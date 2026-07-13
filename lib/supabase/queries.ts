@@ -5,6 +5,7 @@ import type { BlogPost } from "@/types/blogPost";
 import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy";
 import type { ClientLogo } from "@/types/clientLogo";
 import { isSupabaseConfigured } from "./env";
+import { createSupabasePublicClient } from "./public";
 import { createSupabaseServerClient } from "./server";
 
 type CaseStudyMediaRow = {
@@ -139,7 +140,7 @@ export async function getPublishedCaseStudies() {
     return fallbackCaseStudies;
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("case_studies")
     .select(
@@ -172,7 +173,7 @@ export async function getPublishedBlogPosts() {
     return fallbackBlogPosts;
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("id,title,slug,excerpt,content,cover_image,cover_image_alt,author_name,tags,status,published_at")
@@ -196,7 +197,7 @@ export async function getPublishedClientLogos() {
     return fallbackClientLogos;
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("client_logos")
     .select("id,client_name,logo_url,alternate_logo_url,alt,url,sort_order,published,related_case_study_id")
