@@ -6,6 +6,8 @@ import { SmartImage } from "./SmartImage";
 
 export function SelectedProjects() {
   const { work } = siteContent;
+  const hasRealClientMeta = (value: string) =>
+    value.trim().length > 0 && !value.includes("[");
 
   return (
     <section id="work" className="bg-white px-5 py-20 text-ink sm:px-8 lg:py-28">
@@ -27,9 +29,12 @@ export function SelectedProjects() {
                 <article className="border-t border-ink/12 pt-8">
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)] lg:items-end">
                     <div>
-                      <p className="text-[0.7rem] font-black uppercase tracking-[0.22em] text-ink/48">
-                        {project.client} / {project.location}
-                      </p>
+                      {hasRealClientMeta(project.client) &&
+                        hasRealClientMeta(project.location) ? (
+                          <p className="text-[0.7rem] font-black uppercase tracking-[0.22em] text-ink/48">
+                            {project.client} / {project.location}
+                          </p>
+                        ) : null}
                       <h3 className="mt-3 font-serif text-[clamp(2rem,7vw,3.45rem)] font-semibold leading-[0.98]">
                         {project.type}
                       </h3>
@@ -54,7 +59,7 @@ export function SelectedProjects() {
 
                   <div className="mobile-scroll-cue mt-8 [--scroll-cue-bg:#ffffff]">
                     <div className="scroll-row flex gap-4 overflow-x-auto pb-5">
-                      {project.images.map((image, imageIndex) => (
+                      {project.images.map((image) => (
                         <figure
                           key={image.src}
                           className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-[25rem] xl:min-w-[29rem]"
@@ -69,10 +74,6 @@ export function SelectedProjects() {
                               fallbackLabel={project.type}
                             />
                           </div>
-                          <figcaption className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(0,44,93,0),rgba(0,44,93,0.78))] px-4 pb-4 pt-16 text-[0.64rem] font-black uppercase tracking-[0.18em] text-white/86">
-                            Project {String(index + 1).padStart(2, "0")} / Image{" "}
-                            {String(imageIndex + 1).padStart(2, "0")}
-                          </figcaption>
                         </figure>
                       ))}
                     </div>

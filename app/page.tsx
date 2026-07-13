@@ -2,6 +2,7 @@ import { About } from "@/components/About";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { ClientLogosSection } from "@/components/client-logos/ClientLogosSection";
 import { MarketingJourney } from "@/components/MarketingJourney";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { PositioningStatement } from "@/components/PositioningStatement";
@@ -10,8 +11,11 @@ import { ServiceEnquiry } from "@/components/ServiceEnquiry";
 import { ServicesExperience } from "@/components/ServicesExperience";
 import { SocialProof } from "@/components/SocialProof";
 import { VideoShowcase } from "@/components/VideoShowcase";
+import { getPublishedClientLogos } from "@/lib/supabase/queries";
 
-export default function Home() {
+export default async function Home() {
+  const clientLogos = await getPublishedClientLogos();
+
   return (
     <>
       <Header />
@@ -20,6 +24,7 @@ export default function Home() {
         <PositioningStatement />
         <PhotoGallery />
         <SelectedProjects />
+        <ClientLogosSection logos={clientLogos} />
         <ServicesExperience />
         <MarketingJourney />
         <VideoShowcase />

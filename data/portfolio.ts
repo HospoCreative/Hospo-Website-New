@@ -17,9 +17,9 @@ export type ProjectFeature = {
 
 export const selectedProjects: ProjectFeature[] = [
   {
-    client: "[CLIENT NAME REQUIRED]",
+    client: "",
     type: "Restaurant content system",
-    location: "[LOCATION REQUIRED]",
+    location: "",
     objective:
       "Create a stronger visual first impression and a clearer content rhythm for social media, campaign pages and guest communications.",
     services: ["Photography", "Short-form content", "Social media direction"],
@@ -47,9 +47,9 @@ export const selectedProjects: ProjectFeature[] = [
     ]
   },
   {
-    client: "[CLIENT NAME REQUIRED]",
+    client: "",
     type: "Hotel and stay visibility",
-    location: "[LOCATION REQUIRED]",
+    location: "",
     objective:
       "Improve how the property is presented across website, social media and booking touchpoints with a more consistent visual story.",
     services: ["Hotel photography", "Website content", "OTA image selection"],
@@ -77,9 +77,9 @@ export const selectedProjects: ProjectFeature[] = [
     ]
   },
   {
-    client: "[CLIENT NAME REQUIRED]",
+    client: "",
     type: "Campaign asset library",
-    location: "[LOCATION REQUIRED]",
+    location: "",
     objective:
       "Build a practical bank of campaign visuals that can be used across ads, landing pages, email and seasonal promotions.",
     services: ["Campaign planning", "Photography", "Advertising creative"],
@@ -107,9 +107,9 @@ export const selectedProjects: ProjectFeature[] = [
     ]
   },
   {
-    client: "[CLIENT NAME REQUIRED]",
+    client: "",
     type: "Website and booking journey",
-    location: "[LOCATION REQUIRED]",
+    location: "",
     objective:
       "Restructure the digital presentation so guests can understand the experience, find key information and move towards a booking or enquiry.",
     services: ["Website optimisation", "SEO", "Google visibility"],

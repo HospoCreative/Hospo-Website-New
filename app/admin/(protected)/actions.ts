@@ -1,0 +1,277 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { requireAdminUser } from "@/lib/supabase/auth";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+const statusSchema = z.enum(["draft", "published", "archived"]);
+
+const caseStudySchema = z.object({
+  title: z.string().min(2),
+  slug: z.string().min(2),
+  client_name: z.string().min(2),
+  location: z.string().optional(),
+  sector: z.string().optional(),
+  summary: z.string().min(10),
+  challenge: z.string().optional(),
+  solution: z.string().optional(),
+  result: z.string().optional(),
+  services: z.array(z.string()),
+  hero_image: z.string().optional(),
+  hero_image_alt: z.string().optional(),
+  featured: z.boolean(),
+  display_order: z.number(),
+  status: statusSchema
+});
+
+const blogPostSchema = z.object({
+  title: z.string().min(2),
+  slug: z.string().min(2),
+  excerpt: z.string().min(10),
+  content: z.string().min(10),
+  cover_image: z.string().optional(),
+  cover_image_alt: z.string().optional(),
+  author_name: z.string().optional(),
+  tags: z.array(z.string()),
+  status: statusSchema
+});
+
+const clientLogoSchema = z.object({
+  client_name: z.string().min(2),
+  logo_url: z.string().min(2),
+  alternate_logo_url: z.string().optional(),
+  alt: z.string().min(2),
+  url: z.string().optional(),
+  sort_order: z.number(),
+  published: z.boolean(),
+  related_case_study_id: z.string().optional()
+});
+
+function formText(formData: FormData, key: string) {
+  return String(formData.get(key) ?? "").trim();
+}
+
+function formBoolean(formData: FormData, key: string) {
+  return formData.get(key) === "on";
+}
+
+function formNumber(formData: FormData, key: string) {
+  const value = Number(formData.get(key) ?? 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
+function formList(formData: FormData, key: string) {
+  return formText(formData, key)
+    .split(/[\n,]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function optionalNull(value: string) {
+  return value.length ? value : null;
+}
+
+async function mutateTable() {
+  await requireAdminUser();
+  return createSupabaseServerClient();
+}
+
+export async function createCaseStudyAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const title = formText(formData, "title");
+  const parsed = caseStudySchema.parse({
+    title,
+    slug: slugify(formText(formData, "slug") || title),
+    client_name: formText(formData, "client_name"),
+    location: formText(formData, "location"),
+    sector: formText(formData, "sector"),
+    summary: formText(formData, "summary"),
+    challenge: formText(formData, "challenge"),
+    solution: formText(formData, "solution"),
+    result: formText(formData, "result"),
+    services: formList(formData, "services"),
+    hero_image: formText(formData, "hero_image"),
+    hero_image_alt: formText(formData, "hero_image_alt"),
+    featured: formBoolean(formData, "featured"),
+    display_order: formNumber(formData, "display_order"),
+    status: formText(formData, "status")
+  });
+
+  const { data, error } = await supabase
+    .from("case_studies")
+    .insert({
+      ...parsed,
+      location: optionalNull(parsed.location ?? ""),
+      sector: optionalNull(parsed.sector ?? ""),
+      challenge: optionalNull(parsed.challenge ?? ""),
+      solution: optionalNull(parsed.solution ?? ""),
+      result: optionalNull(parsed.result ?? ""),
+      hero_image: optionalNull(parsed.hero_image ?? ""),
+      hero_image_alt: optionalNull(parsed.hero_image_alt ?? ""),
+      published_at: parsed.status === "published" ? new Date().toISOString() : null
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    redirect(`/admin/case-studies/new?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  redirect(`/admin/case-studies/${data.id}`);
+}
+
+export async function updateCaseStudyAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = formText(formData, "id");
+  const title = formText(formData, "title");
+  const parsed = caseStudySchema.parse({
+    title,
+    slug: slugify(formText(formData, "slug") || title),
+    client_name: formText(formData, "client_name"),
+    location: formText(formData, "location"),
+    sector: formText(formData, "sector"),
+    summary: formText(formData, "summary"),
+    challenge: formText(formData, "challenge"),
+    solution: formText(formData, "solution"),
+    result: formText(formData, "result"),
+    services: formList(formData, "services"),
+    hero_image: formText(formData, "hero_image"),
+    hero_image_alt: formText(formData, "hero_image_alt"),
+    featured: formBoolean(formData, "featured"),
+    display_order: formNumber(formData, "display_order"),
+    status: formText(formData, "status")
+  });
+
+  const { error } = await supabase
+    .from("case_studies")
+    .update({
+      ...parsed,
+      location: optionalNull(parsed.location ?? ""),
+      sector: optionalNull(parsed.sector ?? ""),
+      challenge: optionalNull(parsed.challenge ?? ""),
+      solution: optionalNull(parsed.solution ?? ""),
+      result: optionalNull(parsed.result ?? ""),
+      hero_image: optionalNull(parsed.hero_image ?? ""),
+      hero_image_alt: optionalNull(parsed.hero_image_alt ?? ""),
+      published_at: parsed.status === "published" ? new Date().toISOString() : null
+    })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/case-studies/${id}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/case-studies/[slug]", "page");
+  redirect(`/admin/case-studies/${id}?message=saved`);
+}
+
+export async function createBlogPostAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const title = formText(formData, "title");
+  const parsed = blogPostSchema.parse({
+    title,
+    slug: slugify(formText(formData, "slug") || title),
+    excerpt: formText(formData, "excerpt"),
+    content: formText(formData, "content"),
+    cover_image: formText(formData, "cover_image"),
+    cover_image_alt: formText(formData, "cover_image_alt"),
+    author_name: formText(formData, "author_name"),
+    tags: formList(formData, "tags"),
+    status: formText(formData, "status")
+  });
+
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .insert({
+      ...parsed,
+      cover_image: optionalNull(parsed.cover_image ?? ""),
+      cover_image_alt: optionalNull(parsed.cover_image_alt ?? ""),
+      author_name: optionalNull(parsed.author_name ?? ""),
+      published_at: parsed.status === "published" ? new Date().toISOString() : null
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    redirect(`/admin/blog/new?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/blog");
+  redirect(`/admin/blog/${data.id}`);
+}
+
+export async function updateBlogPostAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = formText(formData, "id");
+  const title = formText(formData, "title");
+  const parsed = blogPostSchema.parse({
+    title,
+    slug: slugify(formText(formData, "slug") || title),
+    excerpt: formText(formData, "excerpt"),
+    content: formText(formData, "content"),
+    cover_image: formText(formData, "cover_image"),
+    cover_image_alt: formText(formData, "cover_image_alt"),
+    author_name: formText(formData, "author_name"),
+    tags: formList(formData, "tags"),
+    status: formText(formData, "status")
+  });
+
+  const { error } = await supabase
+    .from("blog_posts")
+    .update({
+      ...parsed,
+      cover_image: optionalNull(parsed.cover_image ?? ""),
+      cover_image_alt: optionalNull(parsed.cover_image_alt ?? ""),
+      author_name: optionalNull(parsed.author_name ?? ""),
+      published_at: parsed.status === "published" ? new Date().toISOString() : null
+    })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/blog/${id}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/blog");
+  revalidatePath("/blog/[slug]", "page");
+  redirect(`/admin/blog/${id}?message=saved`);
+}
+
+export async function createClientLogoAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const parsed = clientLogoSchema.parse({
+    client_name: formText(formData, "client_name"),
+    logo_url: formText(formData, "logo_url"),
+    alternate_logo_url: formText(formData, "alternate_logo_url"),
+    alt: formText(formData, "alt"),
+    url: formText(formData, "url"),
+    sort_order: formNumber(formData, "sort_order"),
+    published: formBoolean(formData, "published"),
+    related_case_study_id: formText(formData, "related_case_study_id")
+  });
+
+  const { error } = await supabase.from("client_logos").insert({
+    ...parsed,
+    alternate_logo_url: optionalNull(parsed.alternate_logo_url ?? ""),
+    url: optionalNull(parsed.url ?? ""),
+    related_case_study_id: optionalNull(parsed.related_case_study_id ?? "")
+  });
+
+  if (error) {
+    redirect(`/admin/clients?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  redirect("/admin/clients?message=saved");
+}

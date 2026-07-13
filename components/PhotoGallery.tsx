@@ -12,8 +12,7 @@ function getGalleryItems(): AssemblyGalleryItem[] {
     altPrefix: "Hospo Creative portfolio image"
   }).map((image) => ({
     src: image.src,
-    alt: image.alt,
-    label: image.title
+    alt: image.alt
   }));
 }
 

@@ -128,16 +128,6 @@ export function HeroClient({
                   <div className="pointer-events-none absolute inset-0 rounded-[8px] ring-1 ring-inset ring-white/10" />
                 </motion.div>
               ))}
-              <div className="pointer-events-none absolute left-4 right-4 top-4 hidden flex-wrap gap-2 sm:flex">
-                {hero.labels.map((label) => (
-                  <span
-                    key={label}
-                    className="border border-yellow/35 bg-ink/45 px-3 py-1.5 text-[0.58rem] font-black uppercase tracking-[0.16em] text-white shadow-soft backdrop-blur-md"
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
             </div>
           </motion.div>
         </div>

@@ -14,7 +14,6 @@ import { SmartImage } from "./SmartImage";
 export type AssemblyGalleryItem = {
   src: string;
   alt: string;
-  label: string;
 };
 
 type ScrollAssemblyGalleryProps = {
@@ -76,19 +75,15 @@ function AssemblyTile({
       className="group relative overflow-hidden rounded-[8px] bg-ink shadow-soft will-change-transform"
     >
       <div className="relative aspect-[4/5]">
-      <SmartImage
-        src={item.src}
-        alt={item.alt}
-        fill
-        sizes="(min-width: 1280px) 360px, (min-width: 768px) 28vw, 50vw"
-        className="object-cover transition duration-700 group-hover:scale-[1.035]"
-        fallbackLabel={item.label}
-      />
+        <SmartImage
+          src={item.src}
+          alt={item.alt}
+          fill
+          sizes="(min-width: 1280px) 360px, (min-width: 768px) 28vw, 50vw"
+          className="object-cover transition duration-700 group-hover:scale-[1.035]"
+          fallbackLabel="Portfolio image"
+        />
       </div>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,44,93,0.0)_35%,rgba(0,44,93,0.36))] opacity-70" />
-      <figcaption className="absolute inset-x-0 bottom-0 p-3 text-[0.64rem] font-black uppercase tracking-[0.16em] text-white/86 sm:p-4">
-        {item.label}
-      </figcaption>
     </motion.figure>
   );
 }
