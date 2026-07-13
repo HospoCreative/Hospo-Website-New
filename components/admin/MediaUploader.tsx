@@ -9,6 +9,8 @@ type MediaBucket = {
   name: string;
   label: string;
   accepts: string;
+  maxBytes: number;
+  maxSizeLabel: string;
 };
 
 type UploadResult = {
@@ -33,6 +35,19 @@ function safeFileName(name: string) {
   return cleaned || fallback;
 }
 
+function formatBytes(bytes: number) {
+  const units = ["B", "KB", "MB", "GB"];
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex += 1;
+  }
+
+  return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+}
+
 export function MediaUploader({ buckets }: MediaUploaderProps) {
   const router = useRouter();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
@@ -53,6 +68,15 @@ export function MediaUploader({ buckets }: MediaUploaderProps) {
 
     if (!file) {
       setError("Choose a file to upload.");
+      return;
+    }
+
+    const selectedBucket = buckets.find((item) => item.name === bucket);
+
+    if (selectedBucket && file.size > selectedBucket.maxBytes) {
+      setError(
+        `${file.name} is ${formatBytes(file.size)}. ${selectedBucket.label} accepts files up to ${selectedBucket.maxSizeLabel}. Compress the video or raise the Supabase bucket limit before uploading.`
+      );
       return;
     }
 
@@ -138,12 +162,13 @@ export function MediaUploader({ buckets }: MediaUploaderProps) {
           <input
             type="file"
             required
-            accept="image/jpeg,image/png,image/webp,image/avif,image/svg+xml,video/mp4,video/webm"
+            accept="image/jpeg,image/png,image/webp,image/avif,image/svg+xml,video/mp4,video/webm,video/quicktime"
             onChange={handleFileChange}
             className="mt-2 w-full rounded-[8px] border border-ink/14 px-4 py-3 text-base text-ink file:mr-4 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-xs file:font-black file:uppercase file:tracking-[0.14em] file:text-white"
           />
           <span className="mt-2 block text-xs font-semibold text-ink/52">
-            {buckets.find((item) => item.name === bucket)?.accepts}
+            {buckets.find((item) => item.name === bucket)?.accepts} · max{" "}
+            {buckets.find((item) => item.name === bucket)?.maxSizeLabel}
           </span>
         </label>
         <button

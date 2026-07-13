@@ -262,14 +262,14 @@ values
     'case-study-media',
     'case-study-media',
     true,
-    52428800,
-    array['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4', 'video/webm']
+    524288000,
+    array['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4', 'video/webm', 'video/quicktime']
   ),
   (
     'blog-media',
     'blog-media',
     true,
-    26214400,
+    52428800,
     array['image/jpeg', 'image/png', 'image/webp', 'image/avif']
   ),
   (

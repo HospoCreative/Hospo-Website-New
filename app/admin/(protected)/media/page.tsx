@@ -9,19 +9,25 @@ const buckets = [
     name: "case-study-media",
     label: "Case study media",
     purpose: "Portfolio photography, campaign assets and case-study images or videos",
-    accepts: "JPG, PNG, WebP, AVIF, MP4, WebM"
+    accepts: "JPG, PNG, WebP, AVIF, MP4, WebM, MOV",
+    maxBytes: 524288000,
+    maxSizeLabel: "500 MB"
   },
   {
     name: "blog-media",
     label: "Blog media",
     purpose: "Article cover images and supporting blog visuals",
-    accepts: "JPG, PNG, WebP, AVIF"
+    accepts: "JPG, PNG, WebP, AVIF",
+    maxBytes: 52428800,
+    maxSizeLabel: "50 MB"
   },
   {
     name: "client-logos",
     label: "Client logos",
     purpose: "Client logo files for the logo strip",
-    accepts: "SVG, PNG, JPG, WebP"
+    accepts: "SVG, PNG, JPG, WebP",
+    maxBytes: 10485760,
+    maxSizeLabel: "10 MB"
   }
 ];
 
@@ -191,7 +197,7 @@ export default async function AdminMediaPage() {
                 </p>
               </div>
               <p className="rounded-full bg-ink/[0.04] px-4 py-2 text-xs font-black uppercase tracking-[0.13em] text-ink/55">
-                {bucket.files.length} file{bucket.files.length === 1 ? "" : "s"}
+                {bucket.files.length} file{bucket.files.length === 1 ? "" : "s"} · max {bucket.maxSizeLabel}
               </p>
             </div>
 
