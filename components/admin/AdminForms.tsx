@@ -19,6 +19,14 @@ type CaseStudyFormValues = {
   featured?: boolean;
   display_order?: number;
   status?: ContentStatus;
+  case_study_media?: Array<{
+    media_type?: string;
+    src?: string;
+    alt?: string | null;
+    caption?: string | null;
+    sort_order?: number | null;
+    published?: boolean | null;
+  }> | null;
 };
 
 type BlogFormValues = {
@@ -34,9 +42,35 @@ type BlogFormValues = {
   status?: ContentStatus;
 };
 
+type ClientLogoFormValues = {
+  id?: string;
+  client_name?: string;
+  logo_url?: string;
+  alternate_logo_url?: string | null;
+  alt?: string;
+  url?: string | null;
+  sort_order?: number;
+  published?: boolean;
+  related_case_study_id?: string | null;
+};
+
 const inputClass =
   "mt-2 w-full rounded-[8px] border border-ink/14 px-4 py-3 text-base text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/30";
 const labelClass = "block text-sm font-bold text-ink";
+const helpClass = "mt-2 block text-sm font-medium leading-6 text-ink/56";
+
+function formatCaseStudyGallery(initial?: CaseStudyFormValues) {
+  return (initial?.case_study_media ?? [])
+    .filter((item) => item.media_type === "image" && item.src)
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .map((item) =>
+      [item.src, item.alt ?? "", item.caption ?? ""]
+        .map((part) => String(part).trim())
+        .join(" | ")
+        .replace(/\s+\|\s+$/g, "")
+    )
+    .join("\n");
+}
 
 function StatusSelect({ value = "draft" }: { value?: ContentStatus }) {
   return (
@@ -120,6 +154,19 @@ export function CaseStudyForm({
           <input name="hero_image_alt" defaultValue={initial?.hero_image_alt ?? ""} className={inputClass} />
         </label>
       </div>
+      <label className={labelClass}>
+        Gallery image URLs
+        <textarea
+          name="gallery_images"
+          rows={7}
+          defaultValue={formatCaseStudyGallery(initial)}
+          className={inputClass}
+          placeholder={"https://.../image-1.jpg | Alt text | Optional caption\nhttps://.../image-2.jpg | Alt text | Optional caption"}
+        />
+        <span className={helpClass}>
+          Add one image per line. Use: image URL | alt text | optional caption. These images create the public case-study gallery.
+        </span>
+      </label>
       <div className="grid gap-5 md:grid-cols-3">
         <label className={labelClass}>
           Display order
@@ -200,45 +247,87 @@ export function BlogPostForm({
   );
 }
 
-export function ClientLogoForm({ action }: { action: FormAction }) {
+export function ClientLogoForm({
+  action,
+  initial,
+  submitLabel = "Add logo"
+}: {
+  action: FormAction;
+  initial?: ClientLogoFormValues;
+  submitLabel?: string;
+}) {
   return (
     <form action={action} className="grid gap-5 rounded-[8px] bg-white p-6 shadow-soft">
+      {initial?.id ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className="grid gap-5 md:grid-cols-2">
         <label className={labelClass}>
           Client name
-          <input name="client_name" required className={inputClass} />
+          <input
+            name="client_name"
+            required
+            defaultValue={initial?.client_name ?? ""}
+            className={inputClass}
+          />
         </label>
         <label className={labelClass}>
           Sort order
-          <input name="sort_order" type="number" defaultValue={0} className={inputClass} />
+          <input
+            name="sort_order"
+            type="number"
+            defaultValue={initial?.sort_order ?? 0}
+            className={inputClass}
+          />
         </label>
       </div>
       <label className={labelClass}>
         Logo image URL
-        <input name="logo_url" required className={inputClass} />
+        <input
+          name="logo_url"
+          required
+          defaultValue={initial?.logo_url ?? ""}
+          className={inputClass}
+        />
       </label>
       <label className={labelClass}>
         Alternate logo URL
-        <input name="alternate_logo_url" className={inputClass} />
+        <input
+          name="alternate_logo_url"
+          defaultValue={initial?.alternate_logo_url ?? ""}
+          className={inputClass}
+        />
       </label>
       <label className={labelClass}>
         Alt text
-        <input name="alt" required className={inputClass} />
+        <input
+          name="alt"
+          required
+          defaultValue={initial?.alt ?? ""}
+          className={inputClass}
+        />
       </label>
       <label className={labelClass}>
         Client website URL
-        <input name="url" className={inputClass} />
+        <input name="url" defaultValue={initial?.url ?? ""} className={inputClass} />
       </label>
       <label className={labelClass}>
         Related case study ID
-        <input name="related_case_study_id" className={inputClass} />
+        <input
+          name="related_case_study_id"
+          defaultValue={initial?.related_case_study_id ?? ""}
+          className={inputClass}
+        />
       </label>
       <label className="flex items-center gap-3 text-sm font-bold text-ink">
-        <input name="published" type="checkbox" className="size-5 accent-ink" />
+        <input
+          name="published"
+          type="checkbox"
+          defaultChecked={initial?.published}
+          className="size-5 accent-ink"
+        />
         Published
       </label>
       <button className="rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:bg-ink/88">
-        Add logo
+        {submitLabel}
       </button>
     </form>
   );

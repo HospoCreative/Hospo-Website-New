@@ -1,11 +1,81 @@
+import Link from "next/link";
 import { selectedProjects } from "@/data/portfolio";
 import { siteContent } from "@/data/site";
+import type { CaseStudy } from "@/types/caseStudy";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
 
-export function SelectedProjects() {
+type DisplayProject = {
+  key: string;
+  client: string;
+  location: string;
+  title: string;
+  objective: string;
+  services: string[];
+  images: Array<{
+    src: string;
+    alt: string;
+  }>;
+  href?: string;
+};
+
+function getCaseStudyImages(caseStudy: CaseStudy) {
+  const mediaImages = (caseStudy.media ?? [])
+    .filter((item) => item.mediaType === "image")
+    .map((item) => ({
+      src: item.src,
+      alt: item.alt || item.caption || caseStudy.title
+    }));
+
+  if (mediaImages.length) {
+    return mediaImages;
+  }
+
+  if (caseStudy.heroImage) {
+    return [
+      {
+        src: caseStudy.heroImage,
+        alt: caseStudy.heroImageAlt || caseStudy.title
+      }
+    ];
+  }
+
+  return [];
+}
+
+function mapCaseStudyToProject(caseStudy: CaseStudy): DisplayProject {
+  return {
+    key: caseStudy.id ?? caseStudy.slug,
+    client: caseStudy.clientName,
+    location: caseStudy.location ?? "",
+    title: caseStudy.title,
+    objective: caseStudy.summary,
+    services: caseStudy.services,
+    images: getCaseStudyImages(caseStudy),
+    href: `/case-studies/${caseStudy.slug}`
+  };
+}
+
+function mapFallbackProject(project: (typeof selectedProjects)[number], index: number): DisplayProject {
+  return {
+    key: `${project.type}-${index}`,
+    client: project.client,
+    location: project.location,
+    title: project.type,
+    objective: project.objective,
+    services: project.services,
+    images: project.images,
+    href: undefined
+  };
+}
+
+export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy[] }) {
   const { work } = siteContent;
+  const cmsProjects = caseStudies.map(mapCaseStudyToProject);
+  const projects = cmsProjects.length
+    ? cmsProjects
+    : selectedProjects.map(mapFallbackProject);
   const hasRealClientMeta = (value: string) =>
     value.trim().length > 0 && !value.includes("[");
 
@@ -23,9 +93,9 @@ export function SelectedProjects() {
         </Reveal>
 
         <div className="mt-14 space-y-16 lg:mt-20 lg:space-y-24">
-          {selectedProjects.map((project, index) => {
+          {projects.map((project, index) => {
             return (
-              <Reveal key={`${project.type}-${index}`} delay={index * 0.06}>
+              <Reveal key={project.key} delay={index * 0.06}>
                 <article className="border-t border-ink/12 pt-8">
                   <div className="grid gap-6 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)] lg:items-end">
                     <div>
@@ -36,7 +106,7 @@ export function SelectedProjects() {
                           </p>
                         ) : null}
                       <h3 className="mt-3 font-serif text-[clamp(2rem,7vw,3.45rem)] font-semibold leading-[0.98]">
-                        {project.type}
+                        {project.title}
                       </h3>
                     </div>
 
@@ -57,35 +127,37 @@ export function SelectedProjects() {
                     </div>
                   </div>
 
-                  <div className="mobile-scroll-cue mt-8 [--scroll-cue-bg:#ffffff]">
-                    <div className="scroll-row flex gap-4 overflow-x-auto pb-5">
-                      {project.images.map((image) => (
-                        <figure
-                          key={image.src}
-                          className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-[25rem] xl:min-w-[29rem]"
-                        >
-                          <div className="relative aspect-[4/5]">
-                            <SmartImage
-                              src={image.src}
-                              alt={image.alt}
-                              fill
-                              sizes="(min-width: 1280px) 460px, (min-width: 1024px) 400px, (min-width: 640px) 44vw, 78vw"
-                              className="object-cover transition duration-700 group-hover:scale-[1.03]"
-                              fallbackLabel={project.type}
-                            />
-                          </div>
-                        </figure>
-                      ))}
+                  {project.images.length ? (
+                    <div className="mobile-scroll-cue mt-8 [--scroll-cue-bg:#ffffff]">
+                      <div className="scroll-row flex gap-4 overflow-x-auto pb-5">
+                        {project.images.map((image) => (
+                          <figure
+                            key={image.src}
+                            className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-[25rem] xl:min-w-[29rem]"
+                          >
+                            <div className="relative aspect-[4/5]">
+                              <SmartImage
+                                src={image.src}
+                                alt={image.alt}
+                                fill
+                                sizes="(min-width: 1280px) 460px, (min-width: 1024px) 400px, (min-width: 640px) 44vw, 78vw"
+                                className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                                fallbackLabel={project.title}
+                              />
+                            </div>
+                          </figure>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
 
-                  <a
-                    href="#contact"
+                  <Link
+                    href={project.href ?? "#contact"}
                     className="mt-3 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                   >
-                    Discuss a similar project
+                    {project.href ? "View case study" : "Discuss a similar project"}
                     <ArrowUpRight aria-hidden="true" size={18} />
-                  </a>
+                  </Link>
                 </article>
               </Reveal>
             );

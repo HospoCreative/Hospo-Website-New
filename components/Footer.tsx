@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { siteContent } from "@/data/site";
 import { Logo } from "./Logo";
 
@@ -9,13 +10,13 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-ink px-5 py-12 text-white sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
         <div className="max-w-md">
-          <a
-            href="#home"
+          <Link
+            href="/"
             className="block transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
             aria-label="Hospo Creative home"
           >
             <Logo variant="white" className="h-10 w-auto" />
-          </a>
+          </Link>
           <p className="mt-5 text-base leading-7 text-white/64">
             {footer.description}
           </p>
@@ -44,13 +45,13 @@ export function Footer() {
                 <ArrowUpRight aria-hidden="true" size={14} />
               </a>
             ))}
-            <a
-              href="#home"
+            <Link
+              href="/#home"
               className="inline-flex items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
             >
               Back to top
               <ArrowUpRight aria-hidden="true" size={14} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

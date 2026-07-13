@@ -11,10 +11,15 @@ import { ServiceEnquiry } from "@/components/ServiceEnquiry";
 import { ServicesExperience } from "@/components/ServicesExperience";
 import { SocialProof } from "@/components/SocialProof";
 import { VideoShowcase } from "@/components/VideoShowcase";
-import { getPublishedClientLogos } from "@/lib/supabase/queries";
+import { getPublishedCaseStudies, getPublishedClientLogos } from "@/lib/supabase/queries";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const clientLogos = await getPublishedClientLogos();
+  const [caseStudies, clientLogos] = await Promise.all([
+    getPublishedCaseStudies(),
+    getPublishedClientLogos()
+  ]);
 
   return (
     <>
@@ -23,7 +28,7 @@ export default async function Home() {
         <Hero />
         <PositioningStatement />
         <PhotoGallery />
-        <SelectedProjects />
+        <SelectedProjects caseStudies={caseStudies} />
         <ClientLogosSection logos={clientLogos} />
         <ServicesExperience />
         <MarketingJourney />

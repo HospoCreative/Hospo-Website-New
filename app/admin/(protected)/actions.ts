@@ -51,6 +51,17 @@ const clientLogoSchema = z.object({
 
 const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logos"]);
 
+type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+type ParsedCaseStudyMedia = {
+  media_type: "image";
+  src: string;
+  alt: string;
+  caption: string | null;
+  sort_order: number;
+  published: true;
+};
+
 function formText(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
 }
@@ -100,6 +111,60 @@ async function mutateTable() {
   return createSupabaseServerClient();
 }
 
+function parseCaseStudyGallery(formData: FormData, fallbackAlt: string) {
+  return formText(formData, "gallery_images")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line, index): ParsedCaseStudyMedia | null => {
+      const [src = "", alt = "", caption = ""] = line
+        .split("|")
+        .map((part) => part.trim());
+
+      if (!src) {
+        return null;
+      }
+
+      return {
+        media_type: "image",
+        src,
+        alt: alt || fallbackAlt,
+        caption: optionalNull(caption),
+        sort_order: index,
+        published: true
+      };
+    })
+    .filter((item): item is ParsedCaseStudyMedia => item !== null);
+}
+
+async function replaceCaseStudyMedia(
+  supabase: SupabaseServerClient,
+  caseStudyId: string,
+  media: ParsedCaseStudyMedia[]
+) {
+  const deleteResult = await supabase
+    .from("case_study_media")
+    .delete()
+    .eq("case_study_id", caseStudyId);
+
+  if (deleteResult.error) {
+    return deleteResult.error.message;
+  }
+
+  if (!media.length) {
+    return null;
+  }
+
+  const insertResult = await supabase.from("case_study_media").insert(
+    media.map((item) => ({
+      ...item,
+      case_study_id: caseStudyId
+    }))
+  );
+
+  return insertResult.error?.message ?? null;
+}
+
 export async function createCaseStudyAction(formData: FormData) {
   const supabase = await mutateTable();
   const title = formText(formData, "title");
@@ -120,6 +185,10 @@ export async function createCaseStudyAction(formData: FormData) {
     display_order: formNumber(formData, "display_order"),
     status: formText(formData, "status")
   });
+  const galleryImages = parseCaseStudyGallery(
+    formData,
+    parsed.hero_image_alt || parsed.title
+  );
 
   const { data, error } = await supabase
     .from("case_studies")
@@ -141,7 +210,14 @@ export async function createCaseStudyAction(formData: FormData) {
     redirect(`/admin/case-studies/new?error=${encodeURIComponent(error.message)}`);
   }
 
+  const mediaError = await replaceCaseStudyMedia(supabase, data.id, galleryImages);
+
+  if (mediaError) {
+    redirect(`/admin/case-studies/${data.id}?error=${encodeURIComponent(mediaError)}`);
+  }
+
   revalidatePath("/");
+  revalidatePath("/case-studies/[slug]", "page");
   redirect(`/admin/case-studies/${data.id}`);
 }
 
@@ -166,6 +242,10 @@ export async function updateCaseStudyAction(formData: FormData) {
     display_order: formNumber(formData, "display_order"),
     status: formText(formData, "status")
   });
+  const galleryImages = parseCaseStudyGallery(
+    formData,
+    parsed.hero_image_alt || parsed.title
+  );
 
   const { error } = await supabase
     .from("case_studies")
@@ -186,8 +266,15 @@ export async function updateCaseStudyAction(formData: FormData) {
     redirect(`/admin/case-studies/${id}?error=${encodeURIComponent(error.message)}`);
   }
 
+  const mediaError = await replaceCaseStudyMedia(supabase, id, galleryImages);
+
+  if (mediaError) {
+    redirect(`/admin/case-studies/${id}?error=${encodeURIComponent(mediaError)}`);
+  }
+
   revalidatePath("/");
   revalidatePath("/case-studies/[slug]", "page");
+  revalidatePath(`/case-studies/${parsed.slug}`);
   redirect(`/admin/case-studies/${id}?message=saved`);
 }
 
@@ -288,6 +375,52 @@ export async function createClientLogoAction(formData: FormData) {
 
   revalidatePath("/");
   redirect("/admin/clients?message=saved");
+}
+
+export async function updateClientLogoAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = formText(formData, "id");
+  const parsed = clientLogoSchema.parse({
+    client_name: formText(formData, "client_name"),
+    logo_url: formText(formData, "logo_url"),
+    alternate_logo_url: formText(formData, "alternate_logo_url"),
+    alt: formText(formData, "alt"),
+    url: formText(formData, "url"),
+    sort_order: formNumber(formData, "sort_order"),
+    published: formBoolean(formData, "published"),
+    related_case_study_id: formText(formData, "related_case_study_id")
+  });
+
+  const { error } = await supabase
+    .from("client_logos")
+    .update({
+      ...parsed,
+      alternate_logo_url: optionalNull(parsed.alternate_logo_url ?? ""),
+      url: optionalNull(parsed.url ?? ""),
+      related_case_study_id: optionalNull(parsed.related_case_study_id ?? "")
+    })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/clients?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  redirect("/admin/clients?message=updated");
+}
+
+export async function deleteClientLogoAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = formText(formData, "id");
+
+  const { error } = await supabase.from("client_logos").delete().eq("id", id);
+
+  if (error) {
+    redirect(`/admin/clients?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  redirect("/admin/clients?message=deleted");
 }
 
 export async function uploadMediaAction(formData: FormData) {
