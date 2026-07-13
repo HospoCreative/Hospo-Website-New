@@ -76,11 +76,12 @@ function ProjectMedia({
   if (image.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(image.src)) {
     return (
       <video
-        className="absolute inset-0 h-full w-full bg-ink object-contain"
-        controls
+        className="absolute inset-0 h-full w-full bg-black object-cover"
+        autoPlay
+        loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         aria-label={image.alt || title}
       >
         <source src={image.src} />
@@ -95,7 +96,7 @@ function ProjectMedia({
       alt={image.alt}
       fill
       sizes="(min-width: 1280px) 460px, (min-width: 1024px) 400px, (min-width: 640px) 44vw, 78vw"
-      className="object-contain transition duration-700 group-hover:scale-[1.02]"
+      className="object-cover transition duration-700 group-hover:scale-[1.03]"
       fallbackLabel={title}
     />
   );
@@ -124,7 +125,7 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
     value.trim().length > 0 && !value.includes("[");
 
   return (
-    <section id="work" className="bg-white px-5 py-20 text-ink sm:px-8 lg:py-28">
+    <section id="work" className="scroll-mt-24 bg-white px-5 py-20 text-ink sm:px-8 lg:py-28">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-6xl">
           <p className="section-eyebrow text-ink/55">{work.eyebrow}</p>

@@ -75,8 +75,8 @@ export function HeroClient({
 
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,44,93,0.96),rgba(0,44,93,0.72)_48%,rgba(0,44,93,0.34)),linear-gradient(180deg,rgba(0,44,93,0.42),rgba(0,44,93,0.82))]" />
 
-      <div className="relative z-10 mx-auto max-w-[82.5rem] px-5 pb-16 pt-14 sm:px-8 lg:pb-20 lg:pt-12">
-        <div className="grid gap-10 lg:grid-cols-[46fr_54fr] lg:items-stretch lg:gap-14 xl:gap-16">
+      <div className="relative z-10 mx-auto max-w-[82.5rem] px-5 pb-16 pt-28 sm:px-8 sm:pt-32 lg:min-h-[calc(100svh-5rem)] lg:pb-20 lg:pt-28">
+        <div className="grid gap-10 lg:grid-cols-[46fr_54fr] lg:items-center lg:gap-14 xl:gap-16">
           <motion.div
             style={{ y: copyY }}
             initial={{ opacity: 0 }}
@@ -131,9 +131,9 @@ export function HeroClient({
               delay: 0.22,
               ease: "easeOut"
             }}
-            className="w-full self-start lg:h-full"
+            className="w-full self-center"
           >
-            <div className="grid h-[28rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[34rem] lg:h-[clamp(31rem,36vw,35rem)] lg:min-h-0 lg:gap-4">
+            <div className="grid h-[28rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[34rem] lg:h-[clamp(31rem,39vw,38rem)] lg:grid-cols-4 lg:grid-rows-1 lg:gap-4">
               {visibleGalleryImages.map((image, index) => (
                 <motion.div
                   key={image.src}

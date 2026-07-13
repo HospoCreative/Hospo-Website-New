@@ -32,10 +32,13 @@ function CaseStudyMediaAsset({
   if (isVideoMedia(item)) {
     return (
       <video
-        className="absolute inset-0 h-full w-full bg-ink object-contain"
+        className="absolute inset-0 h-full w-full bg-black object-cover"
+        autoPlay
         controls
+        muted
+        loop
         playsInline
-        preload="metadata"
+        preload="auto"
         aria-label={item.alt || title}
       >
         <source src={item.src} />
@@ -51,7 +54,7 @@ function CaseStudyMediaAsset({
       fill
       sizes={sizes}
       priority={priority}
-      className="object-contain transition duration-700 group-hover:scale-[1.02]"
+      className="object-cover transition duration-700 group-hover:scale-[1.03]"
       fallbackLabel={title}
     />
   );
@@ -103,7 +106,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   return (
     <>
       <Header />
-      <main className="bg-white pt-16 text-ink">
+      <main className="bg-white pt-24 text-ink">
         <article>
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,0.58fr)] lg:items-end">
