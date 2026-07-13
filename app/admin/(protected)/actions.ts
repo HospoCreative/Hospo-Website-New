@@ -49,6 +49,8 @@ const clientLogoSchema = z.object({
   related_case_study_id: z.string().optional()
 });
 
+const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logos"]);
+
 function formText(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
 }
@@ -79,6 +81,18 @@ function slugify(value: string) {
 
 function optionalNull(value: string) {
   return value.length ? value : null;
+}
+
+function safeFileName(name: string) {
+  const fallback = "media-upload";
+  const cleaned = name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+  return cleaned || fallback;
 }
 
 async function mutateTable() {
@@ -274,4 +288,41 @@ export async function createClientLogoAction(formData: FormData) {
 
   revalidatePath("/");
   redirect("/admin/clients?message=saved");
+}
+
+export async function uploadMediaAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const bucket = mediaBucketSchema.parse(formText(formData, "bucket"));
+  const file = formData.get("file");
+
+  if (!(file instanceof File) || file.size === 0) {
+    redirect("/admin/media?error=Choose a file to upload");
+  }
+
+  const folder = new Date().toISOString().slice(0, 10);
+  const filename = `${Date.now()}-${safeFileName(file.name)}`;
+  const path = `${folder}/${filename}`;
+
+  const { error } = await supabase.storage.from(bucket).upload(path, file, {
+    cacheControl: "31536000",
+    contentType: file.type || undefined,
+    upsert: false
+  });
+
+  if (error) {
+    redirect(`/admin/media?error=${encodeURIComponent(error.message)}`);
+  }
+
+  const {
+    data: { publicUrl }
+  } = supabase.storage.from(bucket).getPublicUrl(path);
+
+  const params = new URLSearchParams({
+    message: "uploaded",
+    bucket,
+    path,
+    url: publicUrl
+  });
+
+  redirect(`/admin/media?${params.toString()}`);
 }
