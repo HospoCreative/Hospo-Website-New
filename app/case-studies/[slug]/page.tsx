@@ -6,12 +6,56 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SmartImage } from "@/components/SmartImage";
 import { getCaseStudyBySlug } from "@/lib/supabase/queries";
+import type { CaseStudyMedia } from "@/types/caseStudy";
 
 export const dynamic = "force-dynamic";
 
 type CaseStudyPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+function isVideoMedia(item: Pick<CaseStudyMedia, "mediaType" | "src">) {
+  return item.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(item.src);
+}
+
+function CaseStudyMediaAsset({
+  item,
+  title,
+  sizes,
+  priority = false
+}: {
+  item: Pick<CaseStudyMedia, "mediaType" | "src" | "alt">;
+  title: string;
+  sizes: string;
+  priority?: boolean;
+}) {
+  if (isVideoMedia(item)) {
+    return (
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        controls
+        playsInline
+        preload="metadata"
+        aria-label={item.alt || title}
+      >
+        <source src={item.src} />
+        Your browser does not support this video.
+      </video>
+    );
+  }
+
+  return (
+    <SmartImage
+      src={item.src}
+      alt={item.alt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      className="object-cover transition duration-700 group-hover:scale-[1.03]"
+      fallbackLabel={title}
+    />
+  );
+}
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -40,9 +84,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
     notFound();
   }
 
-  const imageMedia = (caseStudy.media ?? []).filter((item) => item.mediaType === "image");
-  const media = imageMedia.length
-    ? imageMedia
+  const uploadedMedia = (caseStudy.media ?? []).filter(
+    (item) => item.mediaType === "image" || item.mediaType === "video" || isVideoMedia(item)
+  );
+  const media = uploadedMedia.length
+    ? uploadedMedia
     : caseStudy.heroImage
       ? [
           {
@@ -111,13 +157,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               {media[0] ? (
                 <figure className="overflow-hidden rounded-[8px] bg-white/8 shadow-editorial">
                   <div className="relative aspect-[4/5]">
-                    <SmartImage
-                      src={media[0].src}
-                      alt={media[0].alt}
-                      fill
+                    <CaseStudyMediaAsset
+                      item={media[0]}
+                      title={caseStudy.title}
                       sizes="(min-width: 1024px) 38vw, 100vw"
-                      className="object-cover"
-                      fallbackLabel={caseStudy.title}
+                      priority
                     />
                   </div>
                 </figure>
@@ -141,13 +185,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                       className="group overflow-hidden rounded-[8px] bg-ink shadow-soft"
                     >
                       <div className="relative aspect-[4/5]">
-                        <SmartImage
-                          src={item.src}
-                          alt={item.alt}
-                          fill
+                        <CaseStudyMediaAsset
+                          item={item}
+                          title={caseStudy.title}
                           sizes="(min-width: 1024px) 31vw, (min-width: 640px) 50vw, 100vw"
-                          className="object-cover transition duration-700 group-hover:scale-[1.03]"
-                          fallbackLabel={caseStudy.title}
                         />
                       </div>
                     </figure>

@@ -54,7 +54,7 @@ const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logo
 type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
 
 type ParsedCaseStudyMedia = {
-  media_type: "image";
+  media_type: "image" | "video";
   src: string;
   alt: string;
   caption: string | null;
@@ -125,8 +125,12 @@ function parseCaseStudyGallery(formData: FormData, fallbackAlt: string) {
         return null;
       }
 
+      const mediaType = /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src)
+        ? "video"
+        : "image";
+
       return {
-        media_type: "image",
+        media_type: mediaType,
         src,
         alt: alt || fallbackAlt,
         caption: optionalNull(caption),
