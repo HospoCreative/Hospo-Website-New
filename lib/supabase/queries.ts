@@ -37,7 +37,6 @@ type CaseStudyRow = {
   display_order: number;
   status: ContentStatus;
   published_at: string | null;
-  case_study_media?: CaseStudyMediaRow[] | null;
 };
 
 type BlogPostRow = {
@@ -79,7 +78,7 @@ function mapCaseStudyMedia(row: CaseStudyMediaRow): CaseStudyMedia {
   };
 }
 
-function mapCaseStudy(row: CaseStudyRow): CaseStudy {
+function mapCaseStudy(row: CaseStudyRow, media: CaseStudyMediaRow[] = []): CaseStudy {
   return {
     id: row.id,
     title: row.title,
@@ -98,7 +97,7 @@ function mapCaseStudy(row: CaseStudyRow): CaseStudy {
     displayOrder: row.display_order,
     status: row.status,
     publishedAt: row.published_at,
-    media: (row.case_study_media ?? [])
+    media: media
       .filter((media) => media.published)
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(mapCaseStudyMedia)
@@ -144,16 +143,36 @@ export async function getPublishedCaseStudies() {
   const { data, error } = await supabase
     .from("case_studies")
     .select(
-      "id,title,slug,client_name,location,sector,summary,challenge,solution,result,services,hero_image,hero_image_alt,featured,display_order,status,published_at,case_study_media(id,case_study_id,media_type,src,alt,caption,sort_order,published)"
+      "id,title,slug,client_name,location,sector,summary,challenge,solution,result,services,hero_image,hero_image_alt,featured,display_order,status,published_at"
     )
     .eq("status", "published")
-    .order("display_order", { ascending: true });
+    .order("display_order", { ascending: true })
+    .order("published_at", { ascending: false });
 
   if (error || !data?.length) {
     return fallbackCaseStudies;
   }
 
-  return (data as CaseStudyRow[]).map(mapCaseStudy);
+  const caseStudyRows = data as CaseStudyRow[];
+  const caseStudyIds = caseStudyRows.map((caseStudy) => caseStudy.id);
+  const { data: mediaData } = await supabase
+    .from("case_study_media")
+    .select("id,case_study_id,media_type,src,alt,caption,sort_order,published")
+    .in("case_study_id", caseStudyIds)
+    .eq("published", true)
+    .order("sort_order", { ascending: true });
+
+  const mediaByCaseStudy = ((mediaData ?? []) as CaseStudyMediaRow[]).reduce<
+    Record<string, CaseStudyMediaRow[]>
+  >((groups, item) => {
+    groups[item.case_study_id] = groups[item.case_study_id] ?? [];
+    groups[item.case_study_id].push(item);
+    return groups;
+  }, {});
+
+  return caseStudyRows.map((caseStudy) =>
+    mapCaseStudy(caseStudy, mediaByCaseStudy[caseStudy.id] ?? [])
+  );
 }
 
 export async function getFeaturedCaseStudies() {
