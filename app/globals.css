@@ -103,6 +103,77 @@ video {
     perspective: 1200px;
   }
 
+  .rich-editor p,
+  .rich-article p {
+    margin: 0 0 1.55rem;
+  }
+
+  .rich-editor h2,
+  .rich-article h2 {
+    margin: 3rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--hc-ink);
+  }
+
+  .rich-editor h3,
+  .rich-article h3 {
+    margin: 2.35rem 0 0.85rem;
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.35;
+    color: var(--hc-ink);
+  }
+
+  .rich-editor ul,
+  .rich-editor ol,
+  .rich-article ul,
+  .rich-article ol {
+    margin: 0 0 1.75rem 1.35rem;
+    padding: 0;
+  }
+
+  .rich-editor li,
+  .rich-article li {
+    margin: 0.55rem 0;
+    padding-left: 0.25rem;
+  }
+
+  .rich-editor blockquote,
+  .rich-article blockquote {
+    margin: 2.25rem 0;
+    border-left: 3px solid var(--hc-yellow);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    color: rgba(0, 44, 93, 0.72);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+
+  .rich-editor a,
+  .rich-article a {
+    color: var(--hc-ink);
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: var(--hc-yellow);
+    text-underline-offset: 0.22em;
+  }
+
+  .rich-article {
+    color: rgba(0, 44, 93, 0.78);
+    font-size: clamp(1.1rem, 1.7vw, 1.32rem);
+    line-height: 1.85;
+  }
+
+  .rich-article > :first-child,
+  .rich-editor > :first-child {
+    margin-top: 0;
+  }
+
   @media (min-width: 640px) {
     .mobile-scroll-cue::after,
     .swipe-hint {

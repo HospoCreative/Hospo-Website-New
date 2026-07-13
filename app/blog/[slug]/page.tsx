@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { RichArticleContent } from "@/components/RichArticleContent";
 import { SmartImage } from "@/components/SmartImage";
 import { getBlogPostBySlug } from "@/lib/supabase/queries";
 
@@ -38,11 +39,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
-
-  const paragraphs = post.content
-    .split(/\n{2,}/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
 
   return (
     <>
@@ -91,13 +87,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             ) : null}
 
-            <div className="mx-auto max-w-3xl space-y-7">
-              {paragraphs.map((paragraph) => (
-                <p key={paragraph} className="text-xl leading-9 text-ink/78">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            <RichArticleContent content={post.content} />
           </div>
         </article>
       </main>

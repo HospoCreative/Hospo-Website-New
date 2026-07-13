@@ -1,4 +1,5 @@
 import type { ContentStatus } from "@/types/caseStudy";
+import { RichTextEditor } from "./RichTextEditor";
 
 type FormAction = (formData: FormData) => void | Promise<void>;
 
@@ -61,7 +62,11 @@ const helpClass = "mt-2 block text-sm font-medium leading-6 text-ink/56";
 
 function formatCaseStudyGallery(initial?: CaseStudyFormValues) {
   return (initial?.case_study_media ?? [])
-    .filter((item) => item.media_type === "image" && item.src)
+    .filter(
+      (item) =>
+        (item.media_type === "image" || item.media_type === "video") &&
+        item.src
+    )
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
     .map((item) =>
       [item.src, item.alt ?? "", item.caption ?? ""]
@@ -155,16 +160,17 @@ export function CaseStudyForm({
         </label>
       </div>
       <label className={labelClass}>
-        Gallery image URLs
+        Gallery media URLs
         <textarea
           name="gallery_images"
           rows={7}
           defaultValue={formatCaseStudyGallery(initial)}
           className={inputClass}
-          placeholder={"https://.../image-1.jpg | Alt text | Optional caption\nhttps://.../image-2.jpg | Alt text | Optional caption"}
+          placeholder={"https://.../image-1.jpg | Alt text | Optional caption\nhttps://.../video-1.mp4 | Alt text | Optional caption"}
         />
         <span className={helpClass}>
-          Add one image per line. Use: image URL | alt text | optional caption. These images create the public case-study gallery.
+          Add one image or video per line. Use: media URL | alt text | optional caption.
+          Delete a line and save to remove it from this case-study gallery.
         </span>
       </label>
       <div className="grid gap-5 md:grid-cols-3">
@@ -212,10 +218,12 @@ export function BlogPostForm({
         Excerpt
         <textarea name="excerpt" required rows={3} defaultValue={initial?.excerpt} className={inputClass} />
       </label>
-      <label className={labelClass}>
-        Article content
-        <textarea name="content" required rows={12} defaultValue={initial?.content} className={inputClass} />
-      </label>
+      <RichTextEditor
+        name="content"
+        label="Article content"
+        required
+        defaultValue={initial?.content}
+      />
       <div className="grid gap-5 md:grid-cols-2">
         <label className={labelClass}>
           Cover image URL

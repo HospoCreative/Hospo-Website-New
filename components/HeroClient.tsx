@@ -133,7 +133,7 @@ export function HeroClient({
             }}
             className="w-full self-center"
           >
-            <div className="grid h-[28rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[34rem] lg:h-[clamp(31rem,39vw,38rem)] lg:grid-cols-4 lg:grid-rows-1 lg:gap-4">
+            <div className="grid h-[28rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[34rem] lg:h-[clamp(30rem,36vw,36rem)] lg:gap-4">
               {visibleGalleryImages.map((image, index) => (
                 <motion.div
                   key={image.src}

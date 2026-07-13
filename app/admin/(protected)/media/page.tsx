@@ -1,6 +1,7 @@
 import { MediaUploader } from "@/components/admin/MediaUploader";
 import { CopyField } from "@/components/admin/CopyField";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { deleteMediaAction } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -225,9 +226,19 @@ export default async function AdminMediaPage() {
                             aria-label={file.name}
                             style={{ backgroundImage: `url("${file.publicUrl}")` }}
                           />
+                        ) : video ? (
+                          <video
+                            src={file.publicUrl}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="auto"
+                            className="aspect-[4/3] w-full object-cover"
+                          />
                         ) : (
                           <div className="grid aspect-[4/3] place-items-center bg-ink text-center text-sm font-black uppercase tracking-[0.18em] text-white">
-                            {video ? "Video file" : fileExtension(file.name) || "File"}
+                            {fileExtension(file.name) || "File"}
                           </div>
                         )}
                       </a>
@@ -245,6 +256,17 @@ export default async function AdminMediaPage() {
                           </p>
                         </div>
                         <CopyField label="Public URL" value={file.publicUrl} />
+                        <form action={deleteMediaAction}>
+                          <input type="hidden" name="bucket" value={file.bucket} />
+                          <input type="hidden" name="path" value={file.path} />
+                          <input type="hidden" name="public_url" value={file.publicUrl} />
+                          <button
+                            type="submit"
+                            className="w-full rounded-full border border-red-200 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-red-700 transition hover:border-red-500 hover:bg-red-50"
+                          >
+                            Delete file
+                          </button>
+                        </form>
                       </div>
                     </article>
                   );

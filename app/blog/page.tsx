@@ -35,28 +35,28 @@ export default async function BlogPage() {
           <div className="mx-auto max-w-7xl">
             {featuredPost ? (
               <>
-                <article className="grid gap-8 border-b border-ink/12 pb-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.72fr)] lg:items-end">
+                <article className="grid gap-8 border-b border-ink/12 pb-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.72fr)] lg:items-stretch">
                   {featuredPost.coverImage ? (
                     <a
                       href={`/blog/${featuredPost.slug}`}
-                      className="group relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink shadow-soft"
+                      className="group relative aspect-[16/11] overflow-hidden rounded-[8px] bg-white shadow-soft lg:aspect-auto lg:h-full lg:min-h-[28rem]"
                     >
                       <SmartImage
                         src={featuredPost.coverImage}
                         alt={featuredPost.coverImageAlt ?? featuredPost.title}
                         fill
                         sizes="(min-width: 1024px) 56vw, 100vw"
-                        className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                        className="object-contain transition duration-700 group-hover:scale-[1.02]"
                         fallbackLabel={featuredPost.title}
                       />
                     </a>
                   ) : null}
-                  <div>
+                  <div className="flex flex-col justify-center">
                     <p className="section-eyebrow text-ink/50">Featured article</p>
-                    <h2 className="mt-4 font-serif text-[clamp(2.5rem,7vw,4.8rem)] font-semibold leading-[0.96]">
+                    <h2 className="mt-4 font-serif text-[clamp(2.4rem,4.8vw,3.7rem)] font-semibold leading-[1]">
                       {featuredPost.title}
                     </h2>
-                    <p className="mt-5 text-xl leading-9 text-ink/72">
+                    <p className="mt-5 text-lg leading-8 text-ink/72 sm:text-xl sm:leading-9">
                       {featuredPost.excerpt}
                     </p>
                     <a

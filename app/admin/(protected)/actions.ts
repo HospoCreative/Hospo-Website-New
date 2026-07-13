@@ -463,3 +463,44 @@ export async function uploadMediaAction(formData: FormData) {
 
   redirect(`/admin/media?${params.toString()}`);
 }
+
+export async function deleteMediaAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const bucket = mediaBucketSchema.parse(formText(formData, "bucket"));
+  const path = formText(formData, "path");
+  const publicUrl = formText(formData, "public_url");
+
+  if (!path) {
+    redirect("/admin/media?error=Missing media path");
+  }
+
+  const { error } = await supabase.storage.from(bucket).remove([path]);
+
+  if (error) {
+    redirect(`/admin/media?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (publicUrl) {
+    if (bucket === "case-study-media") {
+      await supabase.from("case_study_media").delete().eq("src", publicUrl);
+      await supabase
+        .from("case_studies")
+        .update({ hero_image: null })
+        .eq("hero_image", publicUrl);
+      revalidatePath("/");
+      revalidatePath("/case-studies/[slug]", "page");
+    }
+
+    if (bucket === "blog-media") {
+      await supabase
+        .from("blog_posts")
+        .update({ cover_image: null })
+        .eq("cover_image", publicUrl);
+      revalidatePath("/blog");
+      revalidatePath("/blog/[slug]", "page");
+    }
+  }
+
+  revalidatePath("/admin/media");
+  redirect("/admin/media?message=deleted");
+}
