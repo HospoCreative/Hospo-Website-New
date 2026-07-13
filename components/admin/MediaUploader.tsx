@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { CopyField } from "@/components/admin/CopyField";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -33,6 +34,7 @@ function safeFileName(name: string) {
 }
 
 export function MediaUploader({ buckets }: MediaUploaderProps) {
+  const router = useRouter();
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const [bucket, setBucket] = useState(buckets[0]?.name ?? "case-study-media");
   const [file, setFile] = useState<File | null>(null);
@@ -79,6 +81,7 @@ export function MediaUploader({ buckets }: MediaUploaderProps) {
     } = supabase.storage.from(bucket).getPublicUrl(path);
 
     setResult({ bucket, path, publicUrl });
+    router.refresh();
   }
 
   return (
