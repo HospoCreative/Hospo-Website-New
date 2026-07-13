@@ -1,0 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --hc-yellow: #ffcc53;
+  --hc-ink: #002c5d;
+  --hc-cream: #ffffff;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Manrope", Inter, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--hc-ink);
+  color: var(--hc-ink);
+}
+
+::selection {
+  background: var(--hc-ink);
+  color: var(--hc-cream);
+}
+
+img,
+video {
+  display: block;
+}
+
+@layer components {
+  .section-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
+
+  .scroll-row {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 44, 93, 0.22) transparent;
+  }
+
+  .scroll-row::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .scroll-row::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-row::-webkit-scrollbar-thumb {
+    background: rgba(0, 44, 93, 0.22);
+    border-radius: 999px;
+  }
+
+  .mobile-scroll-cue {
+    position: relative;
+  }
+
+  .mobile-scroll-cue::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    bottom: 1.25rem;
+    right: -1.25rem;
+    top: 0;
+    width: 4.5rem;
+    background: linear-gradient(90deg, transparent, var(--scroll-cue-bg, var(--hc-cream)));
+  }
+
+  .swipe-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .motion-depth {
+    transform-style: preserve-3d;
+    perspective: 1200px;
+  }
+
+  @media (min-width: 640px) {
+    .mobile-scroll-cue::after,
+    .swipe-hint {
+      display: none;
+    }
+  }
+}
+
+.marquee-track {
+  animation: marquee 88s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.travel-stamp {
+  box-shadow: inset 0 0 0 8px rgba(0, 44, 93, 0.08);
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
