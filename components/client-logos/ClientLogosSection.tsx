@@ -11,7 +11,7 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
     .filter((logo) => logo.published && logo.logoUrl)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
-  if (publishedLogos.length < 3) {
+  if (!publishedLogos.length) {
     return null;
   }
 

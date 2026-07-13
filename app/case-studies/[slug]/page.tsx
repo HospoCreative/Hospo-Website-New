@@ -32,7 +32,7 @@ function CaseStudyMediaAsset({
   if (isVideoMedia(item)) {
     return (
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full bg-ink object-contain"
         controls
         playsInline
         preload="metadata"
@@ -51,7 +51,7 @@ function CaseStudyMediaAsset({
       fill
       sizes={sizes}
       priority={priority}
-      className="object-cover transition duration-700 group-hover:scale-[1.03]"
+      className="object-contain transition duration-700 group-hover:scale-[1.02]"
       fallbackLabel={title}
     />
   );

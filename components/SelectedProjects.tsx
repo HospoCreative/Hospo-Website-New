@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { selectedProjects } from "@/data/portfolio";
 import { siteContent } from "@/data/site";
-import type { CaseStudy } from "@/types/caseStudy";
+import type { CaseStudy, CaseStudyMedia } from "@/types/caseStudy";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
@@ -16,27 +16,36 @@ type DisplayProject = {
   images: Array<{
     src: string;
     alt: string;
+    mediaType?: CaseStudyMedia["mediaType"];
   }>;
   href?: string;
 };
 
-function getCaseStudyImages(caseStudy: CaseStudy) {
-  const mediaImages = (caseStudy.media ?? [])
-    .filter((item) => item.mediaType === "image")
-    .map((item) => ({
+type DisplayProjectMedia = DisplayProject["images"][number];
+
+function isVideoMedia(item: Pick<CaseStudyMedia, "mediaType" | "src">) {
+  return item.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(item.src);
+}
+
+function getCaseStudyMedia(caseStudy: CaseStudy): DisplayProjectMedia[] {
+  const mediaItems = (caseStudy.media ?? [])
+    .filter((item) => item.mediaType === "image" || item.mediaType === "video" || isVideoMedia(item))
+    .map((item): DisplayProjectMedia => ({
       src: item.src,
-      alt: item.alt || item.caption || caseStudy.title
+      alt: item.alt || item.caption || caseStudy.title,
+      mediaType: isVideoMedia(item) ? "video" : item.mediaType
     }));
 
-  if (mediaImages.length) {
-    return mediaImages;
+  if (mediaItems.length) {
+    return mediaItems;
   }
 
   if (caseStudy.heroImage) {
     return [
       {
         src: caseStudy.heroImage,
-        alt: caseStudy.heroImageAlt || caseStudy.title
+        alt: caseStudy.heroImageAlt || caseStudy.title,
+        mediaType: "image" as const
       }
     ];
   }
@@ -52,9 +61,44 @@ function mapCaseStudyToProject(caseStudy: CaseStudy): DisplayProject {
     title: caseStudy.title,
     objective: caseStudy.summary,
     services: caseStudy.services,
-    images: getCaseStudyImages(caseStudy),
+    images: getCaseStudyMedia(caseStudy),
     href: `/case-studies/${caseStudy.slug}`
   };
+}
+
+function ProjectMedia({
+  image,
+  title
+}: {
+  image: DisplayProject["images"][number];
+  title: string;
+}) {
+  if (image.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(image.src)) {
+    return (
+      <video
+        className="absolute inset-0 h-full w-full bg-ink object-contain"
+        controls
+        muted
+        playsInline
+        preload="metadata"
+        aria-label={image.alt || title}
+      >
+        <source src={image.src} />
+        Your browser does not support this video.
+      </video>
+    );
+  }
+
+  return (
+    <SmartImage
+      src={image.src}
+      alt={image.alt}
+      fill
+      sizes="(min-width: 1280px) 460px, (min-width: 1024px) 400px, (min-width: 640px) 44vw, 78vw"
+      className="object-contain transition duration-700 group-hover:scale-[1.02]"
+      fallbackLabel={title}
+    />
+  );
 }
 
 function mapFallbackProject(project: (typeof selectedProjects)[number], index: number): DisplayProject {
@@ -136,14 +180,7 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
                             className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-[25rem] xl:min-w-[29rem]"
                           >
                             <div className="relative aspect-[4/5]">
-                              <SmartImage
-                                src={image.src}
-                                alt={image.alt}
-                                fill
-                                sizes="(min-width: 1280px) 460px, (min-width: 1024px) 400px, (min-width: 640px) 44vw, 78vw"
-                                className="object-cover transition duration-700 group-hover:scale-[1.03]"
-                                fallbackLabel={project.title}
-                              />
+                              <ProjectMedia image={image} title={project.title} />
                             </div>
                           </figure>
                         ))}
