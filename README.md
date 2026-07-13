@@ -1,4 +1,4 @@
-# Hospo Creative Website
+# Hospo Website New
 
 A standalone Next.js one-page website for Hospo Creative, built as a clean hospitality marketing content landing page.
 
