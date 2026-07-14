@@ -118,9 +118,27 @@ function mapFallbackProject(project: (typeof selectedProjects)[number], index: n
 export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy[] }) {
   const { work } = siteContent;
   const cmsProjects = caseStudies.map(mapCaseStudyToProject);
-  const projects = cmsProjects.length
-    ? cmsProjects
-    : selectedProjects.map(mapFallbackProject);
+  const belezaProject: DisplayProject = {
+    key: "beleza-rodizio-instagram-growth",
+    client: "Beleza Rodizio",
+    location: "Hull · Stratford-upon-Avon · Solihull",
+    title: "From 5.2K to 13.2K+ Instagram followers in nine months",
+    objective:
+      "A connected social media, content and campaign programme spanning Hull, Stratford-upon-Avon and Solihull.",
+    services: ["Social Media", "Content", "Campaigns"],
+    images: [
+      {
+        src: "/images/case-studies/beleza/february-instagram-evidence.png",
+        alt: "Beleza Group Instagram report confirming 13,213 followers in February 2026",
+        mediaType: "image"
+      }
+    ],
+    href: "/work/beleza-rodizio"
+  };
+  const projects = [
+    belezaProject,
+    ...(cmsProjects.length ? cmsProjects : selectedProjects.map(mapFallbackProject))
+  ];
   const hasRealClientMeta = (value: string) =>
     value.trim().length > 0 && !value.includes("[");
 
