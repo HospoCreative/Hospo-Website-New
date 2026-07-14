@@ -50,6 +50,7 @@ const clientLogoSchema = z.object({
 });
 
 const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logos"]);
+const enquiryStatusSchema = z.enum(["new", "read", "replied", "archived"]);
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
 
@@ -503,4 +504,26 @@ export async function deleteMediaAction(formData: FormData) {
 
   revalidatePath("/admin/media");
   redirect("/admin/media?message=deleted");
+}
+
+export async function updateEnquiryAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = z.string().uuid().parse(formText(formData, "id"));
+  const status = enquiryStatusSchema.parse(formText(formData, "status"));
+  const adminNotes = z.string().max(5000).parse(formText(formData, "admin_notes"));
+
+  const { error } = await supabase
+    .from("contact_enquiries")
+    .update({
+      status,
+      admin_notes: optionalNull(adminNotes)
+    })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/inbox?id=${id}&error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/admin/inbox");
+  redirect(`/admin/inbox?id=${id}&message=saved`);
 }

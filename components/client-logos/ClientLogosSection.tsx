@@ -16,22 +16,22 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
   }
 
   return (
-    <section className="bg-white px-5 py-20 text-ink sm:px-8 lg:py-28" aria-label="Selected clients">
+    <section className="bg-ink px-5 py-20 text-white sm:px-8 lg:py-28" aria-label="Selected clients">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-5xl">
-          <p className="section-eyebrow text-ink/55">Selected Clients</p>
+          <p className="section-eyebrow text-yellow">Selected Clients</p>
           <h2 className="mt-5 font-serif text-[clamp(2.7rem,9vw,5.4rem)] font-semibold leading-[0.98]">
             Brands we’ve worked with.
           </h2>
-          <p className="mt-7 max-w-3xl text-xl leading-9 text-ink/72 sm:text-2xl sm:leading-10">
+          <p className="mt-7 max-w-3xl text-xl leading-9 text-white/72 sm:text-2xl sm:leading-10">
             A selection of hospitality brands, venues and guest-experience businesses supported through strategy, content, campaigns and digital visibility.
           </p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[8px] border border-ink/10 bg-ink/10 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[8px] border border-white/15 bg-white/15 sm:grid-cols-3 lg:grid-cols-4">
           {publishedLogos.map((logo) => {
             const image = (
-              <div className="relative flex min-h-36 items-center justify-center bg-white p-8 transition duration-300 hover:bg-ink/[0.035] sm:min-h-44">
+              <div className="relative flex min-h-36 items-center justify-center bg-ink p-8 transition duration-300 hover:bg-white/[0.06] sm:min-h-44">
                 <SmartImage
                   src={logo.logoUrl}
                   alt={logo.alt}

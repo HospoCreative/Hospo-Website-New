@@ -63,33 +63,13 @@ const initialForm: EnquiryForm = {
   privacy: false
 };
 
-function createMailto(form: EnquiryForm, email: string) {
-  const subject = `Hospo service enquiry - ${form.businessName || form.name}`;
-  const body = [
-    `Name: ${form.name}`,
-    `Business: ${form.businessName}`,
-    `Email: ${form.email}`,
-    `Website: ${form.website || "Not supplied"}`,
-    `Business type: ${form.businessType || "Not supplied"}`,
-    `Location: ${form.location || "Not supplied"}`,
-    `Services required: ${form.services.join(", ")}`,
-    `Preferred timeframe: ${form.timeframe || "Not supplied"}`,
-    "",
-    "Main marketing challenge:",
-    form.challenge,
-    "",
-    "Message:",
-    form.message || "Not supplied"
-  ].join("\n");
-
-  return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
 export function ServiceEnquiry() {
   const { contact, cta } = siteContent;
   const [form, setForm] = useState<EnquiryForm>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [submitError, setSubmitError] = useState("");
+  const [companyWebsite, setCompanyWebsite] = useState("");
 
   const updateField = (field: keyof EnquiryForm, value: string | boolean | string[]) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -139,7 +119,7 @@ export function ServiceEnquiry() {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!validate()) {
@@ -147,12 +127,29 @@ export function ServiceEnquiry() {
     }
 
     setStatus("loading");
-    const mailto = createMailto(form, contact.email);
+    setSubmitError("");
 
-    window.setTimeout(() => {
-      window.location.href = mailto;
+    try {
+      const response = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, companyWebsite })
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(result.error || "Unable to send your enquiry.");
+      }
+
       setStatus("success");
-    }, 250);
+      setForm(initialForm);
+      setCompanyWebsite("");
+    } catch (error) {
+      setStatus("error");
+      setSubmitError(
+        error instanceof Error ? error.message : "Unable to send your enquiry."
+      );
+    }
   };
 
   const inputClass =
@@ -187,6 +184,15 @@ export function ServiceEnquiry() {
           noValidate
           className="mt-12 rounded-[8px] border border-ink/10 bg-white p-4 shadow-editorial sm:p-6 lg:p-8"
         >
+          <label className="sr-only" aria-hidden="true">
+            Company website confirmation
+            <input
+              tabIndex={-1}
+              autoComplete="off"
+              value={companyWebsite}
+              onChange={(event) => setCompanyWebsite(event.target.value)}
+            />
+          </label>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className={labelClass}>
               Name
@@ -353,14 +359,18 @@ export function ServiceEnquiry() {
             disabled={status === "loading"}
             className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:-translate-y-0.5 hover:bg-ink/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:opacity-70 sm:w-auto"
           >
-            {status === "loading" ? "Preparing enquiry" : cta.primaryCta}
+            {status === "loading" ? "Sending enquiry" : cta.primaryCta}
             <ArrowUpRight aria-hidden="true" size={18} />
           </button>
 
           {status === "success" && (
-            <p className="mt-4 text-sm leading-6 text-ink/70">
-              Your enquiry has been prepared in your email app. Send it from there
-              so Hospo can reply.
+            <p className="mt-4 text-sm font-bold leading-6 text-ink/70" role="status">
+              Thanks. Your enquiry has been sent to Hospo Creative and we will reply by email.
+            </p>
+          )}
+          {status === "error" && (
+            <p className="mt-4 text-sm font-bold leading-6 text-red-700" role="alert">
+              {submitError} You can also email {contact.email}.
             </p>
           )}
         </form>
