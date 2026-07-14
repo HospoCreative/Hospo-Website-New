@@ -142,8 +142,25 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
             return (
               <Reveal key={project.key} delay={index * 0.06}>
                 <article className="border-t border-ink/12 pt-8">
-                  <div className="grid gap-6 lg:grid-cols-[minmax(0,0.45fr)_minmax(0,1fr)] lg:items-end">
-                    <div>
+                  <div className="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)] lg:items-start lg:gap-12">
+                    {project.images.length ? (
+                      <div className="mobile-scroll-cue [--scroll-cue-bg:#ffffff]">
+                        <div className="scroll-row flex gap-4 overflow-x-auto pb-5">
+                          {project.images.map((image) => (
+                            <figure
+                              key={image.src}
+                              className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-full"
+                            >
+                              <div className="relative aspect-[4/5] lg:aspect-[5/4]">
+                                <ProjectMedia image={image} title={project.title} />
+                              </div>
+                            </figure>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    <div className="flex h-full flex-col lg:pt-1">
                       {hasRealClientMeta(project.client) &&
                         hasRealClientMeta(project.location) ? (
                           <p className="text-[0.7rem] font-black uppercase tracking-[0.22em] text-ink/48">
@@ -153,10 +170,7 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
                       <h3 className="mt-3 font-serif text-[clamp(2rem,7vw,3.45rem)] font-semibold leading-[0.98]">
                         {project.title}
                       </h3>
-                    </div>
-
-                    <div className="lg:max-w-3xl">
-                      <p className="text-xl leading-9 text-ink/76 sm:text-2xl sm:leading-10">
+                      <p className="mt-7 text-xl leading-9 text-ink/76 sm:text-2xl sm:leading-10">
                         {project.objective}
                       </p>
                       <div className="mt-5 flex flex-wrap gap-2">
@@ -169,33 +183,15 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
                           </span>
                         ))}
                       </div>
+                      <Link
+                        href={project.href ?? "#contact"}
+                        className="mt-8 inline-flex items-center gap-3 self-start text-sm font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                      >
+                        {project.href ? "View case study" : "Discuss a similar project"}
+                        <ArrowUpRight aria-hidden="true" size={18} />
+                      </Link>
                     </div>
                   </div>
-
-                  {project.images.length ? (
-                    <div className="mobile-scroll-cue mt-8 [--scroll-cue-bg:#ffffff]">
-                      <div className="scroll-row flex gap-4 overflow-x-auto pb-5">
-                        {project.images.map((image) => (
-                          <figure
-                            key={image.src}
-                            className="group relative min-w-[78vw] snap-start overflow-hidden rounded-[8px] bg-ink shadow-soft sm:min-w-[44vw] lg:min-w-[25rem] xl:min-w-[29rem]"
-                          >
-                            <div className="relative aspect-[4/5]">
-                              <ProjectMedia image={image} title={project.title} />
-                            </div>
-                          </figure>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <Link
-                    href={project.href ?? "#contact"}
-                    className="mt-3 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
-                  >
-                    {project.href ? "View case study" : "Discuss a similar project"}
-                    <ArrowUpRight aria-hidden="true" size={18} />
-                  </Link>
                 </article>
               </Reveal>
             );
