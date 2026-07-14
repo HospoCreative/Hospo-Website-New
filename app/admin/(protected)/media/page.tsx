@@ -1,7 +1,6 @@
 import { MediaUploader } from "@/components/admin/MediaUploader";
-import { CopyField } from "@/components/admin/CopyField";
+import { MediaSelectionGrid } from "@/components/admin/MediaSelectionGrid";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { deleteMediaAction } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -55,52 +54,6 @@ type MediaFile = {
   size: number | null;
   mimeType: string | null;
 };
-
-function fileExtension(name: string) {
-  return name.split(".").pop()?.toLowerCase() ?? "";
-}
-
-function isImageFile(file: MediaFile) {
-  const extension = fileExtension(file.name);
-  return (
-    file.mimeType?.startsWith("image/") ||
-    ["avif", "gif", "jpg", "jpeg", "png", "svg", "webp"].includes(extension)
-  );
-}
-
-function isVideoFile(file: MediaFile) {
-  const extension = fileExtension(file.name);
-  return file.mimeType?.startsWith("video/") || ["mp4", "webm", "mov"].includes(extension);
-}
-
-function formatBytes(bytes: number | null) {
-  if (!bytes) {
-    return "Unknown size";
-  }
-
-  const units = ["B", "KB", "MB", "GB"];
-  let size = bytes;
-  let unitIndex = 0;
-
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
-    unitIndex += 1;
-  }
-
-  return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
-}
-
-function formatDate(value: string | null) {
-  if (!value) {
-    return "No date";
-  }
-
-  return new Intl.DateTimeFormat("en", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  }).format(new Date(value));
-}
 
 async function listBucketFiles(
   bucket: string,
@@ -166,8 +119,14 @@ async function getMediaLibrary() {
   return entries;
 }
 
-export default async function AdminMediaPage() {
+type AdminMediaPageProps = {
+  searchParams: Promise<{ message?: string; error?: string; count?: string }>;
+};
+
+export default async function AdminMediaPage({ searchParams }: AdminMediaPageProps) {
+  const params = await searchParams;
   const mediaLibrary = await getMediaLibrary();
+  const deletedCount = Number(params.count ?? 0);
 
   return (
     <div>
@@ -179,6 +138,18 @@ export default async function AdminMediaPage() {
         Upload files directly to Supabase Storage, copy the public URL, then paste it into the relevant
         case study, blog or client logo form.
       </p>
+
+      {params.error ? (
+        <div className="mt-6 rounded-[8px] border border-red-200 bg-red-50 p-4 text-sm font-bold leading-6 text-red-700">
+          <strong>Deletion failed:</strong> {params.error}
+        </div>
+      ) : null}
+
+      {params.message === "deleted" ? (
+        <div className="mt-6 rounded-[8px] border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold leading-6 text-emerald-800">
+          Deleted {deletedCount || 1} file{deletedCount === 1 ? "" : "s"} successfully. Linked website content was updated too.
+        </div>
+      ) : null}
 
       <MediaUploader buckets={buckets} />
 
@@ -203,75 +174,7 @@ export default async function AdminMediaPage() {
             </div>
 
             {bucket.files.length ? (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {bucket.files.map((file) => {
-                  const image = isImageFile(file);
-                  const video = isVideoFile(file);
-
-                  return (
-                    <article
-                      key={`${file.bucket}/${file.path}`}
-                      className="overflow-hidden rounded-[8px] border border-ink/10 bg-white"
-                    >
-                      <a
-                        href={file.publicUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block bg-ink/[0.04]"
-                      >
-                        {image ? (
-                          <div
-                            className="aspect-[4/3] bg-cover bg-center"
-                            role="img"
-                            aria-label={file.name}
-                            style={{ backgroundImage: `url("${file.publicUrl}")` }}
-                          />
-                        ) : video ? (
-                          <video
-                            src={file.publicUrl}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="auto"
-                            className="aspect-[4/3] w-full object-cover"
-                          />
-                        ) : (
-                          <div className="grid aspect-[4/3] place-items-center bg-ink text-center text-sm font-black uppercase tracking-[0.18em] text-white">
-                            {fileExtension(file.name) || "File"}
-                          </div>
-                        )}
-                      </a>
-
-                      <div className="space-y-4 p-4">
-                        <div>
-                          <h3 className="line-clamp-2 text-base font-bold leading-6 text-ink">
-                            {file.name}
-                          </h3>
-                          <p className="mt-1 text-sm font-semibold text-ink/50">
-                            {formatDate(file.updatedAt)} · {formatBytes(file.size)}
-                          </p>
-                          <p className="mt-1 break-all text-xs font-semibold text-ink/42">
-                            {file.path}
-                          </p>
-                        </div>
-                        <CopyField label="Public URL" value={file.publicUrl} />
-                        <form action={deleteMediaAction}>
-                          <input type="hidden" name="bucket" value={file.bucket} />
-                          <input type="hidden" name="path" value={file.path} />
-                          <input type="hidden" name="public_url" value={file.publicUrl} />
-                          <button
-                            type="submit"
-                            className="w-full rounded-full border border-red-200 px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-red-700 transition hover:border-red-500 hover:bg-red-50"
-                          >
-                            Delete file
-                          </button>
-                        </form>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
+              <MediaSelectionGrid bucket={bucket.name} files={bucket.files} />
             ) : (
               <div className="mt-6 rounded-[8px] border border-dashed border-ink/18 p-6 text-base leading-7 text-ink/62">
                 No uploads in this bucket yet.

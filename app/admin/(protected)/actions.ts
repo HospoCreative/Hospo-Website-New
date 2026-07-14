@@ -50,6 +50,10 @@ const clientLogoSchema = z.object({
 });
 
 const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logos"]);
+const mediaSelectionSchema = z.object({
+  path: z.string().min(1).max(2000),
+  publicUrl: z.string().min(1).max(5000)
+});
 const enquiryStatusSchema = z.enum(["new", "read", "replied", "archived"]);
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
@@ -475,10 +479,16 @@ export async function deleteMediaAction(formData: FormData) {
     redirect("/admin/media?error=Missing media path");
   }
 
-  const { error } = await supabase.storage.from(bucket).remove([path]);
+  const { data, error } = await supabase.storage.from(bucket).remove([path]);
 
   if (error) {
     redirect(`/admin/media?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (!data?.length) {
+    redirect(
+      "/admin/media?error=Supabase did not confirm that the file was deleted. Please try again."
+    );
   }
 
   if (publicUrl) {
@@ -503,7 +513,109 @@ export async function deleteMediaAction(formData: FormData) {
   }
 
   revalidatePath("/admin/media");
-  redirect("/admin/media?message=deleted");
+  redirect("/admin/media?message=deleted&count=1");
+}
+
+export async function deleteMediaBatchAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const bucket = mediaBucketSchema.parse(formText(formData, "bucket"));
+  const rawSelections = formData.getAll("selected_media");
+
+  if (!rawSelections.length) {
+    redirect("/admin/media?error=Select at least one file to delete");
+  }
+
+  let selections: z.infer<typeof mediaSelectionSchema>[];
+
+  try {
+    selections = rawSelections.map((value) =>
+      mediaSelectionSchema.parse(JSON.parse(String(value)))
+    );
+  } catch {
+    redirect("/admin/media?error=The selected media list was invalid. Refresh and try again.");
+  }
+
+  const uniqueSelections = Array.from(
+    new Map(selections.map((selection) => [selection.path, selection])).values()
+  );
+
+  if (uniqueSelections.length > 100) {
+    redirect("/admin/media?error=Delete a maximum of 100 files at a time");
+  }
+
+  const paths = uniqueSelections.map((selection) => selection.path);
+  const publicUrls = uniqueSelections.map((selection) => selection.publicUrl);
+  const { data, error } = await supabase.storage.from(bucket).remove(paths);
+
+  if (error) {
+    redirect(`/admin/media?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (!data?.length) {
+    redirect(
+      "/admin/media?error=Supabase did not confirm any deletions. Check storage permissions and try again."
+    );
+  }
+
+  const cleanupErrors: string[] = [];
+
+  if (bucket === "case-study-media") {
+    const { error: galleryError } = await supabase
+      .from("case_study_media")
+      .delete()
+      .in("src", publicUrls);
+    const { error: heroError } = await supabase
+      .from("case_studies")
+      .update({ hero_image: null })
+      .in("hero_image", publicUrls);
+
+    if (galleryError) cleanupErrors.push(galleryError.message);
+    if (heroError) cleanupErrors.push(heroError.message);
+
+    revalidatePath("/");
+    revalidatePath("/case-studies/[slug]", "page");
+  }
+
+  if (bucket === "blog-media") {
+    const { error: blogError } = await supabase
+      .from("blog_posts")
+      .update({ cover_image: null })
+      .in("cover_image", publicUrls);
+
+    if (blogError) cleanupErrors.push(blogError.message);
+
+    revalidatePath("/blog");
+    revalidatePath("/blog/[slug]", "page");
+  }
+
+  if (bucket === "client-logos") {
+    const { error: alternateLogoError } = await supabase
+      .from("client_logos")
+      .update({ alternate_logo_url: null })
+      .in("alternate_logo_url", publicUrls);
+    const { error: primaryLogoError } = await supabase
+      .from("client_logos")
+      .delete()
+      .in("logo_url", publicUrls);
+
+    if (alternateLogoError) cleanupErrors.push(alternateLogoError.message);
+    if (primaryLogoError) cleanupErrors.push(primaryLogoError.message);
+
+    revalidatePath("/");
+  }
+
+  revalidatePath("/admin/media");
+
+  if (cleanupErrors.length) {
+    redirect(
+      `/admin/media?error=${encodeURIComponent(
+        `Files were deleted, but linked content could not be fully updated: ${cleanupErrors[0]}`
+      )}`
+    );
+  }
+
+  const deletedCount = data.length;
+  redirect(`/admin/media?message=deleted&count=${deletedCount}`);
 }
 
 export async function updateEnquiryAction(formData: FormData) {
