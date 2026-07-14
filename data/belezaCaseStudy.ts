@@ -1,44 +1,54 @@
-export const belezaInstagramGrowth = [
-  { label: "Jun", value: 5220 },
-  { label: "Jul", value: 6031 },
-  { label: "Aug", value: 6684 },
-  { label: "Sep", value: 8050 },
-  { label: "Oct", value: 9242 },
-  { label: "Nov", value: 10055 },
-  { label: "Dec", value: 10713 },
-  { label: "Jan", value: 11669 },
-  { label: "Feb", value: 13213 }
-] as const;
-
 export const belezaHeadlineMetrics = [
-  { value: "13,213", label: "Latest reliable Instagram followers", detail: "27 February 2026" },
-  { value: "+7,993", label: "Net Instagram followers", detail: "June 2025-February 2026" },
-  { value: "+153.1%", label: "Correctly calculated growth", detail: "From verified raw counts" },
-  { value: "3", label: "UK locations supported", detail: "Hull, Stratford and Solihull" }
+  { value: "1K -> 13.5K", label: "Instagram followers", detail: "In under one year" },
+  { value: "~1,250%", label: "Audience growth", detail: "Approximately 12,500 net new followers" },
+  { value: "460K+", label: "People reached", detail: "In one reporting month" },
+  { value: "4,275", label: "Link clicks", detail: "October 2025" }
 ] as const;
 
-export const belezaFacebookResults = [
-  { location: "Stratford-upon-Avon", views: "100,900", follows: "249", clicks: "1,500" },
-  { location: "Solihull", views: "64,900", follows: "225", clicks: "1,100" },
-  { location: "Hull", views: "103,800", follows: "225", clicks: "527" }
+export const belezaInstagramHighlights = [
+  { value: "1,598", label: "New followers", detail: "October 2025" },
+  { value: "~1,740", label: "New followers", detail: "December 2025" },
+  { value: "10K+", label: "Follower milestone", detail: "Passed during the management period" },
+  { value: "~13.5K", label: "Final audience", detail: "By the end of the project" }
 ] as const;
 
-export const belezaPaidContent = [
-  { title: "Follower campaign", month: "June", views: "27,421", clicks: "947", follows: "151" },
-  { title: "Celebrations creative", month: "June", views: "18,222", clicks: "584", follows: "74" },
-  { title: "Stratford promotion", month: "September", views: "17,436", clicks: "525", follows: "30" },
-  { title: "Two-location promotion", month: "September", views: "14,800", clicks: "481", follows: "42" }
+export const belezaInfluencerMetrics = [
+  { value: "~131K", label: "Views" },
+  { value: "1,400+", label: "Likes" },
+  { value: "755", label: "Saves" },
+  { value: "~400", label: "Followers in one day" }
+] as const;
+
+export const belezaCampaigns = [
+  "Restaurant awareness",
+  "Brazilian rodizio experience",
+  "Unlimited grilled meats",
+  "Tableside carving and passadores",
+  "Wagyu menu",
+  "Lunch",
+  "Valentine's Day",
+  "Mother's Day",
+  "Christmas and festive dining",
+  "New Year's Eve",
+  "Cocktails",
+  "Salad bar",
+  "Family dining",
+  "Date nights",
+  "Group celebrations",
+  "Solihull restaurant launch",
+  "Stratford-upon-Avon",
+  "Hull",
+  "Influencer collaborations",
+  "Giveaways",
+  "Local partnerships",
+  "Corporate lunch and business outreach"
 ] as const;
 
 export const belezaServices = [
-  "Social media management",
-  "Content planning",
-  "Short-form video",
+  "Social media strategy",
+  "Content production",
   "Campaign planning",
-  "Seasonal promotions",
-  "Venue launch support",
-  "Paid advertising",
-  "Influencer and PR coordination",
-  "Website support",
+  "Community management",
+  "Influencer collaborations",
   "Reporting and optimisation"
 ] as const;

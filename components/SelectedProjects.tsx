@@ -122,14 +122,14 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
     key: "beleza-rodizio-instagram-growth",
     client: "Beleza Rodizio",
     location: "Hull · Stratford-upon-Avon · Solihull",
-    title: "From 5.2K to 13.2K+ Instagram followers in nine months",
+    title: "From 1K to 13.5K Instagram followers in under a year",
     objective:
       "A connected social media, content and campaign programme spanning Hull, Stratford-upon-Avon and Solihull.",
     services: ["Social Media", "Content", "Campaigns"],
     images: [
       {
         src: "/images/case-studies/beleza/february-instagram-evidence.png",
-        alt: "Beleza Group Instagram report confirming 13,213 followers in February 2026",
+        alt: "Beleza Rodizio Instagram performance report",
         mediaType: "image"
       }
     ],
