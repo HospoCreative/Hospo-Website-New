@@ -7,7 +7,7 @@ export const siteContent = {
       "Hospo Creative helps hotels, restaurants and hospitality brands strengthen discovery, content, campaigns, websites and booking touchpoints."
   },
   navItems: [
-    { label: "Work", href: "/case-studies" },
+    { label: "Case Studies", href: "/case-studies" },
     { label: "Services", href: "/#services" },
     { label: "Approach", href: "/#approach" },
     { label: "About", href: "/#about" },
