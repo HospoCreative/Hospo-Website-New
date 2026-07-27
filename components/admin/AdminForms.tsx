@@ -1,6 +1,7 @@
 import type { ContentStatus } from "@/types/caseStudy";
 import { RichTextEditor } from "./RichTextEditor";
 import { PendingSubmitButton } from "./PendingSubmitButton";
+import { LogoPoolPicker } from "./LogoPoolPicker";
 
 type FormAction = (formData: FormData) => void | Promise<void>;
 
@@ -46,14 +47,9 @@ type BlogFormValues = {
 
 type ClientLogoFormValues = {
   id?: string;
-  client_name?: string;
   logo_url?: string;
-  alternate_logo_url?: string | null;
-  alt?: string;
-  url?: string | null;
   sort_order?: number;
   published?: boolean;
-  related_case_study_id?: string | null;
 };
 
 const inputClass =
@@ -264,61 +260,13 @@ export function ClientLogoForm({
   return (
     <form action={action} className="grid gap-5 rounded-[8px] bg-white p-6 shadow-soft">
       {initial?.id ? <input type="hidden" name="id" value={initial.id} /> : null}
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className={labelClass}>
-          Client name
-          <input
-            name="client_name"
-            required
-            defaultValue={initial?.client_name ?? ""}
-            className={inputClass}
-          />
-        </label>
-        <label className={labelClass}>
-          Sort order
-          <input
-            name="sort_order"
-            type="number"
-            defaultValue={initial?.sort_order ?? 0}
-            className={inputClass}
-          />
-        </label>
-      </div>
+      <LogoPoolPicker initialValue={initial?.logo_url} />
       <label className={labelClass}>
-        Logo image URL
+        Sort order
         <input
-          name="logo_url"
-          required
-          defaultValue={initial?.logo_url ?? ""}
-          className={inputClass}
-        />
-      </label>
-      <label className={labelClass}>
-        Alternate logo URL
-        <input
-          name="alternate_logo_url"
-          defaultValue={initial?.alternate_logo_url ?? ""}
-          className={inputClass}
-        />
-      </label>
-      <label className={labelClass}>
-        Alt text
-        <input
-          name="alt"
-          required
-          defaultValue={initial?.alt ?? ""}
-          className={inputClass}
-        />
-      </label>
-      <label className={labelClass}>
-        Client website URL
-        <input name="url" defaultValue={initial?.url ?? ""} className={inputClass} />
-      </label>
-      <label className={labelClass}>
-        Related case study ID
-        <input
-          name="related_case_study_id"
-          defaultValue={initial?.related_case_study_id ?? ""}
+          name="sort_order"
+          type="number"
+          defaultValue={initial?.sort_order ?? 0}
           className={inputClass}
         />
       </label>
@@ -329,7 +277,7 @@ export function ClientLogoForm({
           defaultChecked={initial?.published}
           className="size-5 accent-ink"
         />
-        Published
+        Show this logo on the website
       </label>
       <PendingSubmitButton label={submitLabel} pendingLabel="Saving logo..." />
     </form>

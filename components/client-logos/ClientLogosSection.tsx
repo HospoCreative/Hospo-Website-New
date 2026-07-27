@@ -1,6 +1,5 @@
 import type { ClientLogo } from "@/types/clientLogo";
 import { Reveal } from "@/components/Reveal";
-import { SmartImage } from "@/components/SmartImage";
 
 type ClientLogosSectionProps = {
   logos: ClientLogo[];
@@ -16,43 +15,23 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
   }
 
   return (
-    <section className="bg-ink px-5 py-20 text-white sm:px-8 lg:py-28" aria-label="Selected clients">
-      <div className="mx-auto max-w-7xl">
-        <Reveal className="max-w-5xl">
-          <p className="section-eyebrow text-yellow">Selected Clients</p>
-          <h2 className="mt-5 font-serif text-[clamp(2.7rem,9vw,5.4rem)] font-semibold leading-[0.98]">
-            Brands we’ve worked with.
-          </h2>
-          <p className="mt-7 max-w-3xl text-xl leading-9 text-white/72 sm:text-2xl sm:leading-10">
-            A selection of hospitality brands, venues and guest-experience businesses supported through strategy, content, campaigns and digital visibility.
-          </p>
-        </Reveal>
-
-        <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[8px] border border-white/15 bg-white/15 sm:grid-cols-3 lg:grid-cols-4">
-          {publishedLogos.map((logo) => {
-            const image = (
-              <div className="relative flex min-h-36 items-center justify-center bg-ink p-8 transition duration-300 hover:bg-white/[0.06] sm:min-h-44">
-                <SmartImage
-                  src={logo.logoUrl}
-                  alt={logo.alt}
-                  width={220}
-                  height={110}
-                  className="h-auto max-h-20 w-full max-w-44 object-contain"
-                  fallbackLabel={logo.clientName}
-                />
-              </div>
-            );
-
-            return logo.url ? (
-              <a key={logo.clientName} href={logo.url} target="_blank" rel="noreferrer">
-                {image}
-              </a>
-            ) : (
-              <div key={logo.clientName}>{image}</div>
-            );
-          })}
+    <section className="bg-ink px-5 py-16 sm:px-8 lg:py-24" aria-label="Client logos">
+      <Reveal className="mx-auto max-w-7xl">
+        <div className="grid grid-cols-2 items-center gap-x-10 gap-y-12 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {publishedLogos.map((logo) => (
+            <div
+              key={`${logo.clientName}-${logo.logoUrl}`}
+              className="flex h-24 items-center justify-center sm:h-28"
+            >
+              <img
+                src={logo.logoUrl}
+                alt=""
+                className="h-auto max-h-full w-auto max-w-full object-contain"
+              />
+            </div>
+          ))}
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

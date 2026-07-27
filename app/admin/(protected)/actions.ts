@@ -39,14 +39,9 @@ const blogPostSchema = z.object({
 });
 
 const clientLogoSchema = z.object({
-  client_name: z.string().min(2),
   logo_url: z.string().min(2),
-  alternate_logo_url: z.string().optional(),
-  alt: z.string().min(2),
-  url: z.string().optional(),
   sort_order: z.number(),
-  published: z.boolean(),
-  related_case_study_id: z.string().optional()
+  published: z.boolean()
 });
 
 const mediaBucketSchema = z.enum(["case-study-media", "blog-media", "client-logos"]);
@@ -97,6 +92,17 @@ function slugify(value: string) {
 
 function optionalNull(value: string) {
   return value.length ? value : null;
+}
+
+function logoLabelFromUrl(value: string) {
+  const raw = decodeURIComponent(value.split(/[?#]/)[0]?.split("/").pop() ?? "");
+  const label = raw
+    .replace(/\.[^.]+$/, "")
+    .replace(/^\d+-/, "")
+    .replace(/[-_]+/g, " ")
+    .trim();
+
+  return label || "Client logo";
 }
 
 function safeFileName(name: string) {
@@ -426,21 +432,19 @@ export async function deleteBlogPostAction(formData: FormData) {
 export async function createClientLogoAction(formData: FormData) {
   const supabase = await mutateTable();
   const parsed = clientLogoSchema.parse({
-    client_name: formText(formData, "client_name"),
     logo_url: formText(formData, "logo_url"),
-    alternate_logo_url: formText(formData, "alternate_logo_url"),
-    alt: formText(formData, "alt"),
-    url: formText(formData, "url"),
     sort_order: formNumber(formData, "sort_order"),
-    published: formBoolean(formData, "published"),
-    related_case_study_id: formText(formData, "related_case_study_id")
+    published: formBoolean(formData, "published")
   });
+  const label = logoLabelFromUrl(parsed.logo_url);
 
   const { error } = await supabase.from("client_logos").insert({
     ...parsed,
-    alternate_logo_url: optionalNull(parsed.alternate_logo_url ?? ""),
-    url: optionalNull(parsed.url ?? ""),
-    related_case_study_id: optionalNull(parsed.related_case_study_id ?? "")
+    client_name: label,
+    alt: label,
+    alternate_logo_url: null,
+    url: null,
+    related_case_study_id: null
   });
 
   if (error) {
@@ -455,23 +459,21 @@ export async function updateClientLogoAction(formData: FormData) {
   const supabase = await mutateTable();
   const id = formText(formData, "id");
   const parsed = clientLogoSchema.parse({
-    client_name: formText(formData, "client_name"),
     logo_url: formText(formData, "logo_url"),
-    alternate_logo_url: formText(formData, "alternate_logo_url"),
-    alt: formText(formData, "alt"),
-    url: formText(formData, "url"),
     sort_order: formNumber(formData, "sort_order"),
-    published: formBoolean(formData, "published"),
-    related_case_study_id: formText(formData, "related_case_study_id")
+    published: formBoolean(formData, "published")
   });
+  const label = logoLabelFromUrl(parsed.logo_url);
 
   const { error } = await supabase
     .from("client_logos")
     .update({
       ...parsed,
-      alternate_logo_url: optionalNull(parsed.alternate_logo_url ?? ""),
-      url: optionalNull(parsed.url ?? ""),
-      related_case_study_id: optionalNull(parsed.related_case_study_id ?? "")
+      client_name: label,
+      alt: label,
+      alternate_logo_url: null,
+      url: null,
+      related_case_study_id: null
     })
     .eq("id", id);
 

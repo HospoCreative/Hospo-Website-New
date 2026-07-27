@@ -1,4 +1,3 @@
-import { fallbackClientLogos } from "@/content/fallback/clientLogos";
 import type { BlogPost } from "@/types/blogPost";
 import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy";
 import type { ClientLogo } from "@/types/clientLogo";
@@ -211,7 +210,7 @@ export async function getBlogPostBySlug(slug: string) {
 
 export async function getPublishedClientLogos() {
   if (!isSupabaseConfigured()) {
-    return fallbackClientLogos;
+    return [];
   }
 
   const supabase = createSupabasePublicClient();
@@ -222,7 +221,7 @@ export async function getPublishedClientLogos() {
     .order("sort_order", { ascending: true });
 
   if (error || !data?.length) {
-    return fallbackClientLogos;
+    return [];
   }
 
   return (data as ClientLogoRow[]).map(mapClientLogo);
@@ -233,7 +232,7 @@ export async function getAdminContentCounts() {
     return {
       caseStudies: 0,
       blogPosts: 0,
-      clientLogos: fallbackClientLogos.length
+      clientLogos: 0
     };
   }
 
