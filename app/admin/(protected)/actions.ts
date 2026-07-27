@@ -122,7 +122,7 @@ async function mutateTable() {
   return createSupabaseServerClient();
 }
 
-function parseCaseStudyGallery(formData: FormData, fallbackAlt: string) {
+function parseCaseStudyGallery(formData: FormData, fallbackAlt: string, heroImage = "") {
   return formText(formData, "gallery_images")
     .split("\n")
     .map((line) => line.trim())
@@ -149,7 +149,9 @@ function parseCaseStudyGallery(formData: FormData, fallbackAlt: string) {
         published: true
       };
     })
-    .filter((item): item is ParsedCaseStudyMedia => item !== null);
+    .filter((item): item is ParsedCaseStudyMedia => item !== null)
+    .filter((item) => item.src !== heroImage)
+    .map((item, sort_order) => ({ ...item, sort_order }));
 }
 
 async function replaceCaseStudyMedia(
@@ -202,7 +204,8 @@ export async function createCaseStudyAction(formData: FormData) {
   });
   const galleryImages = parseCaseStudyGallery(
     formData,
-    parsed.hero_image_alt || parsed.title
+    parsed.hero_image_alt || parsed.title,
+    parsed.hero_image
   );
 
   const { data, error } = await supabase
@@ -260,7 +263,8 @@ export async function updateCaseStudyAction(formData: FormData) {
   });
   const galleryImages = parseCaseStudyGallery(
     formData,
-    parsed.hero_image_alt || parsed.title
+    parsed.hero_image_alt || parsed.title,
+    parsed.hero_image
   );
 
   const { error } = await supabase

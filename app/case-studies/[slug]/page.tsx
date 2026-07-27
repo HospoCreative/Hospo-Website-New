@@ -34,7 +34,6 @@ function CaseStudyMediaAsset({
       <video
         className="absolute inset-0 h-full w-full bg-black object-cover"
         autoPlay
-        controls
         muted
         loop
         playsInline
@@ -90,18 +89,18 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const uploadedMedia = (caseStudy.media ?? []).filter(
     (item) => item.mediaType === "image" || item.mediaType === "video" || isVideoMedia(item)
   );
-  const media = uploadedMedia.length
-    ? uploadedMedia
-    : caseStudy.heroImage
-      ? [
-          {
-            mediaType: "image" as const,
-            src: caseStudy.heroImage,
-            alt: caseStudy.heroImageAlt ?? caseStudy.title,
-            sortOrder: 0
-          }
-        ]
-      : [];
+  const explicitHero = caseStudy.heroImage
+    ? {
+        mediaType: isVideoMedia({ mediaType: "image", src: caseStudy.heroImage }) ? "video" as const : "image" as const,
+        src: caseStudy.heroImage,
+        alt: caseStudy.heroImageAlt ?? caseStudy.title,
+        sortOrder: -1
+      }
+    : null;
+  const heroMedia = explicitHero ?? uploadedMedia[0] ?? null;
+  const galleryMedia = heroMedia
+    ? uploadedMedia.filter((item) => item.src !== heroMedia.src)
+    : uploadedMedia;
 
   return (
     <>
@@ -157,11 +156,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 </div>
               </div>
 
-              {media[0] ? (
+              {heroMedia ? (
                 <figure className="overflow-hidden rounded-[8px] bg-white/8 shadow-editorial">
                   <div className="relative aspect-[4/5]">
                     <CaseStudyMediaAsset
-                      item={media[0]}
+                      item={heroMedia}
                       title={caseStudy.title}
                       sizes="(min-width: 1024px) 38vw, 100vw"
                       priority
@@ -172,7 +171,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             </div>
           </section>
 
-          {media.length ? (
+          {galleryMedia.length ? (
             <section className="px-5 py-16 sm:px-8 lg:py-24">
               <div className="mx-auto max-w-7xl">
                 <div className="mb-10 max-w-4xl">
@@ -182,7 +181,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   </h2>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {media.map((item, index) => (
+                  {galleryMedia.map((item, index) => (
                     <figure
                       key={`${item.src}-${index}`}
                       className="group overflow-hidden rounded-[8px] bg-ink shadow-soft"

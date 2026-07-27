@@ -32,8 +32,8 @@ export default async function CaseStudiesPage() {
             <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2">
               {caseStudies.map((caseStudy) => {
                 const media = caseStudy.media?.[0];
-                const mediaSrc = media?.src ?? caseStudy.heroImage;
-                const mediaAlt = media?.alt ?? caseStudy.heroImageAlt ?? caseStudy.title;
+                const mediaSrc = caseStudy.heroImage ?? media?.src;
+                const mediaAlt = caseStudy.heroImageAlt ?? media?.alt ?? caseStudy.title;
                 return (
                   <Link
                     key={caseStudy.id}
@@ -42,7 +42,7 @@ export default async function CaseStudiesPage() {
                   >
                     {mediaSrc ? (
                       <div className="relative aspect-[4/3] overflow-hidden bg-ink">
-                        {media?.mediaType === "video" || isVideo(mediaSrc) ? (
+                        {isVideo(mediaSrc) ? (
                           <video className="absolute inset-0 h-full w-full object-cover" autoPlay loop muted playsInline preload="metadata">
                             <source src={mediaSrc} />
                           </video>

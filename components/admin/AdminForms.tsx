@@ -2,6 +2,7 @@ import type { ContentStatus } from "@/types/caseStudy";
 import { RichTextEditor } from "./RichTextEditor";
 import { PendingSubmitButton } from "./PendingSubmitButton";
 import { LogoPoolPicker } from "./LogoPoolPicker";
+import { BlogCoverMediaFields, CaseStudyMediaFields } from "./MediaFormFields";
 
 type FormAction = (formData: FormData) => void | Promise<void>;
 
@@ -55,7 +56,6 @@ type ClientLogoFormValues = {
 const inputClass =
   "mt-2 w-full rounded-[8px] border border-ink/14 px-4 py-3 text-base text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/30";
 const labelClass = "block text-sm font-bold text-ink";
-const helpClass = "mt-2 block text-sm font-medium leading-6 text-ink/56";
 
 function formatCaseStudyGallery(initial?: CaseStudyFormValues) {
   return (initial?.case_study_media ?? [])
@@ -65,6 +65,7 @@ function formatCaseStudyGallery(initial?: CaseStudyFormValues) {
         item.src
     )
     .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .filter((item) => item.src !== initial?.hero_image)
     .map((item) =>
       [item.src, item.alt ?? "", item.caption ?? ""]
         .map((part) => String(part).trim())
@@ -146,30 +147,11 @@ export function CaseStudyForm({
           placeholder="Photography&#10;Social media direction"
         />
       </label>
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className={labelClass}>
-          Hero image URL
-          <input name="hero_image" defaultValue={initial?.hero_image ?? ""} className={inputClass} />
-        </label>
-        <label className={labelClass}>
-          Hero image alt
-          <input name="hero_image_alt" defaultValue={initial?.hero_image_alt ?? ""} className={inputClass} />
-        </label>
-      </div>
-      <label className={labelClass}>
-        Gallery media URLs
-        <textarea
-          name="gallery_images"
-          rows={7}
-          defaultValue={formatCaseStudyGallery(initial)}
-          className={inputClass}
-          placeholder={"https://.../image-1.jpg | Alt text | Optional caption\nhttps://.../video-1.mp4 | Alt text | Optional caption"}
-        />
-        <span className={helpClass}>
-          Add one image or video per line. Use: media URL | alt text | optional caption.
-          Delete a line and save to remove it from this case-study gallery.
-        </span>
-      </label>
+      <CaseStudyMediaFields
+        heroImage={initial?.hero_image ?? ""}
+        heroImageAlt={initial?.hero_image_alt ?? ""}
+        gallery={formatCaseStudyGallery(initial)}
+      />
       <div className="grid gap-5 md:grid-cols-3">
         <label className={labelClass}>
           Display order
@@ -219,16 +201,7 @@ export function BlogPostForm({
         required
         defaultValue={initial?.content}
       />
-      <div className="grid gap-5 md:grid-cols-2">
-        <label className={labelClass}>
-          Cover image URL
-          <input name="cover_image" defaultValue={initial?.cover_image ?? ""} className={inputClass} />
-        </label>
-        <label className={labelClass}>
-          Cover image alt
-          <input name="cover_image_alt" defaultValue={initial?.cover_image_alt ?? ""} className={inputClass} />
-        </label>
-      </div>
+      <BlogCoverMediaFields coverImage={initial?.cover_image ?? ""} coverImageAlt={initial?.cover_image_alt ?? ""} />
       <div className="grid gap-5 md:grid-cols-3">
         <label className={labelClass}>
           Author

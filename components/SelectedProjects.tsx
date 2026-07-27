@@ -12,6 +12,14 @@ function isVideo(media: ProjectMedia) {
 }
 
 function getMedia(caseStudy: CaseStudy): ProjectMedia | null {
+  if (caseStudy.heroImage) {
+    return {
+      src: caseStudy.heroImage,
+      alt: caseStudy.heroImageAlt || caseStudy.title,
+      mediaType: /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(caseStudy.heroImage) ? "video" : "image"
+    };
+  }
+
   const firstMedia = (caseStudy.media ?? []).find(
     (media) => media.mediaType === "image" || media.mediaType === "video"
   );
