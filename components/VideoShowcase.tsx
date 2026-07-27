@@ -3,28 +3,21 @@ import { siteContent } from "@/data/site";
 import { Play } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
+import { SectionHeading } from "./SectionHeading";
 
 export function VideoShowcase() {
   const { reels: reelsContent } = siteContent;
 
   return (
-    <section id="campaigns" className="bg-ink px-5 py-20 text-white sm:px-8 lg:py-28">
+    <section id="campaigns" className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <Reveal className="max-w-6xl">
-          <p className="section-eyebrow text-yellow">{reelsContent.eyebrow}</p>
-          <h2 className="mt-5 font-serif text-[clamp(2.65rem,10vw,5.6rem)] font-semibold leading-[0.96]">
-            {reelsContent.title}
-          </h2>
-          <p className="mt-7 max-w-4xl text-xl leading-9 text-white/76 sm:text-2xl sm:leading-10">
-            {reelsContent.body}
-          </p>
-        </Reveal>
+        <Reveal><SectionHeading tone="light" eyebrow={reelsContent.eyebrow} title={reelsContent.title} body={reelsContent.body} /></Reveal>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {reels.map((item, index) => (
             <Reveal key={item.title} delay={index * 0.07}>
-              <article className="group relative overflow-hidden rounded-[8px] border border-white/10 bg-white/[0.06] p-2 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-yellow/45">
-                <div className="relative aspect-[9/16] overflow-hidden rounded-[6px] bg-ink">
+              <article className="group relative overflow-hidden border border-white/10 bg-white/[0.06] p-2 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-yellow/45">
+                <div className="relative aspect-[4/5] overflow-hidden bg-ink">
                   {item.videoSrc ? (
                     <video
                       src={item.videoSrc}

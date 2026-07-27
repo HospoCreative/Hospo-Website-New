@@ -2,23 +2,19 @@ import { siteContent } from "@/data/site";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
+import { SectionHeading } from "./SectionHeading";
 
 export function About() {
   const { about } = siteContent;
 
   return (
-    <section id="about" className="bg-white px-5 py-20 text-ink sm:px-8 lg:py-28">
+    <section id="about" className="bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <Reveal className="max-w-6xl">
-          <p className="section-eyebrow text-ink/[0.58]">{about.eyebrow}</p>
-          <h2 className="mt-5 font-serif text-[clamp(2.55rem,9vw,5.2rem)] font-semibold leading-[0.98]">
-            {about.title}
-          </h2>
-        </Reveal>
+        <Reveal><SectionHeading eyebrow={about.eyebrow} title={about.title} /></Reveal>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(320px,0.62fr)] lg:items-center">
           <Reveal>
-            <div className="mt-7 max-w-4xl space-y-5 text-xl leading-9 text-ink/74 sm:text-2xl sm:leading-10">
+            <div className="max-w-3xl space-y-4 text-base leading-7 text-ink/74 sm:text-lg sm:leading-8">
               {about.body.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
@@ -27,13 +23,13 @@ export function About() {
             <div className="mt-9 grid gap-4 sm:grid-cols-2">
               {about.founders.map((founder) => (
                 <article key={founder.name} className="border-l border-yellow pl-5">
-                  <h3 className="font-serif text-3xl font-semibold leading-tight">
+                  <h3 className="font-serif text-2xl font-semibold leading-tight">
                     {founder.name}
                   </h3>
                   <p className="mt-2 text-[0.7rem] font-black uppercase tracking-[0.18em] text-ink/50">
                     {founder.role}
                   </p>
-                  <p className="mt-4 text-lg leading-8 text-ink/70">{founder.bio}</p>
+                  <p className="mt-3 text-sm leading-6 text-ink/70">{founder.bio}</p>
                 </article>
               ))}
             </div>

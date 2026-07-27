@@ -3,6 +3,7 @@
 import { ArrowUpRight, Mail } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { siteContent } from "@/data/site";
+import { SectionHeading } from "./SectionHeading";
 
 const serviceOptions = [
   "Marketing Strategy",
@@ -159,30 +160,25 @@ export function ServiceEnquiry() {
   return (
     <section
       id="contact"
-      className="border-t border-ink/10 bg-white px-5 py-20 text-ink sm:px-8 lg:py-28"
+      className="border-t border-ink/10 bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="max-w-6xl">
-          <p className="section-eyebrow text-ink/55">{cta.eyebrow}</p>
-          <h2 className="mt-5 font-serif text-[clamp(2.75rem,12vw,6rem)] font-semibold leading-[0.94]">
-            {cta.title}
-          </h2>
-          <p className="mt-7 max-w-3xl text-xl leading-9 text-ink/72 sm:text-2xl sm:leading-10">
-            {cta.body}
-          </p>
-          <a
-            href={`mailto:${contact.email}`}
-            className="mt-8 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
-          >
-            <Mail aria-hidden="true" size={17} />
-            {contact.email}
-          </a>
-        </div>
+        <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-start lg:gap-16">
+          <div>
+            <SectionHeading eyebrow={cta.eyebrow} title={cta.title} body={cta.body} />
+            <a
+              href={`mailto:${contact.email}`}
+              className="mt-7 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.16em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+            >
+              <Mail aria-hidden="true" size={17} />
+              {contact.email}
+            </a>
+          </div>
 
-        <form
+          <form
           onSubmit={handleSubmit}
           noValidate
-          className="mt-12 rounded-[8px] border border-ink/10 bg-white p-4 shadow-editorial sm:p-6 lg:p-8"
+          className="rounded-[8px] border border-ink/10 bg-[#f6f5f1] p-4 shadow-soft sm:p-6 lg:p-7"
         >
           <label className="sr-only" aria-hidden="true">
             Company website confirmation
@@ -373,7 +369,8 @@ export function ServiceEnquiry() {
               {submitError} You can also email {contact.email}.
             </p>
           )}
-        </form>
+          </form>
+        </div>
       </div>
     </section>
   );

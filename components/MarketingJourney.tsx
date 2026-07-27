@@ -1,116 +1,48 @@
-"use client";
-
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-  type MotionValue
-} from "framer-motion";
-import { useRef } from "react";
-import { siteContent } from "@/data/site";
-
-function JourneyStage({
-  stage,
-  index,
-  progress
-}: {
-  stage: (typeof siteContent.journey.stages)[number];
-  index: number;
-  progress: MotionValue<number>;
-}) {
-  const reduceMotion = useReducedMotion();
-  const start = 0.04 + index * 0.1;
-  const end = start + 0.16;
-  const opacity = useTransform(progress, [start - 0.05, start, end], [0.46, 1, 0.88]);
-  const y = useTransform(progress, [start - 0.05, end], [24, 0]);
-  const rotateX = useTransform(progress, [start - 0.04, end], ["6deg", "0deg"]);
-
-  return (
-    <motion.article
-      style={reduceMotion ? undefined : { opacity, y, rotateX }}
-      className="motion-depth relative border border-ink/12 bg-white p-5 text-ink shadow-soft sm:p-6"
-    >
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <span className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-yellow">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <span className="h-px flex-1 bg-ink/12" />
-      </div>
-      <h3 className="font-serif text-[clamp(2rem,8vw,3.4rem)] font-semibold leading-none">
-        {stage.title}
-      </h3>
-      <p className="mt-4 text-lg leading-8 text-ink/70">{stage.channels}</p>
-    </motion.article>
-  );
-}
+import { ArrowUpRight } from "lucide-react";
+import { SectionHeading } from "./SectionHeading";
 
 export function MarketingJourney() {
-  const { journey } = siteContent;
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-  const progress = useSpring(scrollYProgress, { stiffness: 76, damping: 25, mass: 0.42 });
-  const pathScale = useTransform(progress, [0.08, 0.62], [0, 1]);
-  const orbY = useTransform(progress, [0.08, 0.62], ["0%", "100%"]);
-  const orbX = useTransform(progress, [0.08, 0.25, 0.45, 0.62], [0, 22, -18, 0]);
+  const stages = [
+    { title: "Get discovered", channels: "Social media, photography, video and Google Search" },
+    { title: "Build interest", channels: "Campaigns, Reels, advertising and reviews" },
+    { title: "Earn trust", channels: "Website, menus, room pages, OTA listings and landing pages" },
+    { title: "Drive bookings", channels: "Reservation journeys, enquiry pages and direct booking links" },
+    { title: "Bring guests back", channels: "Email marketing, remarketing and guest communication" }
+  ];
 
   return (
-    <section
-      id="approach"
-      ref={sectionRef}
-      className="relative overflow-hidden border-t border-ink/10 bg-white px-5 py-20 text-ink sm:px-8 lg:min-h-[132vh] lg:py-0"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,44,93,0.04),rgba(255,255,255,0)_28%,rgba(0,44,93,0.035))]" />
+    <section id="approach" className="border-t border-ink/10 bg-[#f6f5f1] px-5 py-[var(--hc-section)] text-ink sm:px-8">
+      <div className="page-container grid gap-12 lg:grid-cols-[0.62fr_1.38fr] lg:items-center lg:gap-16">
+        <div>
+          <SectionHeading
+            eyebrow="An integrated approach"
+            title="Turn every guest touchpoint into one connected journey."
+            body="Guests rarely move directly from seeing your business to making a booking. They discover, compare, return and build trust across several channels. We help those touchpoints work together as one clear and consistent brand experience."
+          />
+          <p className="mt-8 border-l-2 border-yellow pl-4 text-sm font-semibold leading-7 text-ink/70">
+            We make every touchpoint feel like part of the same brand.
+          </p>
+          <a href="#contact" className="mt-7 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
+            Discuss your guest journey <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+        </div>
 
-      <div className="relative lg:sticky lg:top-0 lg:flex lg:min-h-screen lg:items-center lg:py-20">
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="max-w-6xl">
-            <p className="section-eyebrow text-ink/55">{journey.eyebrow}</p>
-            <h2 className="mt-5 max-w-3xl font-serif text-[clamp(2.7rem,12vw,6.2rem)] font-semibold leading-[0.94]">
-              {journey.title}
-            </h2>
-            <p className="mt-8 max-w-3xl text-xl leading-9 text-ink/72 sm:text-2xl sm:leading-10">
-              {journey.body}
-            </p>
-          </div>
-
-          <div className="relative mt-12 grid gap-4 lg:grid-cols-[1fr_4rem_1fr] lg:gap-6">
-            <div className="absolute left-4 top-0 hidden h-full w-px bg-ink/12 lg:left-1/2 lg:block">
-              <motion.div
-                style={{ scaleY: pathScale, transformOrigin: "top" }}
-                className="h-full w-px bg-ink"
-              />
-              <motion.div
-                style={{ y: orbY, x: orbX }}
-                className="absolute -left-[13px] top-0 grid size-7 place-items-center rounded-full border border-yellow/70 bg-white shadow-[0_0_35px_rgba(255,204,83,0.56)]"
-                aria-hidden="true"
-              >
-                <span className="size-2.5 rounded-full bg-yellow" />
-              </motion.div>
-            </div>
-
-            {journey.stages.map((stage, index) => {
-              const isLeft = index % 2 === 0;
-
-              return (
-                <div
-                  key={stage.title}
-                  className={`lg:col-span-3 lg:grid lg:grid-cols-[1fr_4rem_1fr] lg:items-center ${
-                    index > 0 ? "lg:-mt-6" : ""
-                  }`}
-                >
-                  <div className={isLeft ? "lg:col-start-1" : "lg:col-start-3"}>
-                    <JourneyStage stage={stage} index={index} progress={progress} />
-                  </div>
-                  <div className="hidden lg:col-start-2 lg:block" />
+        <div className="relative pl-7 sm:pl-9">
+          <div className="absolute bottom-5 left-2 top-5 w-px bg-ink/20 sm:left-3" aria-hidden="true" />
+          <div className="absolute left-2 top-5 h-[calc(100%-2.5rem)] w-px bg-yellow sm:left-3" aria-hidden="true" />
+          <ol className="space-y-3">
+            {stages.map((stage, index) => (
+              <li key={stage.title} className="group relative border border-ink/10 bg-white p-4 transition hover:-translate-y-0.5 hover:border-yellow/70 hover:shadow-soft sm:p-5">
+                <span className="absolute -left-[2.05rem] top-6 grid size-5 place-items-center rounded-full border-2 border-yellow bg-[#f6f5f1] text-[0.55rem] font-black text-ink sm:-left-[2.15rem]" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                  <h3 className="font-serif text-2xl font-semibold leading-tight sm:text-[1.75rem]">{stage.title}</h3>
+                  <p className="max-w-[30rem] text-sm leading-6 text-ink/65">{stage.channels}</p>
                 </div>
-              );
-            })}
-          </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

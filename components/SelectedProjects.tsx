@@ -4,6 +4,7 @@ import type { CaseStudy, CaseStudyMedia } from "@/types/caseStudy";
 import { siteContent } from "@/data/site";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
+import { SectionHeading } from "./SectionHeading";
 
 type ProjectMedia = Pick<CaseStudyMedia, "src" | "alt" | "mediaType">;
 
@@ -71,16 +72,10 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
   if (!caseStudies.length) return null;
 
   return (
-    <section id="work" className="scroll-mt-24 bg-white px-5 py-20 text-ink sm:px-8 lg:py-28">
+    <section id="work" className="scroll-mt-24 bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
         <Reveal className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div className="max-w-4xl">
-            <p className="section-eyebrow text-ink/55">{work.eyebrow}</p>
-            <h2 className="mt-5 font-serif text-[clamp(2.7rem,7vw,5rem)] font-semibold leading-[0.96]">
-              {work.title}
-            </h2>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-ink/72 sm:text-xl">{work.body}</p>
-          </div>
+          <SectionHeading eyebrow={work.eyebrow} title={work.title} body={work.body} />
           <Link
             href="/case-studies"
             className="inline-flex shrink-0 items-center gap-2 text-sm font-black uppercase tracking-[0.16em] text-ink transition hover:text-yellow"
@@ -89,14 +84,14 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
           </Link>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {caseStudies.slice(0, 6).map((caseStudy, index) => {
             const media = getMedia(caseStudy);
             return (
               <Reveal key={caseStudy.id} delay={index * 0.05}>
                 <Link
                   href={`/case-studies/${caseStudy.slug}`}
-                  className="group block overflow-hidden rounded-[8px] border border-ink/10 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                  className="group block overflow-hidden border border-ink/10 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                 >
                   {media ? (
                     <div className="relative aspect-[4/3] overflow-hidden bg-ink">
@@ -108,7 +103,7 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
                       {caseStudy.clientName}
                       {caseStudy.location ? ` / ${caseStudy.location}` : ""}
                     </p>
-                    <h3 className="mt-3 font-serif text-3xl font-semibold leading-[0.98]">{caseStudy.title}</h3>
+                    <h3 className="mt-3 font-serif text-[1.65rem] font-semibold leading-[1.02]">{caseStudy.title}</h3>
                     <p className="mt-4 line-clamp-3 text-base leading-7 text-ink/70">{caseStudy.summary}</p>
                     <span className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em]">
                       View case study <ArrowUpRight size={16} aria-hidden="true" />

@@ -75,8 +75,8 @@ export function HeroClient({
 
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,44,93,0.96),rgba(0,44,93,0.72)_48%,rgba(0,44,93,0.34)),linear-gradient(180deg,rgba(0,44,93,0.42),rgba(0,44,93,0.82))]" />
 
-      <div className="relative z-10 mx-auto max-w-[82.5rem] px-5 pb-16 pt-28 sm:px-8 sm:pt-32 lg:min-h-[calc(100svh-5rem)] lg:pb-20 lg:pt-28">
-        <div className="grid gap-10 lg:grid-cols-[46fr_54fr] lg:items-center lg:gap-14 xl:gap-16">
+      <div className="relative z-10 mx-auto max-w-[85rem] px-5 pb-12 pt-24 sm:px-8 sm:pt-28 lg:min-h-[min(100svh,52rem)] lg:pb-14 lg:pt-24">
+        <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-12">
           <motion.div
             style={{ y: copyY }}
             initial={{ opacity: 0 }}
@@ -93,20 +93,20 @@ export function HeroClient({
               {hero.eyebrow}
             </div>
 
-            <h1 className="font-serif text-[clamp(4rem,5.6vw,5.6rem)] font-semibold leading-[0.96] tracking-[-0.035em] text-white">
+            <h1 className="font-serif text-[clamp(3.5rem,6vw,5.5rem)] font-semibold leading-[0.96] tracking-[-0.035em] text-white">
               {renderHeroTitle(hero.title)}
             </h1>
 
-            <div className="mt-6 max-w-[35rem] space-y-4 text-lg leading-8 text-white/[0.82] sm:text-xl sm:leading-9">
+            <div className="mt-5 max-w-[34rem] space-y-4 text-[1.05rem] leading-8 text-white/[0.82]">
               {hero.body.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#work"
-                className="inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.17em] text-ink transition hover:-translate-y-0.5 hover:text-ink/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="button-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
                 {hero.primaryCta}
                 <ArrowUpRight aria-hidden="true" size={18} />
@@ -114,7 +114,7 @@ export function HeroClient({
 
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-3 rounded-full border border-white/[0.28] px-6 py-4 text-sm font-bold uppercase tracking-[0.17em] text-white transition hover:-translate-y-0.5 hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="button-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
                 {hero.secondaryCta}
                 <ArrowUpRight aria-hidden="true" size={18} />
@@ -133,7 +133,7 @@ export function HeroClient({
             }}
             className="w-full self-center"
           >
-            <div className="grid h-[28rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[34rem] lg:h-[clamp(30rem,36vw,36rem)] lg:gap-4">
+            <div className="grid h-[24rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[29rem] lg:h-[clamp(25rem,32vw,32rem)] lg:gap-4">
               {visibleGalleryImages.map((image, index) => (
                 <motion.div
                   key={image.src}

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { services } from "@/data/services";
 import { siteContent } from "@/data/site";
 import { SmartImage } from "./SmartImage";
+import { SectionHeading } from "./SectionHeading";
 
 export function ServicesExperience() {
   const { services: servicesContent } = siteContent;
@@ -18,19 +19,11 @@ export function ServicesExperience() {
       className="border-t border-white/10 bg-ink px-5 py-20 text-white sm:px-8 lg:py-28"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="max-w-6xl">
-          <p className="section-eyebrow text-yellow">{servicesContent.eyebrow}</p>
-          <h2 className="mt-5 font-serif text-[clamp(2.55rem,9vw,5.2rem)] font-semibold leading-[0.98]">
-            {servicesContent.title}
-          </h2>
-          <p className="mt-7 max-w-4xl text-xl leading-9 text-white/76 sm:text-2xl sm:leading-10">
-            {servicesContent.body}
-          </p>
-        </div>
+        <SectionHeading tone="light" eyebrow={servicesContent.eyebrow} title="Marketing support that makes hospitality brands easier to find, trust and book." body={servicesContent.body} />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(270px,0.36fr)_minmax(0,1fr)] lg:items-start">
-          <div className="rounded-[8px] border border-white/12 bg-white/[0.035] p-2 lg:sticky lg:top-28">
-            <div className="max-h-[42rem] space-y-2 overflow-y-auto pr-1 [scrollbar-color:rgba(255,255,255,0.34)_transparent] [scrollbar-width:thin] lg:max-h-[68vh]">
+          <div className="border-y border-white/12 py-1 lg:sticky lg:top-28">
+            <div className="space-y-0">
               {services.map((service, index) => {
                 const isActive = index === activeIndex;
 
@@ -41,18 +34,18 @@ export function ServicesExperience() {
                     onClick={() => setActiveIndex(index)}
                     onMouseEnter={() => setActiveIndex(index)}
                     onFocus={() => setActiveIndex(index)}
-                    className={`group flex min-h-16 w-full items-center justify-between gap-4 rounded-[7px] border px-4 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${
+                    className={`group flex min-h-14 w-full items-center justify-between gap-4 border-b border-white/10 px-2 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${
                       isActive
-                        ? "border-yellow bg-white/[0.1] text-white shadow-soft"
-                        : "border-white/10 text-white/62 hover:border-white/30 hover:bg-white/[0.04] hover:text-white"
+                        ? "text-white"
+                        : "text-white/55 hover:text-white"
                     }`}
                     aria-pressed={isActive}
                   >
-                    <span className="font-serif text-[clamp(1.2rem,4.5vw,1.7rem)] font-semibold leading-tight">
+                    <span className="font-serif text-[clamp(1.05rem,2vw,1.35rem)] font-semibold leading-tight">
                       {service.title}
                     </span>
                     <span
-                      className={`grid size-8 shrink-0 place-items-center rounded-full border text-[0.72rem] font-black transition ${
+                        className={`grid size-7 shrink-0 place-items-center rounded-full border text-[0.65rem] font-black transition ${
                         isActive
                           ? "border-yellow text-yellow"
                           : "border-white/16 text-white/36 group-hover:border-white/34"
@@ -74,7 +67,7 @@ export function ServicesExperience() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.34, ease: "easeOut" }}
-                className="grid overflow-hidden rounded-[8px] border border-white/14 bg-white/[0.06] shadow-soft backdrop-blur-sm lg:min-h-[68vh] lg:grid-cols-[minmax(0,0.88fr)_minmax(360px,0.82fr)]"
+                className="grid overflow-hidden border border-white/14 bg-white/[0.06] shadow-soft backdrop-blur-sm lg:min-h-[30rem] lg:grid-cols-[minmax(0,0.88fr)_minmax(300px,0.82fr)]"
               >
                 <div className="p-5 sm:p-7 lg:p-8">
                   <p className="text-[0.7rem] font-black uppercase tracking-[0.22em] text-yellow">
