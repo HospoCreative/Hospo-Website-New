@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { DeleteContentButton } from "@/components/admin/DeleteContentButton";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { deleteCaseStudyAction } from "../actions";
 
 type CaseStudyAdminRow = {
   id: string;
@@ -38,20 +40,18 @@ export default async function AdminCaseStudiesPage() {
       <div className="mt-8 overflow-hidden rounded-[8px] bg-white shadow-soft">
         {caseStudies.length ? (
           caseStudies.map((caseStudy) => (
-            <Link
+            <article
               key={caseStudy.id}
-              href={`/admin/case-studies/${caseStudy.id}`}
-              className="grid gap-2 border-b border-ink/10 p-5 transition hover:bg-ink/[0.03] md:grid-cols-[1fr_10rem_8rem]"
+              className="grid items-center gap-4 border-b border-ink/10 p-5 md:grid-cols-[1fr_10rem_8rem_auto]"
             >
-              <div>
+              <Link href={`/admin/case-studies/${caseStudy.id}`} className="min-w-0 transition hover:text-ink/65">
                 <p className="text-lg font-bold">{caseStudy.title}</p>
                 <p className="mt-1 text-sm text-ink/55">{caseStudy.client_name}</p>
-              </div>
-              <p className="text-sm text-ink/55">{caseStudy.slug}</p>
-              <p className="text-sm font-bold uppercase tracking-[0.12em] text-ink/55">
-                {caseStudy.status}
-              </p>
-            </Link>
+              </Link>
+              <p className="truncate text-sm text-ink/55">{caseStudy.slug}</p>
+              <p className="text-sm font-bold uppercase tracking-[0.12em] text-ink/55">{caseStudy.status}</p>
+              <DeleteContentButton action={deleteCaseStudyAction} id={caseStudy.id} label={`case study “${caseStudy.title}”`} compact />
+            </article>
           ))
         ) : (
           <p className="p-6 text-lg leading-8 text-ink/72">No case studies yet.</p>

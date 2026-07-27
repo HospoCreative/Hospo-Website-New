@@ -112,7 +112,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,0.58fr)] lg:items-end">
               <div>
                 <Link
-                  href="/#work"
+          href="/case-studies"
                   className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-white/68 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                 >
                   <ArrowLeft aria-hidden="true" size={16} />

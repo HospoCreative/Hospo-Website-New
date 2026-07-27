@@ -1,4 +1,5 @@
 import { ClientLogoForm } from "@/components/admin/AdminForms";
+import { DeleteContentButton } from "@/components/admin/DeleteContentButton";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   createClientLogoAction,
@@ -55,12 +56,12 @@ export default async function AdminClientsPage() {
                   <p className="text-sm font-bold uppercase tracking-[0.12em] text-ink/55">
                     {logo.published ? "Published" : "Hidden"}
                   </p>
-                  <form action={deleteClientLogoAction}>
-                    <input type="hidden" name="id" value={logo.id} />
-                    <button className="rounded-full border border-red-300 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-red-700 transition hover:bg-red-50">
-                      Delete
-                    </button>
-                  </form>
+                  <DeleteContentButton
+                    action={deleteClientLogoAction}
+                    id={logo.id}
+                    label={`client logo \"${logo.client_name}\"`}
+                    compact
+                  />
                 </div>
                 <details className="mt-4 rounded-[8px] border border-ink/10 bg-ink/[0.02] p-4">
                   <summary className="cursor-pointer text-sm font-black uppercase tracking-[0.16em] text-ink/70">

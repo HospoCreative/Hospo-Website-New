@@ -10,17 +10,14 @@ content/sections/site.ts
 
 The old path `data/site.ts` re-exports this file so older components keep working.
 
-## Fallback Content
+## Published Content
 
-Fallback content keeps the public site alive if Supabase is not configured:
+Case studies and blog articles are published from Supabase through the CMS.
+The homepage intentionally hides either preview section when there are no
+published records, rather than showing generic placeholder work.
 
-```text
-content/fallback/caseStudies.ts
-content/fallback/blogPosts.ts
-content/fallback/clientLogos.ts
-```
-
-The client-logo fallback intentionally starts empty. Do not add invented logos.
+Client logos may use the intentionally empty client-logo fallback. Do not add
+invented logos.
 
 ## Images
 

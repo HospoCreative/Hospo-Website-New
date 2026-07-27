@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { DeleteContentButton } from "@/components/admin/DeleteContentButton";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { deleteBlogPostAction } from "../actions";
 
 type BlogAdminRow = {
   id: string;
@@ -37,17 +39,17 @@ export default async function AdminBlogPage() {
       <div className="mt-8 overflow-hidden rounded-[8px] bg-white shadow-soft">
         {posts.length ? (
           posts.map((post) => (
-            <Link
+            <article
               key={post.id}
-              href={`/admin/blog/${post.id}`}
-              className="grid gap-2 border-b border-ink/10 p-5 transition hover:bg-ink/[0.03] md:grid-cols-[1fr_12rem_8rem]"
+              className="grid items-center gap-4 border-b border-ink/10 p-5 md:grid-cols-[1fr_12rem_8rem_auto]"
             >
-              <p className="text-lg font-bold">{post.title}</p>
-              <p className="text-sm text-ink/55">{post.slug}</p>
-              <p className="text-sm font-bold uppercase tracking-[0.12em] text-ink/55">
-                {post.status}
-              </p>
-            </Link>
+              <Link href={`/admin/blog/${post.id}`} className="min-w-0 transition hover:text-ink/65">
+                <p className="text-lg font-bold">{post.title}</p>
+              </Link>
+              <p className="truncate text-sm text-ink/55">{post.slug}</p>
+              <p className="text-sm font-bold uppercase tracking-[0.12em] text-ink/55">{post.status}</p>
+              <DeleteContentButton action={deleteBlogPostAction} id={post.id} label={`article “${post.title}”`} compact />
+            </article>
           ))
         ) : (
           <p className="p-6 text-lg leading-8 text-ink/72">No articles yet.</p>

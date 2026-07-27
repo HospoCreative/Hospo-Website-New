@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CopyField } from "@/components/admin/CopyField";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -176,6 +177,7 @@ export function MediaUploader({ buckets }: MediaUploaderProps) {
           disabled={uploading}
           className="rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:bg-ink/88 disabled:cursor-wait disabled:opacity-60"
         >
+          {uploading ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
           {uploading ? "Uploading..." : "Upload file"}
         </button>
       </form>

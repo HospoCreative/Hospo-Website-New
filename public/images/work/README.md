@@ -1,11 +1,7 @@
 # Selected Work
 
-Selected Work now uses structured project data and local portrait imagery.
+Selected work is managed through the Hospo CMS and displayed only when a case
+study is published. Upload the project media to Supabase Storage, then add its
+public URL in the matching case study inside `/admin/case-studies`.
 
-To update it, open:
-
-`data/portfolio.ts`
-
-Add the project client name, objective, services and local images there.
-
-Use genuine client names and verified details only.
+Use genuine client names, approved media and verified details only.

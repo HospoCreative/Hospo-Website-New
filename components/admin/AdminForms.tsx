@@ -1,5 +1,6 @@
 import type { ContentStatus } from "@/types/caseStudy";
 import { RichTextEditor } from "./RichTextEditor";
+import { PendingSubmitButton } from "./PendingSubmitButton";
 
 type FormAction = (formData: FormData) => void | Promise<void>;
 
@@ -187,9 +188,7 @@ export function CaseStudyForm({
           Featured
         </label>
       </div>
-      <button className="mt-2 rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:bg-ink/88">
-        {submitLabel}
-      </button>
+      <PendingSubmitButton label={submitLabel} pendingLabel="Saving case study..." className="mt-2" />
     </form>
   );
 }
@@ -248,9 +247,7 @@ export function BlogPostForm({
           <StatusSelect value={initial?.status} />
         </label>
       </div>
-      <button className="mt-2 rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:bg-ink/88">
-        {submitLabel}
-      </button>
+      <PendingSubmitButton label={submitLabel} pendingLabel="Saving article..." className="mt-2" />
     </form>
   );
 }
@@ -334,9 +331,7 @@ export function ClientLogoForm({
         />
         Published
       </label>
-      <button className="rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:bg-ink/88">
-        {submitLabel}
-      </button>
+      <PendingSubmitButton label={submitLabel} pendingLabel="Saving logo..." />
     </form>
   );
 }

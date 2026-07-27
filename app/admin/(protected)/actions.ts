@@ -226,6 +226,7 @@ export async function createCaseStudyAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/case-studies");
   revalidatePath("/case-studies/[slug]", "page");
   redirect(`/admin/case-studies/${data.id}`);
 }
@@ -282,6 +283,7 @@ export async function updateCaseStudyAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/case-studies");
   revalidatePath("/case-studies/[slug]", "page");
   revalidatePath(`/case-studies/${parsed.slug}`);
   redirect(`/admin/case-studies/${id}?message=saved`);
@@ -319,6 +321,7 @@ export async function createBlogPostAction(formData: FormData) {
   }
 
   revalidatePath("/blog");
+  revalidatePath("/");
   redirect(`/admin/blog/${data.id}`);
 }
 
@@ -354,8 +357,70 @@ export async function updateBlogPostAction(formData: FormData) {
   }
 
   revalidatePath("/blog");
+  revalidatePath("/");
   revalidatePath("/blog/[slug]", "page");
   redirect(`/admin/blog/${id}?message=saved`);
+}
+
+export async function deleteCaseStudyAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = z.string().uuid().parse(formText(formData, "id"));
+  const { data: caseStudy, error: findError } = await supabase
+    .from("case_studies")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (findError || !caseStudy) {
+    redirect("/admin/case-studies?error=Case%20study%20was%20not%20found");
+  }
+
+  const { error: mediaError } = await supabase
+    .from("case_study_media")
+    .delete()
+    .eq("case_study_id", id);
+
+  if (mediaError) {
+    redirect(`/admin/case-studies/${id}?error=${encodeURIComponent(mediaError.message)}`);
+  }
+
+  const { error } = await supabase.from("case_studies").delete().eq("id", id);
+
+  if (error) {
+    redirect(`/admin/case-studies/${id}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/case-studies");
+  revalidatePath("/case-studies/[slug]", "page");
+  revalidatePath(`/case-studies/${caseStudy.slug}`);
+  redirect("/admin/case-studies?message=deleted");
+}
+
+export async function deleteBlogPostAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = z.string().uuid().parse(formText(formData, "id"));
+  const { data: post, error: findError } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (findError || !post) {
+    redirect("/admin/blog?error=Article%20was%20not%20found");
+  }
+
+  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+
+  if (error) {
+    redirect(`/admin/blog/${id}?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/blog");
+  revalidatePath("/blog/[slug]", "page");
+  revalidatePath(`/blog/${post.slug}`);
+  redirect("/admin/blog?message=deleted");
 }
 
 export async function createClientLogoAction(formData: FormData) {
@@ -499,6 +564,7 @@ export async function deleteMediaAction(formData: FormData) {
         .update({ hero_image: null })
         .eq("hero_image", publicUrl);
       revalidatePath("/");
+      revalidatePath("/case-studies");
       revalidatePath("/case-studies/[slug]", "page");
     }
 
@@ -507,6 +573,7 @@ export async function deleteMediaAction(formData: FormData) {
         .from("blog_posts")
         .update({ cover_image: null })
         .eq("cover_image", publicUrl);
+      revalidatePath("/");
       revalidatePath("/blog");
       revalidatePath("/blog/[slug]", "page");
     }
@@ -573,6 +640,7 @@ export async function deleteMediaBatchAction(formData: FormData) {
     if (heroError) cleanupErrors.push(heroError.message);
 
     revalidatePath("/");
+    revalidatePath("/case-studies");
     revalidatePath("/case-studies/[slug]", "page");
   }
 
@@ -584,6 +652,7 @@ export async function deleteMediaBatchAction(formData: FormData) {
 
     if (blogError) cleanupErrors.push(blogError.message);
 
+    revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/blog/[slug]", "page");
   }

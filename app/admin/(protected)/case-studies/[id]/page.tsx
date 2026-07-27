@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { CaseStudyForm } from "@/components/admin/AdminForms";
+import { DeleteContentButton } from "@/components/admin/DeleteContentButton";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { updateCaseStudyAction } from "../../actions";
+import { deleteCaseStudyAction, updateCaseStudyAction } from "../../actions";
 
 type EditCaseStudyPageProps = {
   params: Promise<{ id: string }>;
@@ -35,6 +36,13 @@ export default async function EditCaseStudyPage({ params }: EditCaseStudyPagePro
           submitLabel="Save case study"
         />
       </div>
+      <section className="mt-8 border-t border-red-800/18 pt-8">
+        <p className="text-lg font-bold text-ink">Delete this case study</p>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
+          This removes the case study and its attached gallery records. Storage files remain in Media until you delete them there.
+        </p>
+        <DeleteContentButton action={deleteCaseStudyAction} id={data.id} label={`case study “${data.title}”`} />
+      </section>
     </div>
   );
 }

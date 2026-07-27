@@ -1,5 +1,3 @@
-import { fallbackBlogPosts } from "@/content/fallback/blogPosts";
-import { fallbackCaseStudies } from "@/content/fallback/caseStudies";
 import { fallbackClientLogos } from "@/content/fallback/clientLogos";
 import type { BlogPost } from "@/types/blogPost";
 import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy";
@@ -136,7 +134,7 @@ function mapClientLogo(row: ClientLogoRow): ClientLogo {
 
 export async function getPublishedCaseStudies() {
   if (!isSupabaseConfigured()) {
-    return fallbackCaseStudies;
+    return [];
   }
 
   const supabase = createSupabasePublicClient();
@@ -150,7 +148,7 @@ export async function getPublishedCaseStudies() {
     .order("published_at", { ascending: false });
 
   if (error || !data?.length) {
-    return fallbackCaseStudies;
+    return [];
   }
 
   const caseStudyRows = data as CaseStudyRow[];
@@ -189,7 +187,7 @@ export async function getCaseStudyBySlug(slug: string) {
 
 export async function getPublishedBlogPosts() {
   if (!isSupabaseConfigured()) {
-    return fallbackBlogPosts;
+    return [];
   }
 
   const supabase = createSupabasePublicClient();
@@ -200,7 +198,7 @@ export async function getPublishedBlogPosts() {
     .order("published_at", { ascending: false });
 
   if (error || !data?.length) {
-    return fallbackBlogPosts;
+    return [];
   }
 
   return (data as BlogPostRow[]).map(mapBlogPost);
@@ -233,8 +231,8 @@ export async function getPublishedClientLogos() {
 export async function getAdminContentCounts() {
   if (!isSupabaseConfigured()) {
     return {
-      caseStudies: fallbackCaseStudies.length,
-      blogPosts: fallbackBlogPosts.length,
+      caseStudies: 0,
+      blogPosts: 0,
       clientLogos: fallbackClientLogos.length
     };
   }

@@ -2,6 +2,7 @@ import { ArrowUpRight, Inbox, MapPin } from "lucide-react";
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { updateEnquiryAction } from "../actions";
+import { PendingSubmitButton } from "@/components/admin/PendingSubmitButton";
 
 type EnquiryStatus = "new" | "read" | "replied" | "archived";
 
@@ -240,9 +241,11 @@ export default async function AdminInboxPage({ searchParams }: InboxPageProps) {
                   />
                 </label>
               </div>
-              <button className="mt-5 rounded-full bg-ink px-5 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:bg-ink/85">
-                Save enquiry
-              </button>
+              <PendingSubmitButton
+                label="Save enquiry"
+                pendingLabel="Saving enquiry..."
+                className="mt-5 px-5 py-3 text-xs tracking-[0.15em]"
+              />
             </form>
           </article>
         ) : (
