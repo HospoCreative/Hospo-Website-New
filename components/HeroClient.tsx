@@ -133,7 +133,7 @@ export function HeroClient({
             }}
             className="w-full self-center"
           >
-            <div className="grid h-[24rem] grid-cols-2 grid-rows-2 gap-3 sm:h-[29rem] lg:h-[clamp(25rem,32vw,32rem)] lg:gap-4">
+            <div className="grid h-[25rem] grid-cols-[1.2fr_0.72fr_0.72fr] grid-rows-2 gap-3 sm:h-[31rem] lg:h-[clamp(29rem,37vw,38rem)] lg:gap-4">
               {visibleGalleryImages.map((image, index) => (
                 <motion.div
                   key={image.src}
@@ -152,14 +152,22 @@ export function HeroClient({
                     delay: 0.32 + index * 0.08,
                     ease: "easeOut"
                   }}
-                  className="group relative min-h-0 overflow-hidden rounded-[8px]"
+                  className={`group relative min-h-0 overflow-hidden rounded-[8px] ${
+                    index === 0
+                      ? "row-span-2"
+                      : index === 1
+                        ? "col-start-2 row-start-1"
+                        : index === 2
+                          ? "col-start-2 row-start-2"
+                          : "col-start-3 row-span-2 row-start-1"
+                  }`}
                 >
                   <SmartImage
                     src={image.src}
                     alt={image.alt}
                     fill
                     sizes="(min-width: 1024px) 27vw, (min-width: 640px) 45vw, 50vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.025]"
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.045]"
                     fallbackLabel="Hero gallery image"
                   />
                 </motion.div>
