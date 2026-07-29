@@ -12,7 +12,7 @@ export function Footer() {
         <div className="max-w-md">
           <Link
             href="/"
-            className="block transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+            className="inline-flex min-h-11 items-center transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
             aria-label="Hospo Creative home"
           >
             <Logo variant="white" className="h-10 w-auto" />
@@ -28,7 +28,7 @@ export function Footer() {
         <div className="flex flex-col gap-4 text-sm text-white/[0.62] lg:items-end">
           <a
             href={`mailto:${contact.email}`}
-            className="transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+            className="inline-flex min-h-11 items-center transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
           >
             {contact.email}
           </a>
@@ -39,7 +39,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                className="inline-flex min-h-11 items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
                 {link.label}
                 <ArrowUpRight aria-hidden="true" size={14} />
@@ -47,7 +47,7 @@ export function Footer() {
             ))}
             <Link
               href="/#home"
-              className="inline-flex items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+              className="inline-flex min-h-11 items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
             >
               Back to top
               <ArrowUpRight aria-hidden="true" size={14} />

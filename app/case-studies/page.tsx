@@ -18,30 +18,30 @@ export default async function CaseStudiesPage() {
     <>
       <Header />
       <main id="main" className="bg-white text-ink">
-        <section className="px-5 pb-16 pt-32 sm:px-8 lg:pb-24 lg:pt-40">
+        <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-20">
           <div className="mx-auto max-w-7xl">
-            <p className="section-eyebrow text-ink/55">Selected work</p>
-            <h1 className="mt-5 max-w-5xl font-serif text-[clamp(3.3rem,8vw,6.5rem)] font-semibold leading-[0.92]">
+            <p className="section-eyebrow text-yellow">Selected work</p>
+            <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
               Hospitality projects made to be seen, understood and chosen.
             </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">Strategy, content and digital execution designed around the way guests discover, compare and choose hospitality businesses.</p>
           </div>
         </section>
 
         {caseStudies.length ? (
           <section className="px-5 pb-20 sm:px-8 lg:pb-28">
-            <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-2">
-              {caseStudies.map((caseStudy) => {
+            <div className="mx-auto max-w-7xl space-y-14 lg:space-y-20">
+              {caseStudies.map((caseStudy, index) => {
                 const media = caseStudy.media?.[0];
                 const mediaSrc = caseStudy.heroImage ?? media?.src;
                 const mediaAlt = caseStudy.heroImageAlt ?? media?.alt ?? caseStudy.title;
                 return (
-                  <Link
+                  <article
                     key={caseStudy.id}
-                    href={`/case-studies/${caseStudy.slug}`}
-                    className="group overflow-hidden rounded-[8px] border border-ink/10 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                    className="group grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12"
                   >
                     {mediaSrc ? (
-                      <div className="relative aspect-[4/3] overflow-hidden bg-ink">
+                      <Link href={`/case-studies/${caseStudy.slug}`} className={`relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
                         {isVideo(mediaSrc) ? (
                           <video className="absolute inset-0 h-full w-full object-cover" autoPlay loop muted playsInline preload="metadata">
                             <source src={mediaSrc} />
@@ -49,17 +49,17 @@ export default async function CaseStudiesPage() {
                         ) : (
                           <SmartImage src={mediaSrc} alt={mediaAlt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" fallbackLabel={caseStudy.title} />
                         )}
-                      </div>
+                      </Link>
                     ) : null}
-                    <div className="p-7 sm:p-8">
+                    <div className={index % 2 ? "lg:order-1" : ""}>
                       <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-ink/52">
                         {caseStudy.clientName}{caseStudy.location ? ` / ${caseStudy.location}` : ""}
                       </p>
-                      <h2 className="mt-3 font-serif text-4xl font-semibold leading-[0.96]">{caseStudy.title}</h2>
+                      <h2 className="mt-3 font-serif text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-[1]">{caseStudy.title}</h2>
                       <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/70">{caseStudy.summary}</p>
-                      <span className="mt-7 inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.16em]">View case study <ArrowUpRight size={17} aria-hidden="true" /></span>
+                      <Link href={`/case-studies/${caseStudy.slug}`} className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-black uppercase tracking-[0.16em] transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">View case study <ArrowUpRight size={17} aria-hidden="true" /></Link>
                     </div>
-                  </Link>
+                  </article>
                 );
               })}
             </div>

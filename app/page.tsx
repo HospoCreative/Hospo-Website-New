@@ -7,11 +7,15 @@ import { BlogPreviewSection } from "@/components/BlogPreviewSection";
 import { MarketingJourney } from "@/components/MarketingJourney";
 import { SelectedProjects } from "@/components/SelectedProjects";
 import { ServiceEnquiry } from "@/components/ServiceEnquiry";
-import { ServicesExperience } from "@/components/ServicesExperience";
-import { VideoShowcase } from "@/components/VideoShowcase";
+import { WhoWeHelp } from "@/components/WhoWeHelp";
+import { DigitalFirstImpression } from "@/components/DigitalFirstImpression";
+import { DigitalRefresh } from "@/components/DigitalRefresh";
+import { FourWaysWeHelp } from "@/components/FourWaysWeHelp";
+import { FaqSection } from "@/components/FaqSection";
+import { FinalCta } from "@/components/FinalCta";
 import {
   getPublishedBlogPosts,
-  getPublishedCaseStudies,
+  getFeaturedCaseStudies,
   getPublishedClientLogos
 } from "@/lib/supabase/queries";
 
@@ -19,7 +23,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [caseStudies, blogPosts, clientLogos] = await Promise.all([
-    getPublishedCaseStudies(),
+    getFeaturedCaseStudies(),
     getPublishedBlogPosts(),
     getPublishedClientLogos()
   ]);
@@ -29,14 +33,18 @@ export default async function Home() {
       <Header />
       <main id="main">
         <Hero />
-        <ClientLogosSection logos={clientLogos} />
+        <WhoWeHelp />
+        <DigitalFirstImpression />
+        <DigitalRefresh />
         <SelectedProjects caseStudies={caseStudies} />
-        <ServicesExperience />
+        <FourWaysWeHelp />
         <MarketingJourney />
-        <VideoShowcase />
-        <About />
-        <BlogPreviewSection posts={blogPosts} />
         <ServiceEnquiry />
+        <About />
+        <ClientLogosSection logos={clientLogos} />
+        <BlogPreviewSection posts={blogPosts} />
+        <FaqSection />
+        <FinalCta />
       </main>
       <Footer />
     </>

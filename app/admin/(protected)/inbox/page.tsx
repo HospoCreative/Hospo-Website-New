@@ -29,7 +29,7 @@ const statusStyles: Record<EnquiryStatus, string> = {
   new: "bg-yellow text-ink",
   read: "bg-sky-100 text-sky-900",
   replied: "bg-emerald-100 text-emerald-900",
-  archived: "bg-slate-200 text-slate-700"
+  archived: "bg-ink/10 text-ink"
 };
 
 function formatDate(value: string) {
@@ -116,7 +116,7 @@ export default async function AdminInboxPage({ searchParams }: InboxPageProps) {
               <Link
                 key={enquiry.id}
                 href={`/admin/inbox?id=${enquiry.id}${activeFilter !== "all" ? `&status=${activeFilter}` : ""}`}
-                className={`block border-b border-ink/10 p-5 transition hover:bg-slate-50 ${
+                className={`block border-b border-ink/10 p-5 transition hover:bg-yellow/10 ${
                   selected?.id === enquiry.id ? "bg-yellow/10" : ""
                 }`}
               >
@@ -219,7 +219,7 @@ export default async function AdminInboxPage({ searchParams }: InboxPageProps) {
               </div>
             </div>
 
-            <form action={updateEnquiryAction} className="mt-8 rounded-[8px] bg-slate-50 p-5">
+            <form action={updateEnquiryAction} className="mt-8 rounded-[8px] bg-yellow/10 p-5">
               <input type="hidden" name="id" value={selected.id} />
               <div className="grid gap-5 sm:grid-cols-[12rem_minmax(0,1fr)]">
                 <label className="text-sm font-bold">

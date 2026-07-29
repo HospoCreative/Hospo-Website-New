@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import type { ClientLogo } from "@/types/clientLogo";
 import { Reveal } from "@/components/Reveal";
 
@@ -26,17 +27,13 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
       <Reveal className="mx-auto max-w-7xl">
         <div className="max-w-5xl">
           <span className="mb-5 block h-1 w-12 bg-yellow" aria-hidden="true" />
+          <p className="section-eyebrow text-yellow">Clients &amp; partners</p>
           <h2
             id="client-logos-title"
             className="max-w-4xl font-serif text-[clamp(1.8rem,3.2vw,2.8rem)] font-semibold leading-[1.05]"
           >
-            <span className="text-yellow">Brands</span> we&apos;ve worked with:
+            Hospitality brands we have supported.
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-white/68">
-            We&apos;ve had a blast working with some incredible brands - from fine
-            dining restaurants to the inviting charm of hotels, and the spirited
-            world of beverage and food brands.
-          </p>
         </div>
 
         <div className="mt-10 grid grid-cols-2 items-center gap-x-10 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-14 lg:gap-y-10">
@@ -49,9 +46,12 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
               transition={{ duration: 0.42, delay: index * 0.06, ease: "easeOut" }}
               className="flex h-24 items-center justify-center sm:h-28 lg:h-32"
             >
-              <img
+              <Image
                 src={logo.logoUrl}
-                alt=""
+                alt={logo.alt || `${logo.clientName} logo`}
+                width={240}
+                height={120}
+                sizes="(min-width: 1024px) 200px, (min-width: 640px) 28vw, 42vw"
                 className="h-auto max-h-[78%] w-auto max-w-full object-contain opacity-90 transition duration-500 hover:scale-105 hover:opacity-100"
               />
             </motion.div>

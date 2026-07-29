@@ -1,377 +1,95 @@
 "use client";
 
-import { ArrowUpRight, Mail } from "lucide-react";
-import { type FormEvent, useState } from "react";
-import { siteContent } from "@/data/site";
+import { ArrowUpRight, Check } from "lucide-react";
+import { type FormEvent, type ReactNode, useState } from "react";
+import { homepageContent } from "@/data/homepage";
 import { SectionHeading } from "./SectionHeading";
 
-const serviceOptions = [
-  "Marketing Strategy",
-  "Social Media Management",
-  "Content Creation",
-  "Photography",
-  "Videography",
-  "Campaign Development",
-  "Google Ads",
-  "Meta Ads",
-  "Website Creation",
-  "Website Optimisation",
-  "SEO",
-  "Google Business Profile",
-  "OTA Optimisation",
-  "Email Marketing",
-  "Other"
-] as const;
-
-const businessTypes = [
-  "Hotel",
-  "Restaurant",
-  "Bar",
-  "Cafe",
-  "Hospitality group",
-  "Food and beverage brand",
-  "Accommodation business",
-  "Other"
-] as const;
-
-const timeframes = ["This month", "1-3 months", "3-6 months", "Planning ahead"] as const;
-
-type EnquiryForm = {
-  name: string;
-  businessName: string;
-  email: string;
-  website: string;
-  businessType: string;
-  location: string;
-  services: string[];
-  challenge: string;
-  timeframe: string;
-  message: string;
-  privacy: boolean;
-};
-
-const initialForm: EnquiryForm = {
-  name: "",
-  businessName: "",
-  email: "",
-  website: "",
-  businessType: "",
-  location: "",
-  services: [],
-  challenge: "",
-  timeframe: "",
-  message: "",
-  privacy: false
-};
+type ReviewForm = { name: string; businessName: string; email: string; website: string; challenge: string; privacy: boolean };
+const initialForm: ReviewForm = { name: "", businessName: "", email: "", website: "", challenge: "", privacy: false };
 
 export function ServiceEnquiry() {
-  const { contact, cta } = siteContent;
-  const [form, setForm] = useState<EnquiryForm>(initialForm);
+  const content = homepageContent.review;
+  const [form, setForm] = useState(initialForm);
+  const [companyWebsite, setCompanyWebsite] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
-  const [companyWebsite, setCompanyWebsite] = useState("");
 
-  const updateField = (field: keyof EnquiryForm, value: string | boolean | string[]) => {
+  function updateField<K extends keyof ReviewForm>(field: K, value: ReviewForm[K]) {
     setForm((current) => ({ ...current, [field]: value }));
-    setErrors((current) => {
-      const next = { ...current };
-      delete next[field];
-      return next;
-    });
-  };
+    setErrors((current) => { const next = { ...current }; delete next[field]; return next; });
+  }
 
-  const toggleService = (service: string) => {
-    const nextServices = form.services.includes(service)
-      ? form.services.filter((item) => item !== service)
-      : [...form.services, service];
+  function validate() {
+    const next: Record<string, string> = {};
+    if (form.name.trim().length < 2) next.name = "Please add your name.";
+    if (form.businessName.trim().length < 2) next.businessName = "Please add your business name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = "Please add a valid email address.";
+    if (form.challenge.trim().length < 10) next.challenge = "Please tell us a little more about the main challenge.";
+    if (!form.privacy) next.privacy = "Please confirm that we may reply to your request.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
 
-    updateField("services", nextServices);
-  };
-
-  const validate = () => {
-    const nextErrors: Record<string, string> = {};
-
-    if (!form.name.trim()) {
-      nextErrors.name = "Please add your name.";
-    }
-
-    if (!form.businessName.trim()) {
-      nextErrors.businessName = "Please add your business name.";
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      nextErrors.email = "Please add a valid email address.";
-    }
-
-    if (form.services.length === 0) {
-      nextErrors.services = "Choose at least one service.";
-    }
-
-    if (!form.challenge.trim()) {
-      nextErrors.challenge = "Please describe your main marketing challenge.";
-    }
-
-    if (!form.privacy) {
-      nextErrors.privacy = "Please confirm you are happy for us to reply.";
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    if (!validate()) {
-      return;
-    }
-
-    setStatus("loading");
-    setSubmitError("");
-
+    if (!validate()) return;
+    setStatus("loading"); setSubmitError("");
     try {
       const response = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, companyWebsite })
+        body: JSON.stringify({
+          ...form,
+          companyWebsite,
+          businessType: "",
+          location: "",
+          services: ["Complimentary Digital Presence Review"],
+          timeframe: "",
+          message: "Digital Presence Review request"
+        })
       });
       const result = (await response.json()) as { error?: string };
-
-      if (!response.ok) {
-        throw new Error(result.error || "Unable to send your enquiry.");
-      }
-
-      setStatus("success");
-      setForm(initialForm);
-      setCompanyWebsite("");
+      if (!response.ok) throw new Error(result.error || "Unable to send your request.");
+      setStatus("success"); setForm(initialForm); setCompanyWebsite("");
     } catch (error) {
-      setStatus("error");
-      setSubmitError(
-        error instanceof Error ? error.message : "Unable to send your enquiry."
-      );
+      setStatus("error"); setSubmitError(error instanceof Error ? error.message : "Unable to send your request.");
     }
-  };
+  }
 
-  const inputClass =
-    "mt-2 w-full rounded-[8px] border border-ink/14 bg-white px-4 py-3 text-base text-ink outline-none transition placeholder:text-ink/36 focus:border-yellow focus:ring-2 focus:ring-yellow/35";
+  const inputClass = "mt-2 min-h-12 w-full rounded-[8px] border border-ink/18 bg-white px-4 py-3 text-base text-ink outline-none transition placeholder:text-ink/38 focus:border-yellow focus:ring-2 focus:ring-yellow/40";
   const labelClass = "text-sm font-bold text-ink";
 
   return (
-    <section
-      id="contact"
-      className="border-t border-ink/10 bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8"
-    >
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-start lg:gap-16">
-          <div>
-            <SectionHeading eyebrow={cta.eyebrow} title={cta.title} body={cta.body} />
-            <a
-              href={`mailto:${contact.email}`}
-              className="mt-7 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.16em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
-            >
-              <Mail aria-hidden="true" size={17} />
-              {contact.email}
-            </a>
-          </div>
-
-          <form
-          onSubmit={handleSubmit}
-          noValidate
-          className="rounded-[8px] border border-ink/10 bg-white p-4 shadow-soft sm:p-6 lg:p-7"
-        >
-          <label className="sr-only" aria-hidden="true">
-            Company website confirmation
-            <input
-              tabIndex={-1}
-              autoComplete="off"
-              value={companyWebsite}
-              onChange={(event) => setCompanyWebsite(event.target.value)}
-            />
-          </label>
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label className={labelClass}>
-              Name
-              <input
-                className={inputClass}
-                value={form.name}
-                onChange={(event) => updateField("name", event.target.value)}
-                aria-invalid={Boolean(errors.name)}
-              />
-              {errors.name && <span className="mt-2 block text-sm text-yellow">{errors.name}</span>}
-            </label>
-
-            <label className={labelClass}>
-              Business name
-              <input
-                className={inputClass}
-                value={form.businessName}
-                onChange={(event) => updateField("businessName", event.target.value)}
-                aria-invalid={Boolean(errors.businessName)}
-              />
-              {errors.businessName && (
-                <span className="mt-2 block text-sm text-yellow">{errors.businessName}</span>
-              )}
-            </label>
-
-            <label className={labelClass}>
-              Email
-              <input
-                type="email"
-                className={inputClass}
-                value={form.email}
-                onChange={(event) => updateField("email", event.target.value)}
-                aria-invalid={Boolean(errors.email)}
-              />
-              {errors.email && <span className="mt-2 block text-sm text-yellow">{errors.email}</span>}
-            </label>
-
-            <label className={labelClass}>
-              Website
-              <input
-                type="url"
-                className={inputClass}
-                value={form.website}
-                onChange={(event) => updateField("website", event.target.value)}
-                placeholder="https://"
-              />
-            </label>
-
-            <label className={labelClass}>
-              Business type
-              <select
-                className={inputClass}
-                value={form.businessType}
-                onChange={(event) => updateField("businessType", event.target.value)}
-              >
-                <option value="">Select a type</option>
-                {businessTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className={labelClass}>
-              Business location
-              <input
-                className={inputClass}
-                value={form.location}
-                onChange={(event) => updateField("location", event.target.value)}
-              />
-            </label>
-          </div>
-
-          <fieldset className="mt-6">
-            <legend className={labelClass}>Services required</legend>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {serviceOptions.map((service) => {
-                const checked = form.services.includes(service);
-
-                return (
-                  <label
-                    key={service}
-                    className={`cursor-pointer rounded-full border px-3 py-2 text-[0.68rem] font-black uppercase tracking-[0.13em] transition ${
-                      checked
-                        ? "border-ink bg-ink text-white"
-                        : "border-ink/14 text-ink/68 hover:border-yellow/70 hover:text-ink"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggleService(service)}
-                      className="sr-only"
-                    />
-                    {service}
-                  </label>
-                );
-              })}
-            </div>
-            {errors.services && (
-              <span className="mt-2 block text-sm text-ink/70">{errors.services}</span>
-            )}
-          </fieldset>
-
-          <div className="mt-6 grid gap-5 sm:grid-cols-2">
-            <label className={`${labelClass} sm:col-span-2`}>
-              Main marketing challenge
-              <textarea
-                className={`${inputClass} min-h-32 resize-y`}
-                value={form.challenge}
-                onChange={(event) => updateField("challenge", event.target.value)}
-                aria-invalid={Boolean(errors.challenge)}
-              />
-              {errors.challenge && (
-                <span className="mt-2 block text-sm text-yellow">{errors.challenge}</span>
-              )}
-            </label>
-
-            <label className={labelClass}>
-              Preferred timeframe
-              <select
-                className={inputClass}
-                value={form.timeframe}
-                onChange={(event) => updateField("timeframe", event.target.value)}
-              >
-                <option value="">Select a timeframe</option>
-                {timeframes.map((timeframe) => (
-                  <option key={timeframe} value={timeframe}>
-                    {timeframe}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className={labelClass}>
-              Message
-              <textarea
-                className={`${inputClass} min-h-24 resize-y`}
-                value={form.message}
-                onChange={(event) => updateField("message", event.target.value)}
-              />
-            </label>
-          </div>
-
-          <label className="mt-6 flex gap-3 text-sm leading-6 text-ink/72">
-            <input
-              type="checkbox"
-              checked={form.privacy}
-              onChange={(event) => updateField("privacy", event.target.checked)}
-              className="mt-1 size-4 accent-yellow"
-            />
-            <span>
-              I am happy for Hospo Creative to use these details to reply to this
-              enquiry.
-              {errors.privacy && (
-                <span className="mt-1 block text-ink/70">{errors.privacy}</span>
-              )}
-            </span>
-          </label>
-
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-white transition hover:-translate-y-0.5 hover:bg-ink/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:opacity-70 sm:w-auto"
-          >
-            {status === "loading" ? "Sending enquiry" : cta.primaryCta}
-            <ArrowUpRight aria-hidden="true" size={18} />
-          </button>
-
-          {status === "success" && (
-            <p className="mt-4 text-sm font-bold leading-6 text-ink/70" role="status">
-              Thanks. Your enquiry has been sent to Hospo Creative and we will reply by email.
-            </p>
-          )}
-          {status === "error" && (
-            <p className="mt-4 text-sm font-bold leading-6 text-red-700" role="alert">
-              {submitError} You can also email {contact.email}.
-            </p>
-          )}
-          </form>
+    <section id="digital-review" className="bg-yellow px-5 py-[var(--hc-section)] text-ink sm:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
+        <div>
+          <SectionHeading eyebrow={content.eyebrow} title={content.title} body={content.body} />
+          <ul className="mt-7 grid gap-2 sm:grid-cols-2">
+            {content.areas.map((area) => <li key={area} className="flex items-center gap-2 text-sm font-semibold"><Check size={15} aria-hidden="true" />{area}</li>)}
+          </ul>
+          <p className="mt-7 border-l border-ink/35 pl-4 text-sm leading-6 text-ink/72">{content.clarification}</p>
         </div>
+        <form onSubmit={handleSubmit} noValidate className="rounded-[8px] bg-white p-5 shadow-editorial sm:p-7">
+          <label className="sr-only" aria-hidden="true">Company website confirmation<input tabIndex={-1} autoComplete="off" value={companyWebsite} onChange={(event) => setCompanyWebsite(event.target.value)} /></label>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Name" error={errors.name}><input autoComplete="name" className={inputClass} value={form.name} onChange={(e) => updateField("name", e.target.value)} aria-invalid={Boolean(errors.name)} /></Field>
+            <Field label="Business name" error={errors.businessName}><input autoComplete="organization" className={inputClass} value={form.businessName} onChange={(e) => updateField("businessName", e.target.value)} aria-invalid={Boolean(errors.businessName)} /></Field>
+            <Field label="Email" error={errors.email}><input type="email" autoComplete="email" className={inputClass} value={form.email} onChange={(e) => updateField("email", e.target.value)} aria-invalid={Boolean(errors.email)} /></Field>
+            <Field label="Website or booking link"><input type="url" inputMode="url" className={inputClass} value={form.website} onChange={(e) => updateField("website", e.target.value)} placeholder="https://" /></Field>
+            <label className={`${labelClass} sm:col-span-2`}>Main challenge<textarea className={`${inputClass} min-h-32 resize-y`} value={form.challenge} onChange={(e) => updateField("challenge", e.target.value)} aria-invalid={Boolean(errors.challenge)} />{errors.challenge ? <span className="mt-2 block text-sm text-ink" role="alert">{errors.challenge}</span> : null}</label>
+          </div>
+          <label className="mt-5 flex min-h-11 items-start gap-3 text-sm leading-6 text-ink/72"><input type="checkbox" checked={form.privacy} onChange={(e) => updateField("privacy", e.target.checked)} className="mt-1 size-4 accent-ink" /><span>I am happy for Hospo Creative to use these details to reply to this request.{errors.privacy ? <span className="mt-1 block font-semibold text-ink" role="alert">{errors.privacy}</span> : null}</span></label>
+          <button type="submit" disabled={status === "loading"} className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 disabled:opacity-60">{status === "loading" ? "Sending request" : "Request Your Digital Review"}<ArrowUpRight size={17} aria-hidden="true" /></button>
+          {status === "success" ? <p className="mt-4 text-sm font-bold leading-6 text-ink" role="status">Thank you. Your review request has been sent and we will reply by email.</p> : null}
+          {status === "error" ? <p className="mt-4 text-sm font-bold leading-6 text-ink" role="alert">{submitError} You can also email info@hospoagency.com.</p> : null}
+        </form>
       </div>
     </section>
   );
+}
+
+function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
+  return <label className="text-sm font-bold text-ink">{label}{children}{error ? <span className="mt-2 block text-sm text-ink" role="alert">{error}</span> : null}</label>;
 }

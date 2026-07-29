@@ -105,7 +105,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   return (
     <>
       <Header />
-      <main className="bg-white pt-24 text-ink">
+      <main className="bg-white text-ink">
         <article>
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,0.58fr)] lg:items-end">
@@ -118,7 +118,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   Selected work
                 </Link>
                 <p className="section-eyebrow mt-8 text-yellow">Case Study</p>
-                <h1 className="mt-5 max-w-5xl font-serif text-[clamp(3.2rem,10vw,6.9rem)] font-semibold leading-[0.92]">
+                <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
                   {caseStudy.title}
                 </h1>
                 <p className="mt-7 max-w-3xl text-xl leading-9 text-white/76 sm:text-2xl sm:leading-10">
@@ -176,7 +176,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <div className="mx-auto max-w-7xl">
                 <div className="mb-10 max-w-4xl">
                   <p className="section-eyebrow text-ink/55">Gallery</p>
-                  <h2 className="mt-4 font-serif text-[clamp(2.6rem,8vw,5.2rem)] font-semibold leading-[0.96]">
+                  <h2 className="mt-4 font-serif text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-[1]">
                     Visual story.
                   </h2>
                 </div>
@@ -202,21 +202,21 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto max-w-7xl">
-              <div className="grid gap-5 lg:grid-cols-3">
+              <div className="grid border-y border-white/16 lg:grid-cols-3">
                 {caseStudy.challenge ? (
-                  <section className="rounded-[8px] border border-white/12 bg-white/[0.04] p-6">
+                  <section className="border-b border-white/16 p-6 lg:border-b-0 lg:border-r">
                     <p className="section-eyebrow text-yellow">Challenge</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.challenge}</p>
                   </section>
                 ) : null}
                 {caseStudy.solution ? (
-                  <section className="rounded-[8px] border border-white/12 bg-white/[0.04] p-6">
+                  <section className="border-b border-white/16 p-6 lg:border-b-0 lg:border-r">
                     <p className="section-eyebrow text-yellow">Solution</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.solution}</p>
                   </section>
                 ) : null}
                 {caseStudy.result ? (
-                  <section className="rounded-[8px] border border-white/12 bg-white/[0.04] p-6">
+                  <section className="p-6">
                     <p className="section-eyebrow text-yellow">Result</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.result}</p>
                   </section>
@@ -224,7 +224,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               </div>
 
               <Link
-                href="/#contact"
+                href="/#digital-review"
                 className="mt-10 inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-ink transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
                 Discuss a similar project

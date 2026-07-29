@@ -11,20 +11,20 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <p className="section-eyebrow text-ink/55">Overview</p>
-      <h1 className="mt-3 font-serif text-5xl font-semibold leading-none">
+      <h1 className="mt-3 max-w-3xl font-serif text-[clamp(2.5rem,5vw,4rem)] font-semibold leading-none">
         Website content dashboard.
       </h1>
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-[8px] bg-white p-6 shadow-soft">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-ink/45">
+          <div key={stat.label} className="border-t-2 border-yellow bg-ink p-6 text-white shadow-soft">
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-white/55">
               {stat.label}
             </p>
             <p className="mt-4 font-serif text-5xl font-semibold">{stat.value}</p>
           </div>
         ))}
       </div>
-      <div className="mt-8 rounded-[8px] bg-white p-6 shadow-soft">
+      <div className="mt-8 border border-ink/12 bg-white p-6 shadow-soft">
         <h2 className="font-serif text-3xl font-semibold">CMS priorities</h2>
         <ul className="mt-4 list-disc space-y-2 pl-5 text-lg leading-8 text-ink/72">
           <li>Publish case studies only when the text and image set are final.</li>

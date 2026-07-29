@@ -43,7 +43,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <>
       <Header />
-      <main className="bg-white pt-16 text-ink">
+      <main className="bg-white text-ink">
         <article>
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto max-w-5xl">
@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 Back to insights
               </Link>
               <p className="section-eyebrow mt-8 text-yellow">Insight</p>
-              <h1 className="mt-5 font-serif text-[clamp(3rem,10vw,6rem)] font-semibold leading-[0.94]">
+              <h1 className="mt-5 font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
                 {post.title}
               </h1>
               <p className="mt-7 text-xl leading-9 text-white/74 sm:text-2xl sm:leading-10">

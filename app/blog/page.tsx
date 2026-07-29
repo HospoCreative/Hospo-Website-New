@@ -18,12 +18,12 @@ export default async function BlogPage() {
   return (
     <>
       <Header />
-      <main className="bg-white pt-16 text-ink">
+      <main className="bg-white text-ink">
         <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
             <p className="section-eyebrow text-yellow">Insights</p>
-            <h1 className="mt-5 max-w-5xl font-serif text-[clamp(3.2rem,10vw,6.6rem)] font-semibold leading-[0.93]">
-              Hospitality marketing notes.
+            <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
+              Practical thinking for stronger hospitality marketing.
             </h1>
             <p className="mt-7 max-w-3xl text-xl leading-9 text-white/72 sm:text-2xl sm:leading-10">
               Practical articles on visibility, content, campaigns, websites and guest journey improvements.
@@ -46,7 +46,7 @@ export default async function BlogPage() {
                         alt={featuredPost.coverImageAlt ?? featuredPost.title}
                         fill
                         sizes="(min-width: 1024px) 56vw, 100vw"
-                        className="object-contain transition duration-700 group-hover:scale-[1.02]"
+                              className="object-cover object-center transition duration-700 group-hover:scale-[1.02]"
                         fallbackLabel={featuredPost.title}
                       />
                     </a>
@@ -103,11 +103,7 @@ export default async function BlogPage() {
                 ) : null}
               </>
             ) : (
-              <div className="rounded-[8px] border border-ink/12 bg-ink/[0.03] p-8">
-                <p className="text-lg leading-8 text-ink/72">
-                  Articles will appear here once they are published in the CMS.
-                </p>
-              </div>
+              null
             )}
           </div>
         </section>

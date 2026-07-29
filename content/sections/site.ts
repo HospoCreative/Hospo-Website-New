@@ -2,17 +2,17 @@
 // Change this file first when updating the landing page message.
 export const siteContent = {
   metadata: {
-    title: "Hospo Creative | Hospitality Marketing & Creative Agency",
+    title: "Hospo Creative | Hospitality Marketing & Digital Optimisation",
     description:
-      "Hospo Creative helps hotels, restaurants and hospitality brands strengthen discovery, content, campaigns, websites and booking touchpoints."
+      "Hospitality photography, content, strategy, websites, OTA optimisation and digital marketing for hotels, restaurants and accommodation brands."
   },
   navItems: [
-    { label: "Case Studies", href: "/case-studies" },
+    { label: "Work", href: "/#work" },
+    { label: "Solutions", href: "/#digital-refresh" },
     { label: "Services", href: "/#services" },
-    { label: "Approach", href: "/#approach" },
     { label: "About", href: "/#about" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/#contact" }
+    { label: "Insights", href: "/#insights" },
+    { label: "Contact", href: "/#digital-review" }
   ],
   contact: {
     email: "info@hospoagency.com",
@@ -154,7 +154,7 @@ export const siteContent = {
     eyebrow: "Hospitality focus",
     title: "Built for the businesses your guests search, compare and remember.",
     body:
-      "We support hospitality brands across restaurants, hotels, food, drink, accommodation and guest experiences. Client logos and testimonials can be added when supplied.",
+      "We support hospitality brands across restaurants, hotels, food, drink, accommodation and guest experiences.",
     sectors: ["Hotels", "Restaurants", "Bars", "Cafes", "Food & drink", "Accommodation"]
   },
   cta: {
