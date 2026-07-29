@@ -37,21 +37,24 @@ export function HeroClient({ hero }: HeroProps) {
           <p className="mt-6 border-l border-yellow pl-4 text-sm leading-6 text-white/60">{hero.note}</p>
         </motion.div>
 
-        <div className="relative hidden h-[clamp(31rem,42vw,39rem)] lg:block" aria-label="Hospo Creative hospitality photography">
-          <div className="absolute left-0 top-[6%] h-[88%] w-[67%]">
+        <div
+          className="relative hidden h-[clamp(31rem,42vw,39rem)] min-w-0 grid-cols-[minmax(0,1.35fr)_minmax(13rem,0.72fr)] grid-rows-2 gap-4 lg:grid"
+          aria-label="Hospo Creative hospitality photography"
+        >
+          <div className="min-h-0 min-w-0 row-span-2">
             <HeroImage image={hero.images[0]} priority delay={0.12} />
           </div>
-          <div className="absolute right-0 top-0 h-[42%] w-[36%]">
+          <div className="min-h-0 min-w-0">
             <HeroImage image={hero.images[1]} delay={0.22} />
           </div>
-          <div className="absolute bottom-[2%] right-[3%] h-[42%] w-[31%]">
+          <div className="min-h-0 min-w-0">
             <HeroImage image={hero.images[2]} delay={0.32} />
           </div>
           <motion.span
             initial={reduceMotion ? false : { scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ duration: 0.8, delay: 0.45 }}
-            className="absolute -right-5 bottom-0 top-[24%] w-px origin-top bg-yellow"
+            className="absolute -right-5 bottom-0 top-[18%] w-px origin-top bg-yellow"
             aria-hidden="true"
           />
         </div>

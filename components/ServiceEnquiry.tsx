@@ -62,7 +62,7 @@ export function ServiceEnquiry() {
   const labelClass = "text-sm font-bold text-ink";
 
   return (
-    <section id="digital-review" className="bg-yellow px-5 py-[var(--hc-section)] text-ink sm:px-8">
+    <section id="digital-review" className="border-y border-ink/10 bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-16">
         <div>
           <SectionHeading eyebrow={content.eyebrow} title={content.title} body={content.body} />
@@ -71,7 +71,7 @@ export function ServiceEnquiry() {
           </ul>
           <p className="mt-7 border-l border-ink/35 pl-4 text-sm leading-6 text-ink/72">{content.clarification}</p>
         </div>
-        <form onSubmit={handleSubmit} noValidate className="rounded-[8px] bg-white p-5 shadow-editorial sm:p-7">
+        <form onSubmit={handleSubmit} noValidate className="rounded-[8px] border border-ink/15 bg-white p-5 shadow-editorial sm:p-7">
           <label className="sr-only" aria-hidden="true">Company website confirmation<input tabIndex={-1} autoComplete="off" value={companyWebsite} onChange={(event) => setCompanyWebsite(event.target.value)} /></label>
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Name" error={errors.name}><input autoComplete="name" className={inputClass} value={form.name} onChange={(e) => updateField("name", e.target.value)} aria-invalid={Boolean(errors.name)} /></Field>
