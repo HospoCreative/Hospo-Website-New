@@ -13,10 +13,10 @@ export function VideoShowcase() {
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionHeading tone="light" eyebrow={reelsContent.eyebrow} title={reelsContent.title} body={reelsContent.body} /></Reveal>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {reels.map((item, index) => (
-            <Reveal key={item.title} delay={index * 0.07}>
-              <article className="group relative overflow-hidden border border-white/10 bg-white/[0.06] p-2 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-yellow/45">
+            <Reveal key={item.title} delay={index * 0.07} className="h-full">
+              <article className="group relative flex h-full min-h-[31rem] flex-col overflow-hidden border border-white/10 bg-white/[0.06] p-2 shadow-soft transition duration-500 hover:-translate-y-2 hover:border-yellow/70">
                 <div className="relative aspect-[4/5] overflow-hidden bg-ink">
                   {item.videoSrc ? (
                     <video
@@ -52,14 +52,14 @@ export function VideoShowcase() {
                     </>
                   )}
                 </div>
-                <div className="p-3 sm:p-4">
+                <div className="flex flex-1 flex-col p-3 sm:p-4">
                   <p className="text-[0.62rem] font-black uppercase tracking-[0.2em] text-yellow">
                     {item.category}
                   </p>
                   <h3 className="mt-2 font-serif text-2xl font-semibold leading-tight">
                     {item.title}
                   </h3>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-auto flex flex-wrap gap-2 pt-4">
                     {item.services.map((service) => (
                       <span
                         key={service}

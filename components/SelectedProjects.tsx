@@ -60,7 +60,7 @@ function CaseStudyPreviewMedia({ media, title }: { media: ProjectMedia | null; t
       alt={media.alt || title}
       fill
       sizes="(min-width: 1280px) 31vw, (min-width: 768px) 45vw, 90vw"
-      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+      className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
       fallbackLabel={title}
     />
   );
@@ -84,28 +84,28 @@ export function SelectedProjects({ caseStudies = [] }: { caseStudies?: CaseStudy
           </Link>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:grid-cols-2 md:items-stretch xl:grid-cols-3">
           {caseStudies.slice(0, 6).map((caseStudy, index) => {
             const media = getMedia(caseStudy);
             return (
-              <Reveal key={caseStudy.id} delay={index * 0.05}>
+              <Reveal key={caseStudy.id} delay={index * 0.05} className="h-full">
                 <Link
                   href={`/case-studies/${caseStudy.slug}`}
-                  className="group block overflow-hidden border border-ink/10 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                  className="group flex min-h-[34rem] flex-col overflow-hidden border border-ink/10 bg-white shadow-soft transition duration-500 hover:-translate-y-2 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow md:h-[45rem] md:min-h-0"
                 >
                   {media ? (
-                    <div className="relative aspect-[4/3] overflow-hidden bg-ink">
+                    <div className="relative h-72 shrink-0 overflow-hidden bg-ink md:h-[24rem]">
                       <CaseStudyPreviewMedia media={media} title={caseStudy.title} />
                     </div>
                   ) : null}
-                  <div className="p-6">
+                  <div className="flex flex-1 flex-col p-6">
                     <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-ink/52">
                       {caseStudy.clientName}
                       {caseStudy.location ? ` / ${caseStudy.location}` : ""}
                     </p>
                     <h3 className="mt-3 font-serif text-[1.65rem] font-semibold leading-[1.02]">{caseStudy.title}</h3>
                     <p className="mt-4 line-clamp-3 text-base leading-7 text-ink/70">{caseStudy.summary}</p>
-                    <span className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em]">
+                    <span className="mt-auto inline-flex items-center gap-2 pt-6 text-xs font-black uppercase tracking-[0.16em]">
                       View case study <ArrowUpRight size={16} aria-hidden="true" />
                     </span>
                   </div>

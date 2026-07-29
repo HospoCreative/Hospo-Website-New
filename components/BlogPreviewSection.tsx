@@ -17,12 +17,12 @@ export function BlogPreviewSection({ posts = [] }: { posts?: BlogPost[] }) {
             All articles <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
         </Reveal>
-        <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-9 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
           {posts.slice(0, 3).map((post, index) => (
-            <Reveal key={post.id} delay={index * 0.05}>
+            <Reveal key={post.id} delay={index * 0.05} className="h-full">
               <Link
                 href={`/blog/${post.slug}`}
-                className="group block h-full overflow-hidden bg-white text-ink transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
+                className="group flex h-full min-h-[28rem] flex-col overflow-hidden bg-white text-ink transition duration-500 hover:-translate-y-2 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
                 {post.coverImage ? (
                   <div className="relative aspect-[4/3] overflow-hidden bg-ink/90">
@@ -36,11 +36,11 @@ export function BlogPreviewSection({ posts = [] }: { posts?: BlogPost[] }) {
                     />
                   </div>
                 ) : null}
-                <div className="p-6">
+                <div className="flex flex-1 flex-col p-6">
                   <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-ink/52">Article</p>
                   <h3 className="mt-3 font-serif text-[1.6rem] font-semibold leading-[1.04]">{post.title}</h3>
                   <p className="mt-4 line-clamp-3 text-base leading-7 text-ink/70">{post.excerpt}</p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em]">
+                  <span className="mt-auto inline-flex items-center gap-2 pt-6 text-xs font-black uppercase tracking-[0.16em]">
                     Read article <ArrowUpRight size={16} aria-hidden="true" />
                   </span>
                 </div>

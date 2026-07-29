@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import type { ClientLogo } from "@/types/clientLogo";
 import { Reveal } from "@/components/Reveal";
 
@@ -6,6 +9,7 @@ type ClientLogosSectionProps = {
 };
 
 export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
+  const reduceMotion = useReducedMotion();
   const publishedLogos = logos
     .filter((logo) => logo.published && logo.logoUrl)
     .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -35,18 +39,22 @@ export function ClientLogosSection({ logos }: ClientLogosSectionProps) {
           </p>
         </div>
 
-        <div className="mt-9 grid grid-cols-2 items-center gap-x-8 gap-y-7 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-12 lg:gap-y-8">
-          {publishedLogos.map((logo) => (
-            <div
+        <div className="mt-10 grid grid-cols-2 items-center gap-x-10 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-14 lg:gap-y-10">
+          {publishedLogos.map((logo, index) => (
+            <motion.div
               key={`${logo.clientName}-${logo.logoUrl}`}
-              className="flex h-14 items-center justify-center sm:h-16"
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.42, delay: index * 0.06, ease: "easeOut" }}
+              className="flex h-24 items-center justify-center sm:h-28 lg:h-32"
             >
               <img
                 src={logo.logoUrl}
                 alt=""
-                className="h-auto max-h-full w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
+                className="h-auto max-h-[78%] w-auto max-w-full object-contain opacity-90 transition duration-500 hover:scale-105 hover:opacity-100"
               />
-            </div>
+            </motion.div>
           ))}
         </div>
       </Reveal>

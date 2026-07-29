@@ -178,7 +178,7 @@ export function ServiceEnquiry() {
           <form
           onSubmit={handleSubmit}
           noValidate
-          className="rounded-[8px] border border-ink/10 bg-[#f6f5f1] p-4 shadow-soft sm:p-6 lg:p-7"
+          className="rounded-[8px] border border-ink/10 bg-white p-4 shadow-soft sm:p-6 lg:p-7"
         >
           <label className="sr-only" aria-hidden="true">
             Company website confirmation

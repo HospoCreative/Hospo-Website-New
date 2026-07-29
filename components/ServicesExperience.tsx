@@ -19,9 +19,9 @@ export function ServicesExperience() {
       className="border-t border-white/10 bg-ink px-5 py-20 text-white sm:px-8 lg:py-28"
     >
       <div className="mx-auto max-w-7xl">
-        <SectionHeading tone="light" eyebrow={servicesContent.eyebrow} title="Marketing support that makes hospitality brands easier to find, trust and book." body={servicesContent.body} />
+        <SectionHeading tone="light" width="wide" eyebrow={servicesContent.eyebrow} title="Marketing support that makes hospitality brands easier to find, trust and book." body={servicesContent.body} />
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(270px,0.36fr)_minmax(0,1fr)] lg:items-start">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(270px,0.36fr)_minmax(0,1fr)] lg:items-start">
           <div className="border-y border-white/12 py-1 lg:sticky lg:top-28">
             <div className="space-y-0">
               {services.map((service, index) => {
@@ -45,14 +45,11 @@ export function ServicesExperience() {
                       {service.title}
                     </span>
                     <span
-                        className={`grid size-7 shrink-0 place-items-center rounded-full border text-[0.65rem] font-black transition ${
-                        isActive
-                          ? "border-yellow text-yellow"
-                          : "border-white/16 text-white/36 group-hover:border-white/34"
+                      className={`size-2.5 shrink-0 rounded-full transition ${
+                        isActive ? "bg-yellow" : "bg-white/25 group-hover:bg-white/60"
                       }`}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                      aria-hidden="true"
+                    />
                   </button>
                 );
               })}
