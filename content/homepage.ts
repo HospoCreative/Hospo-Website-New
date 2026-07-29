@@ -37,18 +37,37 @@ export const homepageContent = {
     ]
   },
   problem: {
-    eyebrow: "The digital first impression",
-    title: "A great guest experience can still be overlooked online.",
+    eyebrow: "Why great hospitality gets overlooked",
+    title: "Your guest experience may be exceptional. Your digital presence may not show it.",
     body:
-      "Potential guests make decisions before they visit. They compare photography, websites, Google profiles, reviews, social media and booking platforms—often within minutes.",
+      "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great hospitality experience can lose attention to a competitor.",
     problems: [
-      "The photography no longer represents the real experience.",
-      "The website or booking journey creates unnecessary friction.",
-      "The OTA listing looks similar to every competitor.",
-      "Social media generates activity but lacks consistent direction."
+      {
+        title: "Outdated presentation",
+        body: "The photography and content no longer reflect the real quality of the experience."
+      },
+      {
+        title: "A fragmented booking journey",
+        body: "The website, Google profile and booking platforms do not guide guests clearly towards the next step."
+      },
+      {
+        title: "Little differentiation",
+        body: "The business looks similar to competitors when guests are comparing their options."
+      },
+      {
+        title: "Inconsistent marketing",
+        body: "Social media and campaigns create activity, but they do not support one clear commercial direction."
+      }
     ],
-    closing: "Great hospitality deserves to be presented with the same care as the experience itself.",
-    image: { src: "/images/gallery/1.8.jpg", alt: "Guest considering a hospitality experience" }
+    closing: "When these touchpoints do not work together, your business becomes harder to discover, trust and book.",
+    experienceImage: {
+      src: "/images/work/hotels.jpg",
+      alt: "Independent hotel and resort experience photographed by Hospo Creative"
+    },
+    digitalImage: {
+      src: "/images/hero/collage/1.jpg",
+      alt: "Hospitality photography displayed inside a neutral website preview"
+    }
   },
   refresh: {
     eyebrow: "Our signature solution",
