@@ -42,32 +42,13 @@ export const homepageContent = {
     body:
       "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great hospitality experience can lose attention to a competitor.",
     problems: [
-      {
-        title: "Outdated presentation",
-        body: "The photography and content no longer reflect the real quality of the experience."
-      },
-      {
-        title: "A fragmented booking journey",
-        body: "The website, Google profile and booking platforms do not guide guests clearly towards the next step."
-      },
-      {
-        title: "Little differentiation",
-        body: "The business looks similar to competitors when guests are comparing their options."
-      },
-      {
-        title: "Inconsistent marketing",
-        body: "Social media and campaigns create activity, but they do not support one clear commercial direction."
-      }
+      "Outdated presentation — The photography and content no longer reflect the real quality of the experience.",
+      "A fragmented booking journey — The website, Google profile and booking platforms do not guide guests clearly towards the next step.",
+      "Little differentiation — The business looks similar to competitors when guests are comparing their options.",
+      "Inconsistent marketing — Social media and campaigns create activity, but they do not support one clear commercial direction."
     ],
     closing: "When these touchpoints do not work together, your business becomes harder to discover, trust and book.",
-    experienceImage: {
-      src: "/images/work/hotels.jpg",
-      alt: "Independent hotel and resort experience photographed by Hospo Creative"
-    },
-    digitalImage: {
-      src: "/images/hero/collage/1.jpg",
-      alt: "Hospitality photography displayed inside a neutral website preview"
-    }
+    image: { src: "/images/gallery/1.8.jpg", alt: "Guest considering a hospitality experience" }
   },
   refresh: {
     eyebrow: "Our signature solution",
