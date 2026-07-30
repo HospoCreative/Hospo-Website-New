@@ -105,7 +105,7 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(20rem,0.48fr)] lg:items-end">
           <div>
             <p className="section-eyebrow text-yellow">{content.eyebrow}</p>
-            <h2 className="mt-5 max-w-4xl font-serif text-[clamp(2.7rem,5.5vw,4.8rem)] font-semibold leading-[0.98] tracking-[-0.025em]">
+            <h2 className="mt-3 max-w-[52rem] font-serif text-[clamp(2.35rem,4.1vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.025em]">
               {content.title}
             </h2>
           </div>
