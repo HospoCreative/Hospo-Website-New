@@ -36,6 +36,8 @@ export async function emailDigitalScan(input: {
     ? "Aqui está o resumo da análise aos sinais públicos do seu negócio de hotelaria."
     : "Here is the summary of your hospitality business public presence scan.";
   const priorityTitle = isPortuguese ? "Prioridades imediatas" : "Immediate priorities";
+  const worksTitle = isPortuguese ? "O que está a funcionar" : "What is working";
+  const improveTitle = isPortuguese ? "Melhorar a seguir" : "Improve next";
   const limitation = isPortuguese
     ? "Esta análise utiliza apenas informação pública e não acede a contas privadas."
     : "This scan uses public information only and does not access private accounts.";
@@ -50,11 +52,16 @@ export async function emailDigitalScan(input: {
     socketTimeout: 12_000
   });
 
-  const areaRows = input.report.areas.map((area) =>
-    `<tr><td style="padding:12px 0;border-bottom:1px solid #d8dde6"><strong>${escapeHtml(area.title)}</strong><br><span style="color:#5f6f86">${escapeHtml(area.summary)}</span></td><td style="padding:12px 0 12px 18px;border-bottom:1px solid #d8dde6;font-size:22px;font-weight:800;color:#07366b">${area.score}/100</td></tr>`
-  ).join("");
+  const areaRows = input.report.areas.map((area) => {
+    const strengths = (area.strengths ?? []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const improvements = (area.improvements ?? []).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    const interpretation = strengths || improvements
+      ? `${strengths ? `<strong style="font-size:12px;text-transform:uppercase">${worksTitle}</strong><ul style="margin:6px 0 12px;padding-left:18px">${strengths}</ul>` : ""}${improvements ? `<strong style="font-size:12px;text-transform:uppercase">${improveTitle}</strong><ul style="margin:6px 0 0;padding-left:18px">${improvements}</ul>` : ""}`
+      : "";
+    return `<tr><td style="padding:16px 0;border-bottom:1px solid #d8dde6"><strong>${escapeHtml(area.title)}</strong><br><span style="color:#5f6f86">${escapeHtml(area.summary)}</span>${interpretation}</td><td style="padding:16px 0 16px 18px;border-bottom:1px solid #d8dde6;font-size:22px;font-weight:800;color:#07366b;vertical-align:top">${area.score}/100</td></tr>`;
+  }).join("");
   const priorityItems = input.report.priorities.map((priority) => `<li style="margin:0 0 10px">${escapeHtml(priority)}</li>`).join("");
-  const textAreas = input.report.areas.map((area) => `${area.title}: ${area.score}/100. ${area.summary}`).join("\n");
+  const textAreas = input.report.areas.map((area) => `${area.title}: ${area.score}/100. ${area.summary}${area.strengths?.length ? `\n${worksTitle}: ${area.strengths.join(" ")}` : ""}${area.improvements?.length ? `\n${improveTitle}: ${area.improvements.join(" ")}` : ""}`).join("\n\n");
   const textPriorities = input.report.priorities.map((priority) => `• ${priority}`).join("\n");
 
   await transporter.sendMail({

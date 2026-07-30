@@ -369,9 +369,20 @@ function area(
   score: number,
   confidence: ScanConfidence,
   summary: string,
-  findings: string[]
+  findings: string[],
+  strengths: string[] = [],
+  improvements: string[] = []
 ): ScanArea {
-  return { key, title, score: clamp(score), confidence, summary, findings: findings.slice(0, 3) };
+  return {
+    key,
+    title,
+    score: clamp(score),
+    confidence,
+    summary,
+    findings: findings.slice(0, 3),
+    strengths: strengths.slice(0, 2),
+    improvements: improvements.slice(0, 2)
+  };
 }
 
 function combineFeedMetrics(automatic: SocialFeedMetrics | null, screenshot?: SocialFeedMetrics | null) {
@@ -423,6 +434,79 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Contact, location and sharing signals available to guests.", "Sinais de contacto, localização e partilha disponíveis para os hóspedes."],
     ["Photography presentation", "Apresentação fotográfica"],
     ["Image quantity, accessibility and technical presentation.", "Quantidade, acessibilidade e apresentação técnica das imagens."],
+    ["The website has a solid technical foundation for guest browsing.", "O website tem uma base técnica sólida para a navegação dos hóspedes."],
+    ["Technical gaps may make the website harder to use or trust.", "As falhas técnicas podem tornar o website mais difícil de utilizar ou menos credível."],
+    ["The core search foundations are in place, with opportunities to improve visibility and speed.", "Os principais fundamentos de pesquisa estão implementados, com oportunidades para melhorar a visibilidade e a velocidade."],
+    ["Important search signals are missing or need strengthening.", "Alguns sinais importantes de pesquisa estão ausentes ou precisam de ser reforçados."],
+    ["The website gives guests a route towards booking directly.", "O website oferece aos hóspedes um percurso para reservar diretamente."],
+    ["The website does not yet make the next direct booking step obvious enough.", "O website ainda não torna suficientemente claro o próximo passo para uma reserva direta."],
+    ["The business provides strong signals for local discovery and verification.", "O negócio apresenta sinais fortes para descoberta e verificação local."],
+    ["Search engines may struggle to connect the business, location and contact details confidently.", "Os motores de pesquisa podem ter dificuldade em associar corretamente o negócio, a localização e os contactos."],
+    ["The website supports guest research across several active social channels.", "O website apoia a pesquisa dos hóspedes através de vários canais sociais ativos."],
+    ["The connection between the website and the wider social presence can be strengthened.", "A ligação entre o website e a presença social mais ampla pode ser reforçada."],
+    ["The available feed sample has a cohesive visual foundation.", "A amostra disponível do feed apresenta uma base visual coesa."],
+    ["The available feed sample shows some consistency, but the brand could feel more recognisable.", "A amostra disponível do feed mostra alguma consistência, mas a marca pode tornar-se mais reconhecível."],
+    ["There is not enough visible feed evidence for a confident visual assessment.", "Não existe evidência visual suficiente do feed para uma avaliação segura."],
+    ["Guests can verify and contact the business through consistent public signals.", "Os hóspedes conseguem verificar e contactar o negócio através de sinais públicos consistentes."],
+    ["Missing contact, location or sharing details may weaken trust.", "A ausência de contactos, localização ou dados de partilha pode enfraquecer a confiança."],
+    ["Photography is presented with a solid accessible and technical foundation.", "A fotografia é apresentada com uma base sólida de acessibilidade e desempenho técnico."],
+    ["The image library needs a more curated and accessible presentation.", "A biblioteca de imagens precisa de uma apresentação mais cuidada e acessível."],
+    ["Guests can browse and enquire through a secure website connection.", "Os hóspedes podem navegar e contactar através de uma ligação segura."],
+    ["The site is configured to adapt to mobile screens.", "O website está configurado para se adaptar a ecrãs móveis."],
+    ["The declared page language helps browsers and assistive technology present the content correctly.", "O idioma declarado ajuda os navegadores e as tecnologias de apoio a apresentar o conteúdo corretamente."],
+    ["Secure the website with HTTPS before asking guests to submit details.", "Proteja o website com HTTPS antes de pedir aos hóspedes que enviem dados."],
+    ["Make the layout mobile responsive so guests can browse and act comfortably on a phone.", "Adapte o layout a dispositivos móveis para que os hóspedes possam navegar e agir confortavelmente no telemóvel."],
+    ["Declare the page language to improve accessibility and international search clarity.", "Declare o idioma da página para melhorar a acessibilidade e a clareza nos resultados de pesquisa internacionais."],
+    ["Resolve the highest impact mobile accessibility issues on key booking pages.", "Resolva os problemas de acessibilidade móvel com maior impacto nas páginas principais de reserva."],
+    ["The page gives search engines and guests a clear topic through its title and main heading.", "O título da página e o título principal comunicam claramente o tema aos hóspedes e aos motores de pesquisa."],
+    ["The search description is ready to communicate the offer before a guest clicks.", "A descrição de pesquisa está preparada para comunicar a oferta antes de o hóspede clicar."],
+    ["A canonical page address helps search engines avoid duplicate versions.", "Um endereço canónico ajuda os motores de pesquisa a evitar versões duplicadas."],
+    ["Write a persuasive search description that includes the experience, location and reason to choose the business.", "Escreva uma descrição de pesquisa persuasiva que inclua a experiência, a localização e o motivo para escolher o negócio."],
+    ["Add one clear main heading that states what the business offers and where it is located.", "Adicione um título principal claro que indique o que o negócio oferece e onde está localizado."],
+    ["Add a canonical page address so search engines know which version to prioritise.", "Adicione um endereço canónico para que os motores de pesquisa saibam qual versão priorizar."],
+    ["Add structured business data so search engines can understand the offer more confidently.", "Adicione dados estruturados para que os motores de pesquisa compreendam a oferta com maior confiança."],
+    ["Reduce mobile loading time, especially around large images and third-party scripts.", "Reduza o tempo de carregamento móvel, especialmente nas imagens grandes e scripts externos."],
+    ["Guests can move from interest to a direct booking action without being sent to an OTA.", "Os hóspedes podem passar do interesse para uma reserva direta sem serem enviados para uma OTA."],
+    ["A visible enquiry route supports guests who need information before booking.", "Um percurso de contacto visível apoia os hóspedes que precisam de informação antes de reservar."],
+    ["Telephone contact gives high-intent guests another direct route to the business.", "O contacto telefónico oferece aos hóspedes com maior intenção outro percurso direto para o negócio."],
+    ["Add a prominent direct booking action in the header and repeat it near high-intent content.", "Adicione uma ação de reserva direta bem visível no cabeçalho e repita-a junto do conteúdo com maior intenção."],
+    ["Add a clear enquiry route for group bookings, events or questions that cannot be completed online.", "Adicione um percurso de contacto claro para reservas de grupo, eventos ou questões que não possam ser tratadas online."],
+    ["Search engines can recognise the site as a local hospitality business.", "Os motores de pesquisa conseguem reconhecer o website como um negócio local de hotelaria."],
+    ["A visible location signal helps guests and search engines connect the business with its destination.", "Uma localização visível ajuda os hóspedes e os motores de pesquisa a associar o negócio ao destino."],
+    ["Public contact details give guests a way to verify and contact the business.", "Os contactos públicos permitem aos hóspedes verificar e contactar o negócio."],
+    ["Add Hotel, Restaurant or LocalBusiness structured data with the correct name, address and contact details.", "Adicione dados estruturados Hotel, Restaurant ou LocalBusiness com o nome, morada e contactos corretos."],
+    ["Show a consistent address or service location so local search engines can match the business accurately.", "Apresente uma morada ou área de serviço consistente para que os motores de pesquisa locais identifiquem corretamente o negócio."],
+    ["Publish a consistent telephone number or email address on the main contact routes.", "Publique um telefone ou email consistente nos principais percursos de contacto."],
+    ["Guests can move from the website to the brand's active social channels.", "Os hóspedes podem passar do website para os canais sociais ativos da marca."],
+    ["The website supports brand verification across more than one social platform.", "O website permite verificar a marca em mais do que uma plataforma social."],
+    ["Structured profile connections help search engines associate the social channels with the business.", "As ligações estruturadas ajudam os motores de pesquisa a associar os canais sociais ao negócio."],
+    ["Link the active social channels guests use to assess the experience before booking.", "Ligue os canais sociais ativos que os hóspedes usam para avaliar a experiência antes de reservar."],
+    ["Connect the other active social channels so guests can verify the brand wherever they research.", "Ligue os outros canais sociais ativos para que os hóspedes possam verificar a marca onde quer que pesquisem."],
+    ["Add the official social profiles to structured business data to strengthen brand association in search.", "Adicione os perfis sociais oficiais aos dados estruturados para reforçar a associação da marca nos resultados de pesquisa."],
+    ["Recent posts use a reasonably consistent colour palette.", "As publicações recentes utilizam uma paleta de cores razoavelmente consistente."],
+    ["The available social imagery is clear enough to present the experience professionally.", "As imagens sociais disponíveis têm clareza suficiente para apresentar a experiência de forma profissional."],
+    ["Brightness is balanced across the available posts, helping the feed feel considered.", "A luminosidade está equilibrada nas publicações disponíveis, ajudando o feed a parecer mais cuidado."],
+    ["The available posts show enough visual variety to avoid feeling repetitive.", "As publicações disponíveis apresentam variedade visual suficiente para não parecerem repetitivas."],
+    ["More recent posts are needed before the feed can receive a confident visual assessment.", "São necessárias mais publicações recentes para realizar uma avaliação visual segura do feed."],
+    ["Use a more consistent editing style and recurring brand colours across recent posts.", "Use um estilo de edição mais consistente e cores de marca recorrentes nas publicações recentes."],
+    ["Replace soft or compressed posts with higher quality photography and correctly sized graphics.", "Substitua publicações desfocadas ou comprimidas por fotografia de maior qualidade e grafismos com dimensões corretas."],
+    ["Balance very dark and very bright posts so the feed feels intentional as a whole.", "Equilibre publicações muito escuras e muito claras para que o feed pareça intencional no seu conjunto."],
+    ["Vary subjects and compositions so repeated-looking posts do not weaken the feed.", "Varie os temas e as composições para que publicações semelhantes não enfraqueçam o feed."],
+    ["Provide a feed screenshot when public platforms block recent posts so visual branding can be assessed reliably.", "Forneça uma captura do feed quando as plataformas bloquearem publicações recentes, para que a identidade visual seja avaliada com rigor."],
+    ["Guests have both email and telephone contact routes available.", "Os hóspedes têm disponíveis contactos por email e telefone."],
+    ["At least one clear public contact route is available.", "Existe pelo menos um percurso de contacto público claro."],
+    ["Shared links have a defined title and image, helping the brand appear consistently in messages and social posts.", "As ligações partilhadas têm um título e uma imagem definidos, ajudando a marca a aparecer de forma consistente em mensagens e publicações sociais."],
+    ["The website provides a location signal that supports trust and consistency.", "O website apresenta uma localização que reforça a confiança e a consistência."],
+    ["Make both email and telephone contact easy to find for guests with different preferences.", "Torne o email e o telefone fáceis de encontrar para hóspedes com diferentes preferências."],
+    ["Add a consistent business address or service location to strengthen trust and local relevance.", "Adicione uma morada ou área de serviço consistente para reforçar a confiança e a relevância local."],
+    ["Set a branded title and image for shared links so the business looks intentional outside the website.", "Defina um título e uma imagem de marca para as ligações partilhadas, para que o negócio pareça cuidado fora do website."],
+    ["The homepage has enough photography to communicate the hospitality experience without relying on a single image.", "A página inicial tem fotografia suficiente para comunicar a experiência de hotelaria sem depender de uma única imagem."],
+    ["Most images are described for accessibility and image search.", "A maioria das imagens está descrita para acessibilidade e pesquisa de imagens."],
+    ["Most images reserve their display space, reducing disruptive layout movement while the page loads.", "A maioria das imagens reserva o seu espaço de apresentação, reduzindo movimentos durante o carregamento."],
+    ["Use a tighter edit of the strongest images so the page feels curated and loads more efficiently.", "Faça uma seleção mais rigorosa das melhores imagens para que a página pareça cuidada e carregue com maior eficiência."],
+    ["Add a focused image sequence covering the space, food or rooms, atmosphere, people and distinctive details.", "Adicione uma sequência de imagens focada nos espaços, gastronomia ou quartos, ambiente, pessoas e detalhes distintivos."],
+    ["Describe important images in plain language so guests using assistive technology understand what is shown.", "Descreva as imagens importantes em linguagem simples para que os hóspedes que usam tecnologias de apoio compreendam o conteúdo."],
+    ["Define image dimensions and optimise delivery to reduce movement and improve mobile loading.", "Defina as dimensões das imagens e otimize o carregamento para reduzir movimentos e melhorar o desempenho móvel."],
     ["The website uses HTTPS.", "O website utiliza HTTPS."],
     ["The website is not using HTTPS.", "O website não utiliza HTTPS."],
     ["A mobile viewport is configured.", "A visualização para dispositivos móveis está configurada."],
@@ -489,6 +573,8 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
       .replace(/^Mobile performance score: (\d+)\/100\.$/, "Pontuação de desempenho móvel: $1/100.")
       .replace(/^(\d+) booking, reservation or enquiry links? detected\.$/, "$1 ligações de reserva ou contacto detetadas.")
       .replace(/^(\d+) supported social profile links? detected\.$/, "$1 ligações a redes sociais suportadas detetadas.")
+      .replace(/^1 social platform connected from the website\.$/, "1 plataforma social ligada a partir do website.")
+      .replace(/^(\d+) social platforms? connected from the website\.$/, "$1 plataformas sociais ligadas a partir do website.")
       .replace(/^(\d+) supported OTA or reservation links? detected\.$/, "$1 ligações a OTAs ou plataformas de reservas suportadas detetadas.")
       .replace(/^(\d+) images? detected on the homepage\.$/, "$1 imagens detetadas na página inicial.")
       .replace(/^(\d+)% of detected images include useful alt text\.$/, "$1% das imagens detetadas incluem texto alternativo útil.")
@@ -510,7 +596,9 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
       ...item,
       title: translate(item.title),
       summary: translate(item.summary),
-      findings: item.findings.map(translate)
+      findings: item.findings.map(translate),
+      strengths: item.strengths?.map(translate),
+      improvements: item.improvements?.map(translate)
     })),
     priorities: report.priorities.map(translate),
     limitations: report.limitations.map(translate)
@@ -565,6 +653,7 @@ export async function runDigitalScan(input: {
     pageSpeed(finalUrl.toString()),
     scanPublicSocialProfiles(socialLinks)
   ]);
+  const socialPlatforms = unique(publicSocial.profiles.map((profile) => profile.platform));
 
   const healthFindings = [
     finalUrl.protocol === "https:" ? "The website uses HTTPS." : "The website is not using HTTPS.",
@@ -619,15 +708,15 @@ export async function runDigitalScan(input: {
     hasPhone || hasEmail ? "Public contact details support local trust and discovery." : null
   ].filter((item): item is string => Boolean(item));
 
-  const visibilityScore = socialLinks.length
-    ? Math.min(100, 35 + socialLinks.length * 18 + (schema.hasSameAs ? 10 : 0))
+  const visibilityScore = socialPlatforms.length
+    ? Math.min(100, 35 + socialPlatforms.length * 18 + (schema.hasSameAs ? 10 : 0))
     : 0;
   const visibilityFindings = [
     socialLinks.length
       ? "The website links guests to its active social profiles."
       : "Add links to the active social channels guests use to assess the experience.",
     schema.hasSameAs ? "Structured profile connections help search engines associate these channels with the business." : null,
-    socialLinks.length ? `${socialLinks.length} supported social profile link${socialLinks.length === 1 ? "" : "s"} detected.` : null
+    socialPlatforms.length ? `${socialPlatforms.length} social platform${socialPlatforms.length === 1 ? "" : "s"} connected from the website.` : null
   ].filter((item): item is string => Boolean(item));
 
   const feed = combineFeedMetrics(publicSocial.metrics, input.socialFeedMetrics);
@@ -696,12 +785,108 @@ export async function runDigitalScan(input: {
     "Creative quality and brand suitability still require human review."
   ];
 
+  const healthStrengths = [
+    finalUrl.protocol === "https:" ? "Guests can browse and enquire through a secure website connection." : null,
+    viewport ? "The site is configured to adapt to mobile screens." : null,
+    language ? "The declared page language helps browsers and assistive technology present the content correctly." : null
+  ].filter((item): item is string => Boolean(item));
+  const healthImprovements = [
+    finalUrl.protocol !== "https:" ? "Secure the website with HTTPS before asking guests to submit details." : null,
+    !viewport ? "Make the layout mobile responsive so guests can browse and act comfortably on a phone." : null,
+    !language ? "Declare the page language to improve accessibility and international search clarity." : null,
+    speed?.accessibility !== undefined && speed.accessibility < 75 ? "Resolve the highest impact mobile accessibility issues on key booking pages." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const seoStrengths = [
+    title && h1 ? "The page gives search engines and guests a clear topic through its title and main heading." : null,
+    description ? "The search description is ready to communicate the offer before a guest clicks." : null,
+    canonical ? "A canonical page address helps search engines avoid duplicate versions." : null
+  ].filter((item): item is string => Boolean(item));
+  const seoImprovements = [
+    !description ? "Write a persuasive search description that includes the experience, location and reason to choose the business." : null,
+    !h1 ? "Add one clear main heading that states what the business offers and where it is located." : null,
+    !canonical ? "Add a canonical page address so search engines know which version to prioritise." : null,
+    !schema.found ? "Add structured business data so search engines can understand the offer more confidently." : null,
+    speed?.performance !== undefined && speed.performance < 70 ? "Reduce mobile loading time, especially around large images and third-party scripts." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const bookingStrengths = [
+    directBookingLinks.length ? "Guests can move from interest to a direct booking action without being sent to an OTA." : null,
+    enquiryLinks.length ? "A visible enquiry route supports guests who need information before booking." : null,
+    hasPhone ? "Telephone contact gives high-intent guests another direct route to the business." : null
+  ].filter((item): item is string => Boolean(item));
+  const bookingImprovements = [
+    !directBookingLinks.length ? "Add a prominent direct booking action in the header and repeat it near high-intent content." : null,
+    !enquiryLinks.length && !hasPhone ? "Add a clear enquiry route for group bookings, events or questions that cannot be completed online." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const localStrengths = [
+    schema.localBusiness ? "Search engines can recognise the site as a local hospitality business." : null,
+    hasAddress ? "A visible location signal helps guests and search engines connect the business with its destination." : null,
+    hasPhone || hasEmail ? "Public contact details give guests a way to verify and contact the business." : null
+  ].filter((item): item is string => Boolean(item));
+  const localImprovements = [
+    !schema.localBusiness ? "Add Hotel, Restaurant or LocalBusiness structured data with the correct name, address and contact details." : null,
+    !hasAddress ? "Show a consistent address or service location so local search engines can match the business accurately." : null,
+    !hasPhone && !hasEmail ? "Publish a consistent telephone number or email address on the main contact routes." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const visibilityStrengths = [
+    socialPlatforms.length ? "Guests can move from the website to the brand's active social channels." : null,
+    socialPlatforms.length >= 2 ? "The website supports brand verification across more than one social platform." : null,
+    schema.hasSameAs ? "Structured profile connections help search engines associate the social channels with the business." : null
+  ].filter((item): item is string => Boolean(item));
+  const visibilityImprovements = [
+    !socialPlatforms.length ? "Link the active social channels guests use to assess the experience before booking." : null,
+    socialPlatforms.length === 1 ? "Connect the other active social channels so guests can verify the brand wherever they research." : null,
+    !schema.hasSameAs ? "Add the official social profiles to structured business data to strengthen brand association in search." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const visualStrengths = feed ? [
+    feed.colourCohesion >= 65 ? "Recent posts use a reasonably consistent colour palette." : null,
+    feed.imageQuality >= 65 ? "The available social imagery is clear enough to present the experience professionally." : null,
+    feed.exposureBalance >= 65 ? "Brightness is balanced across the available posts, helping the feed feel considered." : null,
+    feed.repetitionRisk <= 30 ? "The available posts show enough visual variety to avoid feeling repetitive." : null
+  ].filter((item): item is string => Boolean(item)) : [];
+  const visualImprovements = feed ? [
+    feed.tileCount < 6 ? "More recent posts are needed before the feed can receive a confident visual assessment." : null,
+    feed.colourCohesion < 65 ? "Use a more consistent editing style and recurring brand colours across recent posts." : null,
+    feed.imageQuality < 65 ? "Replace soft or compressed posts with higher quality photography and correctly sized graphics." : null,
+    feed.exposureBalance < 65 ? "Balance very dark and very bright posts so the feed feels intentional as a whole." : null,
+    feed.repetitionRisk > 30 ? "Vary subjects and compositions so repeated-looking posts do not weaken the feed." : null
+  ].filter((item): item is string => Boolean(item)) : [
+    "Provide a feed screenshot when public platforms block recent posts so visual branding can be assessed reliably."
+  ];
+
+  const brandStrengths = [
+    hasEmail && hasPhone ? "Guests have both email and telephone contact routes available." : hasEmail || hasPhone ? "At least one clear public contact route is available." : null,
+    hasOpenGraph ? "Shared links have a defined title and image, helping the brand appear consistently in messages and social posts." : null,
+    hasAddress ? "The website provides a location signal that supports trust and consistency." : null
+  ].filter((item): item is string => Boolean(item));
+  const brandImprovements = [
+    !hasEmail || !hasPhone ? "Make both email and telephone contact easy to find for guests with different preferences." : null,
+    !hasAddress ? "Add a consistent business address or service location to strengthen trust and local relevance." : null,
+    !hasOpenGraph ? "Set a branded title and image for shared links so the business looks intentional outside the website." : null
+  ].filter((item): item is string => Boolean(item));
+
+  const photographyStrengths = [
+    images.count >= 5 && images.count <= 30 ? "The homepage has enough photography to communicate the hospitality experience without relying on a single image." : null,
+    images.altCoverage >= 0.75 ? "Most images are described for accessibility and image search." : null,
+    images.dimensionCoverage >= 0.7 ? "Most images reserve their display space, reducing disruptive layout movement while the page loads." : null
+  ].filter((item): item is string => Boolean(item));
+  const photographyImprovements = [
+    images.count > 30 ? "Use a tighter edit of the strongest images so the page feels curated and loads more efficiently." : null,
+    images.count < 5 ? "Add a focused image sequence covering the space, food or rooms, atmosphere, people and distinctive details." : null,
+    images.altCoverage < 0.75 ? "Describe important images in plain language so guests using assistive technology understand what is shown." : null,
+    images.dimensionCoverage < 0.7 ? "Define image dimensions and optimise delivery to reduce movement and improve mobile loading." : null
+  ].filter((item): item is string => Boolean(item));
+
   const areas = [
-    area("website", "Website health", healthScore, "verified", "Technical foundations and mobile readiness.", healthFindings),
-    area("seo", "SEO and performance", seoScore, speed ? "verified" : "partial", "Search foundations and mobile performance signals.", seoFindings),
-    area("booking", "Direct booking journey", bookingScore, directBookingLinks.length ? "verified" : "partial", "How easily a guest can move from interest to a direct booking or enquiry.", bookingFindings),
-    area("google", "Local discovery readiness", googleScore, googleConfidence, "Signals that help search engines understand the business, location and contact details.", googleFindings),
-    area("visibility", "Social presence connections", visibilityScore, socialLinks.length ? "verified" : "not_confirmed", "How clearly the website connects guests with the brand's active social channels.", visibilityFindings),
+    area("website", "Website health", healthScore, "verified", healthScore >= 75 ? "The website has a solid technical foundation for guest browsing." : "Technical gaps may make the website harder to use or trust.", healthFindings, healthStrengths, healthImprovements),
+    area("seo", "SEO and performance", seoScore, speed ? "verified" : "partial", seoScore >= 70 ? "The core search foundations are in place, with opportunities to improve visibility and speed." : "Important search signals are missing or need strengthening.", seoFindings, seoStrengths, seoImprovements),
+    area("booking", "Direct booking journey", bookingScore, directBookingLinks.length ? "verified" : "partial", directBookingLinks.length ? "The website gives guests a route towards booking directly." : "The website does not yet make the next direct booking step obvious enough.", bookingFindings, bookingStrengths, bookingImprovements),
+    area("google", "Local discovery readiness", googleScore, googleConfidence, googleScore >= 70 ? "The business provides strong signals for local discovery and verification." : "Search engines may struggle to connect the business, location and contact details confidently.", googleFindings, localStrengths, localImprovements),
+    area("visibility", "Social presence connections", visibilityScore, socialPlatforms.length ? "verified" : "not_confirmed", socialPlatforms.length >= 2 ? "The website supports guest research across several active social channels." : "The connection between the website and the wider social presence can be strengthened.", visibilityFindings, visibilityStrengths, visibilityImprovements),
     area(
       "social_visual",
       "Social feed visual consistency",
@@ -711,11 +896,17 @@ export async function runDigitalScan(input: {
         : feed
           ? "partial"
           : "not_confirmed",
-      "Rules-based visual signals from public thumbnails and an optional private screenshot.",
-      socialVisualFindings
+      feed
+        ? socialVisualScore >= 70
+          ? "The available feed sample has a cohesive visual foundation."
+          : "The available feed sample shows some consistency, but the brand could feel more recognisable."
+        : "There is not enough visible feed evidence for a confident visual assessment.",
+      socialVisualFindings,
+      visualStrengths,
+      visualImprovements
     ),
-    area("brand", "Brand and contact consistency", brandScore, "verified", "Contact, location and sharing signals available to guests.", brandFindings),
-    area("photography", "Photography presentation", photographyScore, "partial", "Image quantity, accessibility and technical presentation.", photographyFindings)
+    area("brand", "Brand and contact consistency", brandScore, "verified", brandScore >= 70 ? "Guests can verify and contact the business through consistent public signals." : "Missing contact, location or sharing details may weaken trust.", brandFindings, brandStrengths, brandImprovements),
+    area("photography", "Photography presentation", photographyScore, "partial", images.altCoverage >= 0.75 && images.count <= 30 ? "Photography is presented with a solid accessible and technical foundation." : "The image library needs a more curated and accessible presentation.", photographyFindings, photographyStrengths, photographyImprovements)
   ];
 
   const priorityPool = [

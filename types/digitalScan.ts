@@ -36,6 +36,8 @@ export type ScanArea = {
   confidence: ScanConfidence;
   summary: string;
   findings: string[];
+  strengths?: string[];
+  improvements?: string[];
 };
 
 export type DigitalScanReport = {

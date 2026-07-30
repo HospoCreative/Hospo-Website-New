@@ -31,6 +31,8 @@ const copy = {
     security: "We only inspect public website information. Never enter account passwords or private platform credentials.",
     report: "Your public digital presence report",
     score: "Overall score",
+    whatWorks: "What is working",
+    improveNext: "Improve next",
     priorities: "Immediate priorities",
     discovered: "Evidence checked",
     evidenceHelp: "These links provide supporting evidence only. OTA links are not required or scored because a strong direct booking journey is the priority.",
@@ -80,6 +82,8 @@ const copy = {
     security: "Analisamos apenas informação pública. Nunca introduza palavras-passe ou credenciais privadas de plataformas.",
     report: "Relatório da sua presença digital pública",
     score: "Pontuação geral",
+    whatWorks: "O que está a funcionar",
+    improveNext: "Melhorar a seguir",
     priorities: "Prioridades imediatas",
     discovered: "Elementos verificados",
     evidenceHelp: "Estas ligações servem apenas como evidência. As ligações a OTAs não são obrigatórias nem afetam a pontuação, porque a prioridade é um percurso de reserva direta forte.",
@@ -295,10 +299,17 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
                   <span className={`mt-4 w-fit rounded-full px-3 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.14em] ${presentation.className}`}>
                     {presentation.label}
                   </span>
-                  <p className="mt-4 text-sm leading-6 text-white/62">{item.summary}</p>
-                  <ul className="mt-5 space-y-3 border-t border-white/12 pt-5 text-sm leading-6 text-white/76">
-                    {item.findings.slice(0, 3).map((finding) => <li key={finding} className="flex gap-2"><Check className="mt-1 shrink-0 text-yellow" size={14} />{finding}</li>)}
-                  </ul>
+                  <p className="mt-4 text-sm leading-6 text-white/70">{item.summary}</p>
+                  {(item.strengths?.length || item.improvements?.length) ? (
+                    <div className="mt-5 space-y-5 border-t border-white/12 pt-5 text-sm leading-6">
+                      {item.strengths?.length ? <div><p className="text-[0.62rem] font-black uppercase tracking-[0.14em] text-yellow">{t.whatWorks}</p><ul className="mt-2 space-y-2 text-white/82">{item.strengths.slice(0, 2).map((strength) => <li key={strength} className="flex gap-2"><Check className="mt-1 shrink-0 text-yellow" size={14} />{strength}</li>)}</ul></div> : null}
+                      {item.improvements?.length ? <div><p className="text-[0.62rem] font-black uppercase tracking-[0.14em] text-yellow">{t.improveNext}</p><ul className="mt-2 space-y-2 text-white/82">{item.improvements.slice(0, 2).map((improvement) => <li key={improvement} className="flex gap-2"><ArrowUpRight className="mt-1 shrink-0 text-yellow" size={14} />{improvement}</li>)}</ul></div> : null}
+                    </div>
+                  ) : (
+                    <ul className="mt-5 space-y-3 border-t border-white/12 pt-5 text-sm leading-6 text-white/76">
+                      {item.findings.slice(0, 3).map((finding) => <li key={finding} className="flex gap-2"><Check className="mt-1 shrink-0 text-yellow" size={14} />{finding}</li>)}
+                    </ul>
+                  )}
                 </article>
               );})}
             </div>
