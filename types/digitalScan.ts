@@ -8,6 +8,11 @@ export type ScanAreaKey =
   | "brand"
   | "photography";
 
+export type HospitalityBusinessType =
+  | "hotel_accommodation"
+  | "restaurant_venue"
+  | "fnb_product";
+
 export type SocialFeedMetrics = {
   source: "screenshot" | "automatic" | "combined";
   width: number;
@@ -45,11 +50,18 @@ export type DigitalScanReport = {
   websiteUrl: string;
   finalUrl: string;
   businessName: string;
+  businessType: HospitalityBusinessType;
   location: string;
   scannedAt: string;
   overallScore: number;
   pageSpeedAvailable: boolean;
   areas: ScanArea[];
+  overview: {
+    typeLabel: string;
+    headline: string;
+    summary: string;
+    offerings: string[];
+  };
   priorities: string[];
   discovered: {
     socialLinks: string[];

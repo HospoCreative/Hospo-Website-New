@@ -13,6 +13,7 @@ export const maxDuration = 60;
 const scanSchema = z.object({
   websiteUrl: z.string().trim().min(4).max(500),
   businessName: z.string().trim().max(160).optional().default(""),
+  businessType: z.enum(["hotel_accommodation", "restaurant_venue", "fnb_product"]),
   location: z.string().trim().max(160).optional().default(""),
   email: z.string().trim().email().max(254),
   locale: z.enum(["en", "pt"]).default("en"),
@@ -80,6 +81,7 @@ export async function POST(request: Request) {
       businessName: input.businessName || new URL(
         /^https?:\/\//i.test(input.websiteUrl) ? input.websiteUrl : `https://${input.websiteUrl}`
       ).hostname.replace(/^www\./, ""),
+      businessType: input.businessType,
       location: input.location,
       locale: input.locale,
       socialFeedMetrics: input.socialFeedMetrics

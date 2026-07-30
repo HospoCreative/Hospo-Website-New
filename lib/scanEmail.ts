@@ -38,6 +38,7 @@ export async function emailDigitalScan(input: {
   const priorityTitle = isPortuguese ? "Prioridades imediatas" : "Immediate priorities";
   const worksTitle = isPortuguese ? "O que está a funcionar" : "What is working";
   const improveTitle = isPortuguese ? "Melhorar a seguir" : "Improve next";
+  const overviewTitle = isPortuguese ? "Visão geral" : "Quick overview";
   const limitation = isPortuguese
     ? "Esta análise utiliza apenas informação pública e não acede a contas privadas."
     : "This scan uses public information only and does not access private accounts.";
@@ -63,14 +64,21 @@ export async function emailDigitalScan(input: {
   const priorityItems = input.report.priorities.map((priority) => `<li style="margin:0 0 10px">${escapeHtml(priority)}</li>`).join("");
   const textAreas = input.report.areas.map((area) => `${area.title}: ${area.score}/100. ${area.summary}${area.strengths?.length ? `\n${worksTitle}: ${area.strengths.join(" ")}` : ""}${area.improvements?.length ? `\n${improveTitle}: ${area.improvements.join(" ")}` : ""}`).join("\n\n");
   const textPriorities = input.report.priorities.map((priority) => `• ${priority}`).join("\n");
+  const overview = input.report.overview;
+  const overviewHtml = overview
+    ? `<div style="margin:24px 0;background:#07366b;padding:24px;color:#ffffff"><p style="margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#ffcd39">${overviewTitle}</p><p style="margin:0 0 8px;font-size:12px;font-weight:800;text-transform:uppercase;color:#aabbd0">${escapeHtml(overview.typeLabel)}</p><h2 style="margin:0 0 12px;font-family:Georgia,serif;font-size:28px;line-height:1.15">${escapeHtml(overview.headline)}</h2><p style="margin:0;line-height:1.6;color:#dfe8f3">${escapeHtml(overview.summary)}</p>${overview.offerings.length ? `<p style="margin:14px 0 0;font-size:13px;color:#ffffff"><strong>${isPortuguese ? "Oferta identificada" : "Offerings identified"}:</strong> ${escapeHtml(overview.offerings.join(", "))}</p>` : ""}</div>`
+    : "";
+  const overviewText = overview
+    ? `${overviewTitle}\n${overview.typeLabel}\n${overview.headline}\n${overview.summary}${overview.offerings.length ? `\n${isPortuguese ? "Oferta identificada" : "Offerings identified"}: ${overview.offerings.join(", ")}` : ""}\n\n`
+    : "";
 
   await transporter.sendMail({
     from,
     to: input.email,
     replyTo: process.env.SMTP_REPLY_TO || "info@hospoagency.com",
     subject: title,
-    text: `${intro}\n\n${input.report.finalUrl}\n\n${isPortuguese ? "Pontuação geral" : "Overall score"}: ${input.report.overallScore}/100\n\n${textAreas}\n\n${priorityTitle}\n${textPriorities}\n\n${limitation}`,
-    html: `<div style="margin:0;background:#f4f7fb;padding:32px 16px;font-family:Arial,sans-serif;color:#092f5c"><div style="max-width:680px;margin:0 auto;background:#ffffff;padding:32px"><div style="height:5px;background:#ffcd39;margin-bottom:28px"></div><p style="margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6a7890">Hospo Creative</p><h1 style="margin:0 0 18px;font-family:Georgia,serif;font-size:36px;line-height:1.05">${escapeHtml(input.report.businessName)}</h1><p style="font-size:16px;line-height:1.6;color:#51647e">${intro}</p><p style="margin:28px 0;font-size:44px;font-weight:800">${input.report.overallScore}<span style="font-size:18px;color:#6a7890">/100</span></p><table style="width:100%;border-collapse:collapse">${areaRows}</table><h2 style="margin:32px 0 16px;font-family:Georgia,serif;font-size:26px">${priorityTitle}</h2><ul style="padding-left:20px;line-height:1.6">${priorityItems}</ul><p style="margin-top:30px;padding-top:20px;border-top:1px solid #d8dde6;font-size:13px;line-height:1.6;color:#6a7890">${limitation}</p></div></div>`
+    text: `${intro}\n\n${input.report.finalUrl}\n\n${overviewText}${isPortuguese ? "Pontuação geral" : "Overall score"}: ${input.report.overallScore}/100\n\n${textAreas}\n\n${priorityTitle}\n${textPriorities}\n\n${limitation}`,
+    html: `<div style="margin:0;background:#f4f7fb;padding:32px 16px;font-family:Arial,sans-serif;color:#092f5c"><div style="max-width:680px;margin:0 auto;background:#ffffff;padding:32px"><div style="height:5px;background:#ffcd39;margin-bottom:28px"></div><p style="margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6a7890">Hospo Creative</p><h1 style="margin:0 0 18px;font-family:Georgia,serif;font-size:36px;line-height:1.05">${escapeHtml(input.report.businessName)}</h1><p style="font-size:16px;line-height:1.6;color:#51647e">${intro}</p>${overviewHtml}<p style="margin:28px 0;font-size:44px;font-weight:800">${input.report.overallScore}<span style="font-size:18px;color:#6a7890">/100</span></p><table style="width:100%;border-collapse:collapse">${areaRows}</table><h2 style="margin:32px 0 16px;font-family:Georgia,serif;font-size:26px">${priorityTitle}</h2><ul style="padding-left:20px;line-height:1.6">${priorityItems}</ul><p style="margin-top:30px;padding-top:20px;border-top:1px solid #d8dde6;font-size:13px;line-height:1.6;color:#6a7890">${limitation}</p></div></div>`
   });
 
   return true;

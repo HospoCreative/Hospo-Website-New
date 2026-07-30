@@ -9,11 +9,11 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return {
-    title: locale === "pt" ? "Análise Digital Gratuita | Hospo Creative" : "Free Hospitality Digital Scan | Hospo Creative",
+    title: locale === "pt" ? "Teste a Sua Presença Digital | Hospo Creative" : "Test Your Digital Score | Hospo Creative",
     description:
       locale === "pt"
-        ? "Analise gratuitamente os sinais públicos do website, percurso de reserva, Google, redes sociais e OTAs."
-        : "Scan the public website, booking journey, Google, social and OTA signals of your hospitality business."
+        ? "Descubra os pontos fortes e as prioridades de melhoria da oferta, website, percurso comercial, pesquisa, marca, redes sociais e fotografia."
+        : "Discover strengths and improvement priorities across your offer, website, customer journey, search presence, brand, social channels and photography."
   };
 }
 

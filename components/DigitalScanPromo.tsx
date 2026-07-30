@@ -5,18 +5,18 @@ import { Reveal } from "./Reveal";
 
 const content = {
   en: {
-    eyebrow: "Free instant tool",
-    title: "How strong is your public digital presence?",
-    body: "Scan the signals guests can see across your website, booking journey, Google links, social profiles and OTA connections. No account connection required.",
-    cta: "Run the free scan",
-    points: ["Website and SEO health", "Booking journey signals", "Google, social and OTA links"]
+    eyebrow: "Your digital score",
+    title: "How strong is your hospitality brand online?",
+    body: "Discover what helps or weakens visibility, trust and customer action across your website, search presence, social channels and photography. No account connection required.",
+    cta: "Test your digital score",
+    points: ["Booking, ordering or purchase journey", "Search and website visibility", "Offer, social and photography signals"]
   },
   pt: {
-    eyebrow: "Ferramenta instantânea gratuita",
-    title: "Qual é a força da sua presença digital pública?",
-    body: "Analise os sinais que os hóspedes encontram no website, percurso de reserva, ligações Google, redes sociais e OTAs. Não é necessário ligar qualquer conta.",
-    cta: "Fazer a análise gratuita",
-    points: ["Saúde do website e SEO", "Sinais do percurso de reserva", "Ligações Google, sociais e OTAs"]
+    eyebrow: "A sua pontuação digital",
+    title: "Qual é a força da sua marca de hotelaria online?",
+    body: "Descubra o que reforça ou enfraquece a visibilidade, a confiança e a ação dos clientes no website, pesquisa, redes sociais e fotografia. Não é necessário ligar qualquer conta.",
+    cta: "Teste a sua presença digital",
+    points: ["Percurso de reserva, pedido ou compra", "Visibilidade na pesquisa e no website", "Sinais da oferta, redes sociais e fotografia"]
   }
 } as const;
 

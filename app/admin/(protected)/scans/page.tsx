@@ -104,6 +104,16 @@ export default async function AdminScansPage({ searchParams }: PageProps) {
               <a href={selected.final_url} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/20 px-5 text-xs font-black uppercase tracking-[0.14em]">Open website <ArrowUpRight size={15} /></a>
             </div>
 
+            {selected.report.overview ? (
+              <section className="mt-7 border-t-2 border-yellow bg-ink p-6 text-white">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-yellow">Quick overview</p>
+                <p className="mt-3 text-xs font-black uppercase tracking-[0.14em] text-white/55">{selected.report.overview.typeLabel}</p>
+                <h3 className="mt-3 font-serif text-3xl font-semibold leading-tight">{selected.report.overview.headline}</h3>
+                <p className="mt-4 max-w-3xl leading-7 text-white/70">{selected.report.overview.summary}</p>
+                {selected.report.overview.offerings.length ? <div className="mt-5 flex flex-wrap gap-2">{selected.report.overview.offerings.map((offering) => <span key={offering} className="rounded-full border border-white/25 px-3 py-2 text-xs font-bold">{offering}</span>)}</div> : null}
+              </section>
+            ) : null}
+
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
               {selected.report.areas.map((area) => <div key={area.key} className="border-t-2 border-yellow bg-ink p-5 text-white"><div className="flex items-start justify-between gap-3"><h3 className="font-serif text-xl font-semibold">{area.title}</h3><span className="text-2xl font-black text-yellow">{area.score}</span></div><p className="mt-3 text-sm leading-6 text-white/65">{area.summary}</p></div>)}
             </div>

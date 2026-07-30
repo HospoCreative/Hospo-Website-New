@@ -4,6 +4,7 @@ import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import type {
   DigitalScanReport,
+  HospitalityBusinessType,
   ScanArea,
   ScanAreaKey,
   ScanConfidence,
@@ -79,6 +80,72 @@ function linkHref(html: string, rel: string) {
 function textContent(html: string, tagName: string) {
   const match = html.match(new RegExp(`<${tagName}\\b[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "i"));
   return match ? decodeEntities(match[1].replace(/<[^>]+>/g, " ")) : "";
+}
+
+function visiblePageText(html: string) {
+  return decodeEntities(
+    html
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+      .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+  );
+}
+
+function joinedList(items: string[], locale: Locale) {
+  if (items.length < 2) return items[0] ?? "";
+  const conjunction = locale === "pt" ? " e " : " and ";
+  return `${items.slice(0, -1).join(", ")}${conjunction}${items.at(-1)}`;
+}
+
+function businessTypeProfile(type: HospitalityBusinessType, locale: Locale) {
+  const pt = locale === "pt";
+  if (type === "restaurant_venue") {
+    return {
+      label: pt ? "Restaurantes, bares e cafés" : "Restaurants, bars and coffee shops",
+      shortLabel: pt ? "espaço de restauração" : "food and drink venue",
+      typePattern: /\b(?:restaurant|restaurante|bar|café|cafe|coffee shop|bistro|pub|dining|eatery|brasserie)\b/i,
+      offerings: [
+        [/\b(?:breakfast|pequeno-almoço|brunch)\b/i, pt ? "Pequeno-almoço e brunch" : "Breakfast and brunch"],
+        [/\b(?:lunch|almoço|dinner|jantar|dining)\b/i, pt ? "Almoço e jantar" : "Lunch and dinner"],
+        [/\b(?:cocktail|cocktails|wine|vinho|drinks|bebidas)\b/i, pt ? "Bebidas e cocktails" : "Drinks and cocktails"],
+        [/\b(?:coffee|café|cafe|bakery|pastelaria)\b/i, pt ? "Café e pastelaria" : "Coffee and bakery"],
+        [/\b(?:takeaway|takeout|delivery|entrega)\b/i, pt ? "Takeaway e entrega" : "Takeaway and delivery"],
+        [/\b(?:private dining|events|eventos|group dining)\b/i, pt ? "Eventos e grupos" : "Events and groups"],
+        [/\b(?:menu|menus|ementa)\b/i, pt ? "Menus" : "Menus"]
+      ] as Array<[RegExp, string]>
+    };
+  }
+  if (type === "fnb_product") {
+    return {
+      label: pt ? "Produtos de alimentação e bebidas" : "Food and beverage products",
+      shortLabel: pt ? "marca de produtos de alimentação e bebidas" : "food and beverage product brand",
+      typePattern: /\b(?:food brand|marca alimentar|beverage brand|drink brand|coffee brand|wine brand|food products?|beverage products?|bebidas?|alimentos?|coffee|café|tea|chá|wine|vinho|beer|cerveja|spirits?|juice|sumo|snacks?|chocolate|sauce|molho|ingredients?|stockists?|wholesale)\b/i,
+      offerings: [
+        [/\b(?:coffee|café|cafe|beans|grãos)\b/i, pt ? "Café" : "Coffee"],
+        [/\b(?:tea|chá)\b/i, pt ? "Chá" : "Tea"],
+        [/\b(?:wine|vinho|beer|cerveja|spirits?|gin|rum|whisky)\b/i, pt ? "Bebidas alcoólicas" : "Alcoholic drinks"],
+        [/\b(?:soft drinks?|soda|juice|sumo|kombucha|water|água)\b/i, pt ? "Bebidas não alcoólicas" : "Non-alcoholic drinks"],
+        [/\b(?:snacks?|chocolate|sauce|molho|condiments?|bakery|baked)\b/i, pt ? "Produtos alimentares" : "Food products"],
+        [/\b(?:gift|gifts|bundle|packs?|cabaz|presentes)\b/i, pt ? "Presentes e conjuntos" : "Gifts and bundles"],
+        [/\b(?:wholesale|trade|stockists?|retailers?|revendedores)\b/i, pt ? "Revenda e distribuição" : "Wholesale and stockists"]
+      ] as Array<[RegExp, string]>
+    };
+  }
+  return {
+    label: pt ? "Hotéis e alojamento" : "Hotels and accommodation",
+    shortLabel: pt ? "hotel ou alojamento" : "hotel or accommodation business",
+    typePattern: /\b(?:hotel|resort|accommodation|alojamento|stay|stays|rooms?|quartos?|suites?|villa|hostel|guesthouse|pousada|apartments?)\b/i,
+    offerings: [
+      [/\b(?:rooms?|quartos?|suites?|villa|apartments?)\b/i, pt ? "Quartos e suites" : "Rooms and suites"],
+      [/\b(?:spa|wellness|massage|bem-estar)\b/i, pt ? "Spa e bem-estar" : "Spa and wellness"],
+      [/\b(?:pool|piscina|beach|praia)\b/i, pt ? "Piscina e praia" : "Pool and beach"],
+      [/\b(?:restaurant|bar|dining|breakfast|pequeno-almoço)\b/i, pt ? "Restauração" : "Dining"],
+      [/\b(?:meeting|meetings|conference|events?|eventos|wedding|casamento)\b/i, pt ? "Eventos e reuniões" : "Events and meetings"],
+      [/\b(?:family|família|kids|children)\b/i, pt ? "Experiências para famílias" : "Family experiences"],
+      [/\b(?:gym|fitness|activities|atividades|excursions?)\b/i, pt ? "Atividades e fitness" : "Activities and fitness"]
+    ] as Array<[RegExp, string]>
+  };
 }
 
 function unique<T>(values: T[]) {
@@ -584,6 +651,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
       .replace(/^Contrast balance signal: (\d+)\/100\.$/, "Sinal de equilíbrio de contraste: $1/100.")
       .replace(/^Source image quality signal: (\d+)\/100\.$/, "Sinal de qualidade da imagem de origem: $1/100.")
       .replace(/^Possible visual repetition: (\d+)%\.$/, "Possível repetição visual: $1%.")
+      .replace(/^Automatic public analysis used 1 recent thumbnail\.$/, "A análise pública automática utilizou 1 miniatura recente.")
       .replace(/^Automatic public analysis used (\d+) recent thumbnails?\.$/, "A análise pública automática utilizou $1 miniaturas recentes.")
       .replace(/^(.+): automatic visual scan completed with (\d+) public thumbnails?\.$/, "$1: análise visual automática concluída com $2 miniaturas públicas.")
       .replace(/^(.+): public profile was reachable, but recent feed imagery was incomplete\.$/, "$1: o perfil público estava acessível, mas as imagens recentes do feed estavam incompletas.")
@@ -608,6 +676,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
 export async function runDigitalScan(input: {
   websiteUrl: string;
   businessName: string;
+  businessType: HospitalityBusinessType;
   location: string;
   locale?: Locale;
   socialFeedMetrics?: SocialFeedMetrics | null;
@@ -620,6 +689,7 @@ export async function runDigitalScan(input: {
   const anchorLinks = extractAnchorLinks(html, finalUrl);
   const links = unique([...extractLinks(html, finalUrl), ...structuredProfileLinks(html, finalUrl)]);
   const lowerHtml = html.toLowerCase();
+  const pageText = visiblePageText(html);
   const title = textContent(html, "title");
   const description = metaContent(html, "description");
   const h1 = textContent(html, "h1");
@@ -648,10 +718,27 @@ export async function runDigitalScan(input: {
     /<form\b[^>]*(?:id|class)=["'][^"']*(?:booking|reservation)[^"']*["']/i.test(html) ||
     /<input\b[^>]*(?:value=["'](?:book now|check availability|reserve now)["']|name=["']booknow["'])/i.test(html) ||
     /\baccorBookingArgs\b/i.test(html);
-  const directBookingLinks = unique([
+  const reservationLinks = unique([
     ...linkedDirectBookingRoutes,
     ...(hasOnsiteBookingForm ? [finalUrl.toString()] : [])
   ]);
+  const menuLinks = unique(anchorLinks
+    .filter(({ url, text }) => !linksForDomains([url], socialDomains).length && /\b(?:menu|menus|food menu|drinks menu|ementa)\b/i.test(`${new URL(url).pathname} ${text}`))
+    .map(({ url }) => url));
+  const orderLinks = unique(anchorLinks
+    .filter(({ url, text }) => !linksForDomains([url], socialDomains).length && /\b(?:order online|order now|shop now|buy now|buy|shop|store|cart|takeaway|takeout|delivery|encomendar|comprar|loja)\b/i.test(`${new URL(url).pathname} ${text}`))
+    .map(({ url }) => url));
+  const stockistLinks = unique(anchorLinks
+    .filter(({ url, text }) => !linksForDomains([url], socialDomains).length && /\b(?:stockists?|where to buy|retailers?|wholesale|trade|revendedores|onde comprar)\b/i.test(`${new URL(url).pathname} ${text}`))
+    .map(({ url }) => url));
+  const productLinks = unique(anchorLinks
+    .filter(({ url, text }) => !linksForDomains([url], socialDomains).length && /\b(?:products?|collections?|flavours?|shop|produtos?|coleções?)\b/i.test(`${new URL(url).pathname} ${text}`))
+    .map(({ url }) => url));
+  const directBookingLinks = input.businessType === "hotel_accommodation"
+    ? reservationLinks
+    : input.businessType === "restaurant_venue"
+      ? unique([...reservationLinks, ...orderLinks])
+      : unique([...orderLinks, ...stockistLinks, ...productLinks]);
   const enquiryLinks = unique(anchorLinks
     .filter(({ url, text }) => /enquir|inquir|contact|get in touch|request/i.test(`${url} ${text}`))
     .map(({ url }) => url));
@@ -664,6 +751,15 @@ export async function runDigitalScan(input: {
     scanPublicSocialProfiles(socialLinks)
   ]);
   const socialPlatforms = unique(publicSocial.profiles.map((profile) => profile.platform));
+  const businessProfile = businessTypeProfile(input.businessType, input.locale ?? "en");
+  const typeEvidenceText = `${title} ${description} ${h1} ${pageText.slice(0, 30_000)}`;
+  const businessTypeClear = businessProfile.typePattern.test(typeEvidenceText);
+  const detectedOfferings = businessProfile.offerings
+    .filter(([pattern]) => pattern.test(typeEvidenceText))
+    .map(([, label]) => label)
+    .slice(0, 6);
+  const locationTokens = input.location.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((token) => token.length >= 3);
+  const locationClear = hasAddress || Boolean(locationTokens.length && locationTokens.some((token) => lowerHtml.includes(token)));
 
   const healthFindings = [
     finalUrl.protocol === "https:" ? "The website uses HTTPS." : "The website is not using HTTPS.",
@@ -694,29 +790,178 @@ export async function runDigitalScan(input: {
       : "Live PageSpeed data was unavailable during this scan."
   ];
 
-  const bookingScore = Math.min(100, (directBookingLinks.length ? 70 : 0) + (enquiryLinks.length ? 15 : 0) + (hasPhone ? 15 : 0));
-  const bookingFindings = [
-    directBookingLinks.length
+  const pt = input.locale === "pt";
+  const fallbackContact = Boolean(enquiryLinks.length || hasPhone || hasEmail);
+  let journeyTitle = "Direct booking journey";
+  let journeyScore = Math.min(100, (reservationLinks.length ? 70 : 0) + (enquiryLinks.length ? 15 : 0) + (hasPhone ? 15 : 0));
+  let journeySummary = reservationLinks.length
+    ? "The website gives guests a route towards booking directly."
+    : "The website does not yet make the next direct booking step obvious enough.";
+  let journeyFindings = [
+    reservationLinks.length
       ? "Guests can reach a direct booking or reservation action from the homepage."
       : "A clearer direct booking action could reduce guest drop-off and reliance on third-party platforms.",
     enquiryLinks.length ? "An enquiry route is available as a useful fallback for guests who are not ready to book." : null,
     hasPhone ? "A telephone route is available for guests who prefer direct contact." : null
   ].filter((item): item is string => Boolean(item));
+  let journeyStrengths = [
+    reservationLinks.length ? "Guests can move from interest to a direct booking action without being sent to an OTA." : null,
+    enquiryLinks.length ? "A visible enquiry route supports guests who need information before booking." : null,
+    hasPhone ? "Telephone contact gives high-intent guests another direct route to the business." : null
+  ].filter((item): item is string => Boolean(item));
+  let journeyImprovements = [
+    !reservationLinks.length ? "Add a prominent direct booking action in the header and repeat it near high-intent content." : null,
+    !enquiryLinks.length && !hasPhone ? "Add a clear enquiry route for group bookings, events or questions that cannot be completed online." : null
+  ].filter((item): item is string => Boolean(item));
 
-  const localSignals = [schema.localBusiness, hasAddress, hasPhone || hasEmail].filter(Boolean).length;
-  const googleScore = Math.min(100,
+  if (input.businessType === "restaurant_venue") {
+    journeyTitle = pt ? "Percurso de reservas e pedidos" : "Reservation and ordering journey";
+    journeyScore = Math.min(100,
+      (reservationLinks.length ? 50 : 0) +
+      (menuLinks.length ? 25 : 0) +
+      (orderLinks.length ? 15 : 0) +
+      (fallbackContact ? 10 : 0)
+    );
+    journeySummary = pt
+      ? journeyScore >= 70
+        ? "O website ajuda os clientes a consultar a oferta e a avançar para uma reserva ou pedido."
+        : "O percurso entre descobrir a oferta e reservar ou pedir precisa de ser mais claro."
+      : journeyScore >= 70
+        ? "The website helps customers explore the offer and move towards a reservation or order."
+        : "The route from discovering the offer to reserving or ordering needs to be clearer.";
+    journeyFindings = [
+      reservationLinks.length
+        ? (pt ? "Existe um percurso visível para reservar mesa ou fazer uma reserva." : "A visible table reservation or booking route is available.")
+        : (pt ? "Não foi encontrado um percurso claro para reservar mesa." : "A clear table reservation route was not found."),
+      menuLinks.length
+        ? (pt ? "Os clientes conseguem consultar a ementa a partir do website." : "Customers can access the menu from the website.")
+        : (pt ? "Não foi encontrada uma ligação clara para a ementa." : "A clear menu link was not found."),
+      orderLinks.length
+        ? (pt ? "Existe um percurso para pedidos online ou takeaway." : "An online ordering or takeaway route is available.")
+        : null
+    ].filter((item): item is string => Boolean(item));
+    journeyStrengths = [
+      reservationLinks.length ? (pt ? "Os clientes podem reservar diretamente sem depender de uma plataforma externa de descoberta." : "Customers can reserve directly without relying on a third-party discovery platform.") : null,
+      menuLinks.length ? (pt ? "A ementa ajuda os clientes a compreender a oferta antes de visitar." : "The menu helps customers understand the offer before visiting.") : null,
+      orderLinks.length ? (pt ? "Os pedidos online criam um percurso comercial adicional." : "Online ordering provides an additional commercial route.") : null
+    ].filter((item): item is string => Boolean(item));
+    journeyImprovements = [
+      !reservationLinks.length ? (pt ? "Adicione uma ação clara para reservar mesa no cabeçalho e junto da ementa." : "Add a clear reserve a table action in the header and near the menu.") : null,
+      !menuLinks.length ? (pt ? "Disponibilize uma ementa atualizada e fácil de consultar no website." : "Provide an up-to-date menu that is easy to access on the website.") : null,
+      !orderLinks.length ? (pt ? "Se disponibiliza takeaway ou entrega, torne o percurso de pedido mais visível." : "If takeaway or delivery is available, make the ordering route more visible.") : null
+    ].filter((item): item is string => Boolean(item));
+  } else if (input.businessType === "fnb_product") {
+    journeyTitle = pt ? "Percurso de compra" : "Purchase journey";
+    journeyScore = Math.min(100,
+      (orderLinks.length ? 55 : 0) +
+      (productLinks.length ? 20 : 0) +
+      (stockistLinks.length ? 15 : 0) +
+      (fallbackContact ? 10 : 0)
+    );
+    journeySummary = pt
+      ? journeyScore >= 70
+        ? "O website apresenta os produtos e oferece um percurso claro para comprar ou encontrar um ponto de venda."
+        : "O percurso entre descobrir os produtos e comprá-los precisa de ser mais claro."
+      : journeyScore >= 70
+        ? "The website presents the products and provides a clear route to buy or find a stockist."
+        : "The route from discovering the products to buying them needs to be clearer.";
+    journeyFindings = [
+      orderLinks.length
+        ? (pt ? "Existe um percurso visível para comprar ou encomendar produtos." : "A visible route to buy or order products is available.")
+        : (pt ? "Não foi encontrado um percurso claro para comprar os produtos." : "A clear route to buy the products was not found."),
+      productLinks.length
+        ? (pt ? "O website apresenta páginas dedicadas à gama de produtos." : "The website provides dedicated product range pages.")
+        : (pt ? "Não foi encontrada uma gama de produtos claramente estruturada." : "A clearly structured product range was not found."),
+      stockistLinks.length
+        ? (pt ? "Os clientes conseguem procurar revendedores ou pontos de venda." : "Customers can look for stockists or retail locations.")
+        : null
+    ].filter((item): item is string => Boolean(item));
+    journeyStrengths = [
+      orderLinks.length ? (pt ? "Os clientes conseguem avançar diretamente para uma compra." : "Customers can move directly towards a purchase.") : null,
+      productLinks.length ? (pt ? "A gama de produtos tem espaço próprio para apoiar a comparação e a escolha." : "The product range has dedicated space to support comparison and choice.") : null,
+      stockistLinks.length ? (pt ? "A informação sobre pontos de venda apoia clientes que preferem comprar presencialmente." : "Stockist information supports customers who prefer to buy in person.") : null
+    ].filter((item): item is string => Boolean(item));
+    journeyImprovements = [
+      !orderLinks.length ? (pt ? "Adicione uma ação clara para comprar ou encomendar em páginas de elevada intenção." : "Add a clear buy or order action on high-intent pages.") : null,
+      !productLinks.length ? (pt ? "Organize a gama em páginas de produto claras com benefícios, formatos e utilizações." : "Organise the range into clear product pages with benefits, formats and uses.") : null,
+      !stockistLinks.length ? (pt ? "Se vende através de lojas, adicione uma página de pontos de venda ou revendedores." : "If products are sold through retailers, add a stockist or where to buy page.") : null
+    ].filter((item): item is string => Boolean(item));
+  }
+
+  let discoveryTitle = "Local discovery readiness";
+  let discoveryScore = Math.min(100,
     (schema.localBusiness ? 45 : 0) +
     (hasAddress ? 30 : 0) +
     (hasPhone || hasEmail ? 25 : 0)
   );
-  const googleConfidence: ScanConfidence = localSignals >= 3 ? "verified" : localSignals ? "partial" : "not_confirmed";
-  const googleFindings = [
+  let discoveryConfidence: ScanConfidence = [schema.localBusiness, hasAddress, hasPhone || hasEmail].filter(Boolean).length >= 3
+    ? "verified"
+    : [schema.localBusiness, hasAddress, hasPhone || hasEmail].some(Boolean)
+      ? "partial"
+      : "not_confirmed";
+  let discoverySummary = discoveryScore >= 70
+    ? "The business provides strong signals for local discovery and verification."
+    : "Search engines may struggle to connect the business, location and contact details confidently.";
+  let discoveryFindings = [
     schema.localBusiness
       ? "Search engines can identify this as a local hospitality business."
       : "Add hospitality business structured data so search engines can understand the business type, location and contact details.",
     hasAddress ? "The website provides a clear location signal for local discovery." : null,
     hasPhone || hasEmail ? "Public contact details support local trust and discovery." : null
   ].filter((item): item is string => Boolean(item));
+  let discoveryStrengths = [
+    schema.localBusiness ? "Search engines can recognise the site as a local hospitality business." : null,
+    hasAddress ? "A visible location signal helps customers and search engines connect the business with its destination." : null,
+    hasPhone || hasEmail ? "Public contact details give customers a way to verify and contact the business." : null
+  ].filter((item): item is string => Boolean(item));
+  let discoveryImprovements = [
+    !schema.localBusiness
+      ? input.businessType === "restaurant_venue"
+        ? "Add Restaurant structured data with the correct name, address and contact details."
+        : "Add Hotel or LodgingBusiness structured data with the correct name, address and contact details."
+      : null,
+    !hasAddress ? "Show a consistent address or service location so local search engines can match the business accurately." : null,
+    !hasPhone && !hasEmail ? "Publish a consistent telephone number or email address on the main contact routes." : null
+  ].filter((item): item is string => Boolean(item));
+
+  if (input.businessType === "fnb_product") {
+    discoveryTitle = pt ? "Descoberta em pesquisa e pontos de venda" : "Search and retail discovery";
+    discoveryScore = Math.min(100,
+      (schema.found ? 30 : 0) +
+      (stockistLinks.length ? 30 : 0) +
+      (locationClear ? 20 : 0) +
+      (hasPhone || hasEmail ? 20 : 0)
+    );
+    discoveryConfidence = schema.found || stockistLinks.length || locationClear ? "partial" : "not_confirmed";
+    discoverySummary = pt
+      ? discoveryScore >= 70
+        ? "A marca oferece sinais claros para pesquisa, disponibilidade e verificação."
+        : "A disponibilidade dos produtos, mercados servidos e dados da marca precisam de maior clareza."
+      : discoveryScore >= 70
+        ? "The brand provides clear signals for search, availability and verification."
+        : "Product availability, markets served and brand data need greater clarity.";
+    discoveryFindings = [
+      schema.found
+        ? (pt ? "Foram encontrados dados estruturados que ajudam os motores de pesquisa a interpretar a marca." : "Structured data helps search engines interpret the brand.")
+        : (pt ? "Não foram encontrados dados estruturados claros para a organização ou produtos." : "Clear organisation or product structured data was not found."),
+      stockistLinks.length
+        ? (pt ? "Existe um percurso para encontrar pontos de venda ou revendedores." : "A route to stockists or retailers is available.")
+        : (pt ? "Não foi encontrado um percurso para pontos de venda ou revendedores." : "A stockist or retailer route was not found."),
+      locationClear
+        ? (pt ? "O mercado, localização ou área servida é identificável." : "The market, location or service area is identifiable.")
+        : null
+    ].filter((item): item is string => Boolean(item));
+    discoveryStrengths = [
+      schema.found ? (pt ? "Os dados estruturados apoiam a compreensão da marca em pesquisa." : "Structured data supports brand understanding in search.") : null,
+      stockistLinks.length ? (pt ? "Os clientes conseguem descobrir onde comprar os produtos." : "Customers can discover where to buy the products.") : null,
+      hasPhone || hasEmail ? (pt ? "Os dados de contacto ajudam clientes e parceiros comerciais a verificar a marca." : "Contact details help customers and trade partners verify the brand.") : null
+    ].filter((item): item is string => Boolean(item));
+    discoveryImprovements = [
+      !schema.found ? (pt ? "Adicione dados estruturados Organization e Product para a marca e os produtos principais." : "Add Organization and Product structured data for the brand and key products.") : null,
+      !stockistLinks.length ? (pt ? "Se vende através de terceiros, adicione uma página clara de pontos de venda ou revendedores." : "If products are sold through third parties, add a clear stockist or where to buy page.") : null,
+      !locationClear ? (pt ? "Explique os mercados, áreas de entrega ou regiões onde os produtos estão disponíveis." : "Explain the markets, delivery areas or regions where products are available.") : null
+    ].filter((item): item is string => Boolean(item));
+  }
 
   const visibilityScore = socialPlatforms.length
     ? Math.min(100, 35 + socialPlatforms.length * 18 + (schema.hasSameAs ? 10 : 0))
@@ -771,17 +1016,22 @@ export async function runDigitalScan(input: {
         "Upload a feed screenshot to add a free visual consistency check without connecting an account."
       ];
 
-  const brandScore =
-    (hasEmail ? 25 : 0) +
-    (hasPhone ? 25 : 0) +
-    (hasAddress ? 20 : 0) +
-    (hasOpenGraph ? 20 : 0) +
-    (schema.localBusiness ? 10 : 0);
-  const brandFindings = [
-    hasEmail ? "An email contact signal was found." : "A public email contact signal was not found.",
-    hasPhone ? "A telephone contact signal was found." : "A public telephone contact signal was not found.",
-    hasAddress ? "An address or location signal was found." : "An address or location signal was not found.",
-    hasOpenGraph ? "Social sharing title and image metadata are present." : "Complete social sharing metadata was not detected."
+  const offerClarityScore =
+    (businessTypeClear ? 25 : 0) +
+    Math.min(30, detectedOfferings.length * 10) +
+    (locationClear ? 20 : 0) +
+    (hasPhone || hasEmail ? 15 : 0) +
+    (hasOpenGraph ? 10 : 0);
+  const offerFindings = [
+    businessTypeClear
+      ? (pt ? `O website comunica claramente que se trata de ${businessProfile.shortLabel}.` : `The website clearly communicates that this is a ${businessProfile.shortLabel}.`)
+      : (pt ? `O website não comunica de forma suficientemente clara que se trata de ${businessProfile.shortLabel}.` : `The website does not communicate clearly enough that this is a ${businessProfile.shortLabel}.`),
+    detectedOfferings.length
+      ? (pt ? `A oferta visível inclui ${joinedList(detectedOfferings, "pt")}.` : `The visible offer includes ${joinedList(detectedOfferings, "en")}.`)
+      : (pt ? "Os principais produtos ou serviços não estão suficientemente destacados na página inicial." : "The main products or services are not surfaced clearly enough on the homepage."),
+    locationClear
+      ? (pt ? "A localização ou área servida está visível para os clientes." : "The location or service area is visible to customers.")
+      : (pt ? "A localização ou área servida não está suficientemente clara." : "The location or service area is not clear enough.")
   ];
 
   const photographyScore = Math.min(
@@ -820,27 +1070,6 @@ export async function runDigitalScan(input: {
     speed?.performance !== undefined && speed.performance < 70 ? "Reduce mobile loading time, especially around large images and third-party scripts." : null
   ].filter((item): item is string => Boolean(item));
 
-  const bookingStrengths = [
-    directBookingLinks.length ? "Guests can move from interest to a direct booking action without being sent to an OTA." : null,
-    enquiryLinks.length ? "A visible enquiry route supports guests who need information before booking." : null,
-    hasPhone ? "Telephone contact gives high-intent guests another direct route to the business." : null
-  ].filter((item): item is string => Boolean(item));
-  const bookingImprovements = [
-    !directBookingLinks.length ? "Add a prominent direct booking action in the header and repeat it near high-intent content." : null,
-    !enquiryLinks.length && !hasPhone ? "Add a clear enquiry route for group bookings, events or questions that cannot be completed online." : null
-  ].filter((item): item is string => Boolean(item));
-
-  const localStrengths = [
-    schema.localBusiness ? "Search engines can recognise the site as a local hospitality business." : null,
-    hasAddress ? "A visible location signal helps guests and search engines connect the business with its destination." : null,
-    hasPhone || hasEmail ? "Public contact details give guests a way to verify and contact the business." : null
-  ].filter((item): item is string => Boolean(item));
-  const localImprovements = [
-    !schema.localBusiness ? "Add Hotel, Restaurant or LocalBusiness structured data with the correct name, address and contact details." : null,
-    !hasAddress ? "Show a consistent address or service location so local search engines can match the business accurately." : null,
-    !hasPhone && !hasEmail ? "Publish a consistent telephone number or email address on the main contact routes." : null
-  ].filter((item): item is string => Boolean(item));
-
   const visibilityStrengths = [
     socialPlatforms.length ? "Guests can move from the website to the brand's active social channels." : null,
     socialPlatforms.length >= 2 ? "The website supports brand verification across more than one social platform." : null,
@@ -868,34 +1097,69 @@ export async function runDigitalScan(input: {
     "Provide a feed screenshot when public platforms block recent posts so visual branding can be assessed reliably."
   ];
 
-  const brandStrengths = [
-    hasEmail && hasPhone ? "Guests have both email and telephone contact routes available." : hasEmail || hasPhone ? "At least one clear public contact route is available." : null,
-    hasOpenGraph ? "Shared links have a defined title and image, helping the brand appear consistently in messages and social posts." : null,
-    hasAddress ? "The website provides a location signal that supports trust and consistency." : null
+  const offerStrengths = [
+    businessTypeClear ? (pt ? "Os visitantes conseguem perceber rapidamente o tipo de negócio." : "Visitors can quickly understand the type of business.") : null,
+    detectedOfferings.length >= 2 ? (pt ? "A página inicial apresenta várias partes importantes da oferta." : "The homepage presents several important parts of the offer.") : null,
+    locationClear ? (pt ? "A localização ajuda os clientes a decidir se o negócio é relevante para a sua visita ou compra." : "The location helps customers decide whether the business is relevant to their visit or purchase.") : null,
+    hasPhone || hasEmail ? (pt ? "Existe pelo menos uma forma clara de contacto público." : "At least one clear public contact route is available.") : null
   ].filter((item): item is string => Boolean(item));
-  const brandImprovements = [
-    !hasEmail || !hasPhone ? "Make both email and telephone contact easy to find for guests with different preferences." : null,
-    !hasAddress ? "Add a consistent business address or service location to strengthen trust and local relevance." : null,
-    !hasOpenGraph ? "Set a branded title and image for shared links so the business looks intentional outside the website." : null
+  const offerImprovements = [
+    !businessTypeClear ? (pt ? `Declare logo no início que o negócio é ${businessProfile.shortLabel}.` : `State near the top of the page that the business is a ${businessProfile.shortLabel}.`) : null,
+    !detectedOfferings.length ? (pt ? "Mostre os principais produtos ou serviços com nomes, imagens e benefícios claros." : "Show the main products or services with clear names, imagery and benefits.") : null,
+    detectedOfferings.length === 1 ? (pt ? "Dê maior hierarquia às diferentes partes da oferta para facilitar a comparação." : "Give the different parts of the offer stronger hierarchy so customers can compare them.") : null,
+    !locationClear ? (pt ? "Torne a localização, a área servida ou os pontos de venda mais visíveis." : "Make the location, service area or retail availability more visible.") : null,
+    !hasOpenGraph ? (pt ? "Defina um título e uma imagem de marca para as ligações partilhadas." : "Set a branded title and image for shared links.") : null
   ].filter((item): item is string => Boolean(item));
 
+  const photographyCoverageStrength = input.businessType === "hotel_accommodation"
+    ? (pt ? "A página inicial tem fotografia suficiente para apresentar os quartos, instalações e experiência." : "The homepage has enough photography to present the rooms, facilities and experience.")
+    : input.businessType === "restaurant_venue"
+      ? (pt ? "A página inicial tem fotografia suficiente para apresentar a comida, as bebidas e o ambiente." : "The homepage has enough photography to present the food, drinks and atmosphere.")
+      : (pt ? "A página inicial tem fotografia suficiente para apresentar os produtos e a marca." : "The homepage has enough photography to present the products and brand.");
   const photographyStrengths = [
-    images.count >= 5 && images.count <= 30 ? "The homepage has enough photography to communicate the hospitality experience without relying on a single image." : null,
+    images.count >= 5 && images.count <= 30 ? photographyCoverageStrength : null,
     images.altCoverage >= 0.75 ? "Most images are described for accessibility and image search." : null,
     images.dimensionCoverage >= 0.7 ? "Most images reserve their display space, reducing disruptive layout movement while the page loads." : null
   ].filter((item): item is string => Boolean(item));
+  const imageSequenceImprovement = input.businessType === "hotel_accommodation"
+    ? pt
+      ? "Adicione uma sequência de imagens focada nos quartos, instalações, ambiente, pessoas e detalhes distintivos."
+      : "Add a focused image sequence covering rooms, facilities, atmosphere, people and distinctive details."
+    : input.businessType === "restaurant_venue"
+      ? pt
+        ? "Adicione uma sequência de imagens focada nos pratos principais, bebidas, espaço, ambiente, pessoas e serviço."
+        : "Add a focused image sequence covering signature dishes, drinks, the venue, atmosphere, people and service."
+      : pt
+        ? "Adicione uma sequência de imagens focada na gama, embalagem, ingredientes, ocasiões de consumo e detalhes distintivos."
+        : "Add a focused image sequence covering the product range, packaging, ingredients, use occasions and distinctive details.";
   const photographyImprovements = [
     images.count > 30 ? "Use a tighter edit of the strongest images so the page feels curated and loads more efficiently." : null,
-    images.count < 5 ? "Add a focused image sequence covering the space, food or rooms, atmosphere, people and distinctive details." : null,
+    images.count < 5 ? imageSequenceImprovement : null,
     images.altCoverage < 0.75 ? "Describe important images in plain language so guests using assistive technology understand what is shown." : null,
     images.dimensionCoverage < 0.7 ? "Define image dimensions and optimise delivery to reduce movement and improve mobile loading." : null
   ].filter((item): item is string => Boolean(item));
 
+  const overviewHeadline = businessTypeClear
+    ? pt
+      ? `Uma oferta de ${businessProfile.shortLabel}${locationClear && input.location ? ` em ${input.location}` : ""}.`
+      : `A recognisable ${businessProfile.shortLabel}${locationClear && input.location ? ` in ${input.location}` : ""}.`
+    : pt
+      ? "A primeira impressão ainda não explica claramente o tipo de negócio."
+      : "The first impression does not yet explain the type of business clearly.";
+  const overviewSummary = pt
+    ? `${input.businessName} ${businessTypeClear ? `apresenta-se como ${businessProfile.shortLabel}` : `foi analisado na categoria ${businessProfile.label.toLowerCase()}, mas essa categoria não fica imediatamente clara no website`}. ${detectedOfferings.length ? `A página inicial destaca ${joinedList(detectedOfferings, "pt")}.` : "Os principais produtos ou serviços não estão suficientemente visíveis na página inicial."} ${locationClear ? "A localização ou área servida é identificável." : "A localização ou área servida precisa de maior destaque."}`
+    : `${input.businessName} ${businessTypeClear ? `presents itself as a ${businessProfile.shortLabel}` : `was assessed as ${businessProfile.label.toLowerCase()}, but that category is not immediately clear on the website`}. ${detectedOfferings.length ? `The homepage highlights ${joinedList(detectedOfferings, "en")}.` : "The main products or services are not prominent enough on the homepage."} ${locationClear ? "The location or service area is identifiable." : "The location or service area needs greater prominence."}`;
+  const journeyEvidence = input.businessType === "hotel_accommodation"
+    ? reservationLinks.length > 0
+    : input.businessType === "restaurant_venue"
+      ? reservationLinks.length > 0 || menuLinks.length > 0 || orderLinks.length > 0
+      : orderLinks.length > 0 || productLinks.length > 0 || stockistLinks.length > 0;
+
   const areas = [
     area("website", "Website health", healthScore, "verified", healthScore >= 75 ? "The website has a solid technical foundation for guest browsing." : "Technical gaps may make the website harder to use or trust.", healthFindings, healthStrengths, healthImprovements),
     area("seo", "SEO and performance", seoScore, speed ? "verified" : "partial", seoScore >= 70 ? "The core search foundations are in place, with opportunities to improve visibility and speed." : "Important search signals are missing or need strengthening.", seoFindings, seoStrengths, seoImprovements),
-    area("booking", "Direct booking journey", bookingScore, directBookingLinks.length ? "verified" : "partial", directBookingLinks.length ? "The website gives guests a route towards booking directly." : "The website does not yet make the next direct booking step obvious enough.", bookingFindings, bookingStrengths, bookingImprovements),
-    area("google", "Local discovery readiness", googleScore, googleConfidence, googleScore >= 70 ? "The business provides strong signals for local discovery and verification." : "Search engines may struggle to connect the business, location and contact details confidently.", googleFindings, localStrengths, localImprovements),
+    area("booking", journeyTitle, journeyScore, journeyEvidence ? "verified" : "partial", journeySummary, journeyFindings, journeyStrengths, journeyImprovements),
+    area("google", discoveryTitle, discoveryScore, discoveryConfidence, discoverySummary, discoveryFindings, discoveryStrengths, discoveryImprovements),
     area("visibility", "Social presence connections", visibilityScore, socialPlatforms.length ? "verified" : "not_confirmed", socialPlatforms.length >= 2 ? "The website supports guest research across several active social channels." : "The connection between the website and the wider social presence can be strengthened.", visibilityFindings, visibilityStrengths, visibilityImprovements),
     area(
       "social_visual",
@@ -915,22 +1179,39 @@ export async function runDigitalScan(input: {
       visualStrengths,
       visualImprovements
     ),
-    area("brand", "Brand and contact consistency", brandScore, "verified", brandScore >= 70 ? "Guests can verify and contact the business through consistent public signals." : "Missing contact, location or sharing details may weaken trust.", brandFindings, brandStrengths, brandImprovements),
+    area(
+      "brand",
+      pt ? "Clareza da oferta e da marca" : "Offer and brand clarity",
+      offerClarityScore,
+      businessTypeClear && detectedOfferings.length ? "verified" : "partial",
+      pt
+        ? offerClarityScore >= 70
+          ? "Os visitantes conseguem compreender o tipo de negócio, a oferta e a localização."
+          : "A proposta, os produtos ou serviços e a localização precisam de maior clareza."
+        : offerClarityScore >= 70
+          ? "Visitors can understand the business type, offer and location."
+          : "The proposition, products or services and location need greater clarity.",
+      offerFindings,
+      offerStrengths,
+      offerImprovements
+    ),
     area("photography", "Photography presentation", photographyScore, "partial", images.altCoverage >= 0.75 && images.count <= 30 ? "Photography is presented with a solid accessible and technical foundation." : "The image library needs a more curated and accessible presentation.", photographyFindings, photographyStrengths, photographyImprovements)
   ];
 
   const priorityPool = [
-    !directBookingLinks.length && "Add one prominent direct booking action in the header and key landing sections.",
-    !feed && "Upload a feed screenshot to add a free visual consistency check without connecting an account.",
+    journeyImprovements[0],
+    !businessTypeClear && (pt ? `Declare claramente que o negócio é ${businessProfile.shortLabel}.` : `State clearly that the business is a ${businessProfile.shortLabel}.`),
+    !detectedOfferings.length && (pt ? "Apresente os principais produtos ou serviços com imagens, nomes e benefícios claros." : "Present the main products or services with clear imagery, names and benefits."),
+    !locationClear && (pt ? "Torne a localização, área servida ou pontos de venda visíveis nas páginas principais." : "Make the location, service area or retail availability visible on key pages."),
+    discoveryImprovements[0],
     feed && feed.colourCohesion < 55 && "Use a more consistent colour treatment or recurring branded graphic system across the feed.",
     feed && feed.exposureBalance < 55 && "Balance very dark and very bright posts so the feed feels more intentional as a whole.",
     feed && feed.imageQuality < 60 && "Use higher-resolution feed imagery and export graphics at platform-ready dimensions.",
     feed && feed.repetitionRisk > 35 && "Increase the variety of recent visuals so repeated-looking posts do not weaken the feed.",
     !description && "Write a clear meta description that communicates the hospitality experience and location.",
-    !schema.localBusiness && "Add appropriate hospitality business structured data with address, contact and profile links.",
     !socialLinks.length && "Connect the website to the active social profiles guests use to assess the experience.",
     images.altCoverage < 0.75 && "Improve image alt text so photography is accessible and easier for search engines to understand.",
-    images.count < 5 && "Use a stronger, curated photography sequence to communicate rooms, food, atmosphere and guest experience.",
+    images.count < 5 && imageSequenceImprovement,
     !hasOpenGraph && "Add complete social sharing metadata so links present consistently when shared.",
     speed?.performance !== undefined && speed.performance < 70 && "Prioritise mobile performance, especially image weight and loading behaviour."
   ].filter((item): item is string => Boolean(item));
@@ -943,6 +1224,13 @@ export async function runDigitalScan(input: {
     finalUrl: finalUrl.toString(),
     businessName: input.businessName,
     location: input.location,
+    businessType: input.businessType,
+    overview: {
+      typeLabel: businessProfile.label,
+      headline: overviewHeadline,
+      summary: overviewSummary,
+      offerings: detectedOfferings
+    },
     scannedAt: new Date().toISOString(),
     overallScore: clamp(areas.reduce((total, item) => total + item.score, 0) / areas.length),
     pageSpeedAvailable: Boolean(speed),

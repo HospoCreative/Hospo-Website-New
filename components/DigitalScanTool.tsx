@@ -8,11 +8,16 @@ import { analyseSocialFeedScreenshot } from "@/lib/socialFeedAnalysis";
 
 const copy = {
   en: {
-    eyebrow: "Instant public scan",
+    eyebrow: "Test your digital score",
     title: "See how your hospitality business appears online.",
-    body: "Enter your public website and contact details. We will review the signals that shape discovery, direct bookings, trust and brand presentation.",
+    body: "Enter your public website and contact details. We will review how clearly customers can understand the offer, find the business and move towards a booking, order or purchase.",
     website: "Website URL",
     business: "Business name",
+    businessType: "Type of business",
+    businessTypePrompt: "Select the closest business type",
+    hotelType: "Hotels and accommodation",
+    restaurantType: "Restaurants, bars and coffee shops",
+    productType: "Food and beverage products",
     businessOptional: "Optional",
     location: "Town or location",
     email: "Contact email",
@@ -30,6 +35,9 @@ const copy = {
     honeypot: "Company website confirmation",
     security: "We only inspect public website information. Never enter account passwords or private platform credentials.",
     report: "Your public digital presence report",
+    overview: "Quick overview",
+    offerings: "Offerings detected",
+    noOfferings: "No clear offering themes were confirmed from the public homepage.",
     score: "Overall score",
     whatWorks: "What is working",
     improveNext: "Improve next",
@@ -59,11 +67,16 @@ const copy = {
     error: "We could not complete the scan. Please check the website address and try again."
   },
   pt: {
-    eyebrow: "Análise pública instantânea",
+    eyebrow: "Teste a sua presença digital",
     title: "Veja como o seu negócio de hotelaria aparece online.",
-    body: "Introduza o website público e os dados de contacto. Vamos analisar os sinais que influenciam a descoberta, as reservas diretas, a confiança e a apresentação da marca.",
+    body: "Introduza o website público e os dados de contacto. Vamos analisar se os clientes compreendem a oferta, encontram o negócio e avançam para uma reserva, pedido ou compra.",
     website: "URL do website",
     business: "Nome do negócio",
+    businessType: "Tipo de negócio",
+    businessTypePrompt: "Selecione o tipo de negócio mais próximo",
+    hotelType: "Hotéis e alojamento",
+    restaurantType: "Restaurantes, bares e cafés",
+    productType: "Produtos de alimentação e bebidas",
     businessOptional: "Opcional",
     location: "Localidade",
     email: "Email de contacto",
@@ -81,6 +94,9 @@ const copy = {
     honeypot: "Confirmação do website da empresa",
     security: "Analisamos apenas informação pública. Nunca introduza palavras-passe ou credenciais privadas de plataformas.",
     report: "Relatório da sua presença digital pública",
+    overview: "Visão geral",
+    offerings: "Ofertas identificadas",
+    noOfferings: "Não foram confirmadas ofertas claras na página inicial pública.",
     score: "Pontuação geral",
     whatWorks: "O que está a funcionar",
     improveNext: "Melhorar a seguir",
@@ -176,6 +192,7 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
         body: JSON.stringify({
           websiteUrl: form.get("websiteUrl"),
           businessName: form.get("businessName"),
+          businessType: form.get("businessType"),
           location: form.get("location"),
           email: form.get("email"),
           companyWebsite: form.get("companyWebsite"),
@@ -222,6 +239,15 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
             <label className="text-sm font-bold">
               {t.website}
               <input name="websiteUrl" type="text" inputMode="url" required placeholder="https://example.com" className="mt-2 min-h-12 w-full rounded-[8px] border border-ink/18 px-4 py-3 text-base outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/30" />
+            </label>
+            <label className="text-sm font-bold">
+              {t.businessType}
+              <select name="businessType" required defaultValue="" className="mt-2 min-h-12 w-full rounded-[8px] border border-ink/18 bg-white px-4 py-3 text-base outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/30">
+                <option value="" disabled>{t.businessTypePrompt}</option>
+                <option value="hotel_accommodation">{t.hotelType}</option>
+                <option value="restaurant_venue">{t.restaurantType}</option>
+                <option value="fnb_product">{t.productType}</option>
+              </select>
             </label>
             <div className="grid gap-5 sm:grid-cols-2">
               <label className="text-sm font-bold">
@@ -287,6 +313,20 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
               </div>
             </div>
 
+            <div className="mt-10 grid gap-6 border border-ink/15 bg-ink p-6 text-white sm:p-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-10">
+              <div>
+                <p className="section-eyebrow text-yellow">{t.overview}</p>
+                <p className="mt-4 text-sm font-black uppercase tracking-[0.14em] text-white/60">{report.overview.typeLabel}</p>
+                {report.location ? <p className="mt-2 text-sm text-white/65">{report.location}</p> : null}
+              </div>
+              <div>
+                <h3 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl">{report.overview.headline}</h3>
+                <p className="mt-4 max-w-3xl text-base leading-7 text-white/75">{report.overview.summary}</p>
+                <p className="mt-6 text-[0.62rem] font-black uppercase tracking-[0.14em] text-yellow">{t.offerings}</p>
+                {report.overview.offerings.length ? <div className="mt-3 flex flex-wrap gap-2">{report.overview.offerings.map((offering) => <span key={offering} className="rounded-full border border-white/25 px-3 py-2 text-xs font-bold text-white">{offering}</span>)}</div> : <p className="mt-3 text-sm text-white/65">{t.noOfferings}</p>}
+              </div>
+            </div>
+
             <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
               {report.areas.map((item) => {
                 const presentation = statusPresentation(item.score, item.confidence, t);
@@ -340,7 +380,7 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
                   </div>
                 ) : null}
                 {[
-                  [t.directBooking, report.discovered.directBookingLinks ?? []],
+                  [report.businessType === "hotel_accommodation" ? t.directBooking : report.businessType === "restaurant_venue" ? (locale === "pt" ? "Reservas e pedidos" : "Reservation and ordering routes") : (locale === "pt" ? "Compra e produtos" : "Purchase and product routes"), report.discovered.directBookingLinks ?? []],
                   [t.enquiries, report.discovered.enquiryLinks ?? []],
                   [t.socials, report.discovered.socialLinks],
                   [t.google, report.discovered.googleLinks],

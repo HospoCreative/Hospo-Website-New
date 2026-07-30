@@ -71,10 +71,10 @@ export function Header({ locale = "en" }: { locale?: Locale }) {
 
         <div className="flex items-center gap-3">
           <Link
-            href={localizedPath("/#digital-review", locale)}
+            href={localizedPath("/digital-scan", locale)}
             className="hidden items-center gap-2 rounded-full bg-yellow px-4 py-2.5 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-ink transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:inline-flex"
           >
-            {translate(locale, "Request a Digital Review")}
+            {translate(locale, "Test Your Digital Score")}
             <ArrowUpRight aria-hidden="true" size={16} strokeWidth={2} />
           </Link>
 
@@ -112,11 +112,11 @@ export function Header({ locale = "en" }: { locale?: Locale }) {
               </a>
             ))}
             <Link
-              href={localizedPath("/#digital-review", locale)}
+              href={localizedPath("/digital-scan", locale)}
               onClick={() => setIsOpen(false)}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-full border border-yellow/45 bg-white/[0.06] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
-              {translate(locale, "Request a Digital Review")}
+              {translate(locale, "Test Your Digital Score")}
               <ArrowUpRight aria-hidden="true" size={16} />
             </Link>
           </nav>
