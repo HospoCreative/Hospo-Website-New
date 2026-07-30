@@ -62,8 +62,9 @@ function CaseStudyMediaAsset({
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const { slug } = await params;
-  const caseStudy = await getCaseStudyBySlug(slug);
+  const caseStudy = await getCaseStudyBySlug(slug, locale);
 
   if (!caseStudy) {
     return {};
@@ -83,7 +84,7 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const locale = await getRequestLocale();
   const { slug } = await params;
-  const caseStudy = await getCaseStudyBySlug(slug);
+  const caseStudy = await getCaseStudyBySlug(slug, locale);
 
   if (!caseStudy) {
     notFound();

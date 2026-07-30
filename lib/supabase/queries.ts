@@ -1,6 +1,7 @@
 import type { BlogPost } from "@/types/blogPost";
 import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy";
 import type { ClientLogo } from "@/types/clientLogo";
+import type { Locale } from "@/lib/i18n";
 import { isSupabaseConfigured } from "./env";
 import { createSupabasePublicClient } from "./public";
 import { createSupabaseServerClient } from "./server";
@@ -19,17 +20,25 @@ type CaseStudyMediaRow = {
 type CaseStudyRow = {
   id: string;
   title: string;
+  title_pt: string | null;
   slug: string;
   client_name: string;
   location: string | null;
   sector: string | null;
+  sector_pt: string | null;
   summary: string;
+  summary_pt: string | null;
   challenge: string | null;
+  challenge_pt: string | null;
   solution: string | null;
+  solution_pt: string | null;
   result: string | null;
+  result_pt: string | null;
   services: string[] | null;
+  services_pt: string[] | null;
   hero_image: string | null;
   hero_image_alt: string | null;
+  hero_image_alt_pt: string | null;
   featured: boolean;
   display_order: number;
   status: ContentStatus;
@@ -39,13 +48,18 @@ type CaseStudyRow = {
 type BlogPostRow = {
   id: string;
   title: string;
+  title_pt: string | null;
   slug: string;
   excerpt: string;
+  excerpt_pt: string | null;
   content: string;
+  content_pt: string | null;
   cover_image: string | null;
   cover_image_alt: string | null;
+  cover_image_alt_pt: string | null;
   author_name: string | null;
   tags: string[] | null;
+  tags_pt: string[] | null;
   status: ContentStatus;
   published_at: string | null;
 };
@@ -75,21 +89,41 @@ function mapCaseStudyMedia(row: CaseStudyMediaRow): CaseStudyMedia {
   };
 }
 
-function mapCaseStudy(row: CaseStudyRow, media: CaseStudyMediaRow[] = []): CaseStudy {
+function translatedText(locale: Locale, translated: string | null, fallback: string) {
+  return locale === "pt" && translated?.trim() ? translated : fallback;
+}
+
+function translatedOptional(locale: Locale, translated: string | null, fallback: string | null) {
+  return locale === "pt" && translated?.trim() ? translated : fallback;
+}
+
+function translatedList(locale: Locale, translated: string[] | null, fallback: string[] | null) {
+  return locale === "pt" && translated?.length ? translated : (fallback ?? []);
+}
+
+function mapCaseStudy(row: CaseStudyRow, media: CaseStudyMediaRow[] = [], locale: Locale = "en"): CaseStudy {
   return {
     id: row.id,
-    title: row.title,
+    title: translatedText(locale, row.title_pt, row.title),
+    titlePt: row.title_pt,
     slug: row.slug,
     clientName: row.client_name,
     location: row.location,
-    sector: row.sector,
-    summary: row.summary,
-    challenge: row.challenge,
-    solution: row.solution,
-    result: row.result,
-    services: row.services ?? [],
+    sector: translatedOptional(locale, row.sector_pt, row.sector),
+    sectorPt: row.sector_pt,
+    summary: translatedText(locale, row.summary_pt, row.summary),
+    summaryPt: row.summary_pt,
+    challenge: translatedOptional(locale, row.challenge_pt, row.challenge),
+    challengePt: row.challenge_pt,
+    solution: translatedOptional(locale, row.solution_pt, row.solution),
+    solutionPt: row.solution_pt,
+    result: translatedOptional(locale, row.result_pt, row.result),
+    resultPt: row.result_pt,
+    services: translatedList(locale, row.services_pt, row.services),
+    servicesPt: row.services_pt ?? [],
     heroImage: row.hero_image,
-    heroImageAlt: row.hero_image_alt,
+    heroImageAlt: translatedOptional(locale, row.hero_image_alt_pt, row.hero_image_alt),
+    heroImageAltPt: row.hero_image_alt_pt,
     featured: row.featured,
     displayOrder: row.display_order,
     status: row.status,
@@ -101,17 +135,22 @@ function mapCaseStudy(row: CaseStudyRow, media: CaseStudyMediaRow[] = []): CaseS
   };
 }
 
-function mapBlogPost(row: BlogPostRow): BlogPost {
+function mapBlogPost(row: BlogPostRow, locale: Locale = "en"): BlogPost {
   return {
     id: row.id,
-    title: row.title,
+    title: translatedText(locale, row.title_pt, row.title),
+    titlePt: row.title_pt,
     slug: row.slug,
-    excerpt: row.excerpt,
-    content: row.content,
+    excerpt: translatedText(locale, row.excerpt_pt, row.excerpt),
+    excerptPt: row.excerpt_pt,
+    content: translatedText(locale, row.content_pt, row.content),
+    contentPt: row.content_pt,
     coverImage: row.cover_image,
-    coverImageAlt: row.cover_image_alt,
+    coverImageAlt: translatedOptional(locale, row.cover_image_alt_pt, row.cover_image_alt),
+    coverImageAltPt: row.cover_image_alt_pt,
     authorName: row.author_name,
-    tags: row.tags ?? [],
+    tags: translatedList(locale, row.tags_pt, row.tags),
+    tagsPt: row.tags_pt ?? [],
     status: row.status,
     publishedAt: row.published_at
   };
@@ -131,7 +170,7 @@ function mapClientLogo(row: ClientLogoRow): ClientLogo {
   };
 }
 
-export async function getPublishedCaseStudies() {
+export async function getPublishedCaseStudies(locale: Locale = "en") {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -140,7 +179,7 @@ export async function getPublishedCaseStudies() {
   const { data, error } = await supabase
     .from("case_studies")
     .select(
-      "id,title,slug,client_name,location,sector,summary,challenge,solution,result,services,hero_image,hero_image_alt,featured,display_order,status,published_at"
+      "id,title,title_pt,slug,client_name,location,sector,sector_pt,summary,summary_pt,challenge,challenge_pt,solution,solution_pt,result,result_pt,services,services_pt,hero_image,hero_image_alt,hero_image_alt_pt,featured,display_order,status,published_at"
     )
     .eq("status", "published")
     .order("display_order", { ascending: true })
@@ -168,12 +207,12 @@ export async function getPublishedCaseStudies() {
   }, {});
 
   return caseStudyRows.map((caseStudy) =>
-    mapCaseStudy(caseStudy, mediaByCaseStudy[caseStudy.id] ?? [])
+    mapCaseStudy(caseStudy, mediaByCaseStudy[caseStudy.id] ?? [], locale)
   );
 }
 
-export async function getFeaturedCaseStudies() {
-  const caseStudies = await getPublishedCaseStudies();
+export async function getFeaturedCaseStudies(locale: Locale = "en") {
+  const caseStudies = await getPublishedCaseStudies(locale);
   return caseStudies
     .filter(
       (caseStudy) =>
@@ -189,12 +228,12 @@ export async function getFeaturedCaseStudies() {
     .slice(0, 3);
 }
 
-export async function getCaseStudyBySlug(slug: string) {
-  const caseStudies = await getPublishedCaseStudies();
+export async function getCaseStudyBySlug(slug: string, locale: Locale = "en") {
+  const caseStudies = await getPublishedCaseStudies(locale);
   return caseStudies.find((caseStudy) => caseStudy.slug === slug) ?? null;
 }
 
-export async function getPublishedBlogPosts() {
+export async function getPublishedBlogPosts(locale: Locale = "en") {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -202,7 +241,7 @@ export async function getPublishedBlogPosts() {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id,title,slug,excerpt,content,cover_image,cover_image_alt,author_name,tags,status,published_at")
+    .select("id,title,title_pt,slug,excerpt,excerpt_pt,content,content_pt,cover_image,cover_image_alt,cover_image_alt_pt,author_name,tags,tags_pt,status,published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -210,11 +249,11 @@ export async function getPublishedBlogPosts() {
     return [];
   }
 
-  return (data as BlogPostRow[]).map(mapBlogPost);
+  return (data as BlogPostRow[]).map((post) => mapBlogPost(post, locale));
 }
 
-export async function getBlogPostBySlug(slug: string) {
-  const posts = await getPublishedBlogPosts();
+export async function getBlogPostBySlug(slug: string, locale: Locale = "en") {
+  const posts = await getPublishedBlogPosts(locale);
   return posts.find((post) => post.slug === slug) ?? null;
 }
 

@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
   const locale = await getRequestLocale();
-  const posts = await getPublishedBlogPosts();
+  const posts = await getPublishedBlogPosts(locale);
   const [featuredPost, ...otherPosts] = posts;
 
   return (

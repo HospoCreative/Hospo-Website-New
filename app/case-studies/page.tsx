@@ -15,7 +15,7 @@ function isVideo(src: string) {
 
 export default async function CaseStudiesPage() {
   const locale = await getRequestLocale();
-  const caseStudies = await getPublishedCaseStudies();
+  const caseStudies = await getPublishedCaseStudies(locale);
 
   return (
     <>

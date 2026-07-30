@@ -10,17 +10,25 @@ const statusSchema = z.enum(["draft", "published", "archived"]);
 
 const caseStudySchema = z.object({
   title: z.string().min(2),
+  title_pt: z.string().optional(),
   slug: z.string().min(2),
   client_name: z.string().min(2),
   location: z.string().optional(),
   sector: z.string().optional(),
+  sector_pt: z.string().optional(),
   summary: z.string().min(10),
+  summary_pt: z.string().optional(),
   challenge: z.string().optional(),
+  challenge_pt: z.string().optional(),
   solution: z.string().optional(),
+  solution_pt: z.string().optional(),
   result: z.string().optional(),
+  result_pt: z.string().optional(),
   services: z.array(z.string()),
+  services_pt: z.array(z.string()),
   hero_image: z.string().optional(),
   hero_image_alt: z.string().optional(),
+  hero_image_alt_pt: z.string().optional(),
   featured: z.boolean(),
   display_order: z.number(),
   status: statusSchema
@@ -28,13 +36,18 @@ const caseStudySchema = z.object({
 
 const blogPostSchema = z.object({
   title: z.string().min(2),
+  title_pt: z.string().optional(),
   slug: z.string().min(2),
   excerpt: z.string().min(10),
+  excerpt_pt: z.string().optional(),
   content: z.string().min(10),
+  content_pt: z.string().optional(),
   cover_image: z.string().optional(),
   cover_image_alt: z.string().optional(),
+  cover_image_alt_pt: z.string().optional(),
   author_name: z.string().optional(),
   tags: z.array(z.string()),
+  tags_pt: z.array(z.string()),
   status: statusSchema
 });
 
@@ -187,17 +200,25 @@ export async function createCaseStudyAction(formData: FormData) {
   const title = formText(formData, "title");
   const parsed = caseStudySchema.parse({
     title,
+    title_pt: formText(formData, "title_pt"),
     slug: slugify(formText(formData, "slug") || title),
     client_name: formText(formData, "client_name"),
     location: formText(formData, "location"),
     sector: formText(formData, "sector"),
+    sector_pt: formText(formData, "sector_pt"),
     summary: formText(formData, "summary"),
+    summary_pt: formText(formData, "summary_pt"),
     challenge: formText(formData, "challenge"),
+    challenge_pt: formText(formData, "challenge_pt"),
     solution: formText(formData, "solution"),
+    solution_pt: formText(formData, "solution_pt"),
     result: formText(formData, "result"),
+    result_pt: formText(formData, "result_pt"),
     services: formList(formData, "services"),
+    services_pt: formList(formData, "services_pt"),
     hero_image: formText(formData, "hero_image"),
     hero_image_alt: formText(formData, "hero_image_alt"),
+    hero_image_alt_pt: formText(formData, "hero_image_alt_pt"),
     featured: formBoolean(formData, "featured"),
     display_order: formNumber(formData, "display_order"),
     status: formText(formData, "status")
@@ -214,11 +235,18 @@ export async function createCaseStudyAction(formData: FormData) {
       ...parsed,
       location: optionalNull(parsed.location ?? ""),
       sector: optionalNull(parsed.sector ?? ""),
+      title_pt: optionalNull(parsed.title_pt ?? ""),
+      sector_pt: optionalNull(parsed.sector_pt ?? ""),
+      summary_pt: optionalNull(parsed.summary_pt ?? ""),
       challenge: optionalNull(parsed.challenge ?? ""),
+      challenge_pt: optionalNull(parsed.challenge_pt ?? ""),
       solution: optionalNull(parsed.solution ?? ""),
+      solution_pt: optionalNull(parsed.solution_pt ?? ""),
       result: optionalNull(parsed.result ?? ""),
+      result_pt: optionalNull(parsed.result_pt ?? ""),
       hero_image: optionalNull(parsed.hero_image ?? ""),
       hero_image_alt: optionalNull(parsed.hero_image_alt ?? ""),
+      hero_image_alt_pt: optionalNull(parsed.hero_image_alt_pt ?? ""),
       published_at: parsed.status === "published" ? new Date().toISOString() : null
     })
     .select("id")
@@ -235,8 +263,11 @@ export async function createCaseStudyAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/pt");
   revalidatePath("/case-studies");
   revalidatePath("/case-studies/[slug]", "page");
+  revalidatePath("/pt/case-studies");
+  revalidatePath("/pt/case-studies/[slug]", "page");
   redirect(`/admin/case-studies/${data.id}`);
 }
 
@@ -246,17 +277,25 @@ export async function updateCaseStudyAction(formData: FormData) {
   const title = formText(formData, "title");
   const parsed = caseStudySchema.parse({
     title,
+    title_pt: formText(formData, "title_pt"),
     slug: slugify(formText(formData, "slug") || title),
     client_name: formText(formData, "client_name"),
     location: formText(formData, "location"),
     sector: formText(formData, "sector"),
+    sector_pt: formText(formData, "sector_pt"),
     summary: formText(formData, "summary"),
+    summary_pt: formText(formData, "summary_pt"),
     challenge: formText(formData, "challenge"),
+    challenge_pt: formText(formData, "challenge_pt"),
     solution: formText(formData, "solution"),
+    solution_pt: formText(formData, "solution_pt"),
     result: formText(formData, "result"),
+    result_pt: formText(formData, "result_pt"),
     services: formList(formData, "services"),
+    services_pt: formList(formData, "services_pt"),
     hero_image: formText(formData, "hero_image"),
     hero_image_alt: formText(formData, "hero_image_alt"),
+    hero_image_alt_pt: formText(formData, "hero_image_alt_pt"),
     featured: formBoolean(formData, "featured"),
     display_order: formNumber(formData, "display_order"),
     status: formText(formData, "status")
@@ -273,11 +312,18 @@ export async function updateCaseStudyAction(formData: FormData) {
       ...parsed,
       location: optionalNull(parsed.location ?? ""),
       sector: optionalNull(parsed.sector ?? ""),
+      title_pt: optionalNull(parsed.title_pt ?? ""),
+      sector_pt: optionalNull(parsed.sector_pt ?? ""),
+      summary_pt: optionalNull(parsed.summary_pt ?? ""),
       challenge: optionalNull(parsed.challenge ?? ""),
+      challenge_pt: optionalNull(parsed.challenge_pt ?? ""),
       solution: optionalNull(parsed.solution ?? ""),
+      solution_pt: optionalNull(parsed.solution_pt ?? ""),
       result: optionalNull(parsed.result ?? ""),
+      result_pt: optionalNull(parsed.result_pt ?? ""),
       hero_image: optionalNull(parsed.hero_image ?? ""),
       hero_image_alt: optionalNull(parsed.hero_image_alt ?? ""),
+      hero_image_alt_pt: optionalNull(parsed.hero_image_alt_pt ?? ""),
       published_at: parsed.status === "published" ? new Date().toISOString() : null
     })
     .eq("id", id);
@@ -293,9 +339,13 @@ export async function updateCaseStudyAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/pt");
   revalidatePath("/case-studies");
   revalidatePath("/case-studies/[slug]", "page");
   revalidatePath(`/case-studies/${parsed.slug}`);
+  revalidatePath("/pt/case-studies");
+  revalidatePath("/pt/case-studies/[slug]", "page");
+  revalidatePath(`/pt/case-studies/${parsed.slug}`);
   redirect(`/admin/case-studies/${id}?message=saved`);
 }
 
@@ -304,13 +354,18 @@ export async function createBlogPostAction(formData: FormData) {
   const title = formText(formData, "title");
   const parsed = blogPostSchema.parse({
     title,
+    title_pt: formText(formData, "title_pt"),
     slug: slugify(formText(formData, "slug") || title),
     excerpt: formText(formData, "excerpt"),
+    excerpt_pt: formText(formData, "excerpt_pt"),
     content: formText(formData, "content"),
+    content_pt: formText(formData, "content_pt"),
     cover_image: formText(formData, "cover_image"),
     cover_image_alt: formText(formData, "cover_image_alt"),
+    cover_image_alt_pt: formText(formData, "cover_image_alt_pt"),
     author_name: formText(formData, "author_name"),
     tags: formList(formData, "tags"),
+    tags_pt: formList(formData, "tags_pt"),
     status: formText(formData, "status")
   });
 
@@ -320,6 +375,10 @@ export async function createBlogPostAction(formData: FormData) {
       ...parsed,
       cover_image: optionalNull(parsed.cover_image ?? ""),
       cover_image_alt: optionalNull(parsed.cover_image_alt ?? ""),
+      title_pt: optionalNull(parsed.title_pt ?? ""),
+      excerpt_pt: optionalNull(parsed.excerpt_pt ?? ""),
+      content_pt: optionalNull(parsed.content_pt ?? ""),
+      cover_image_alt_pt: optionalNull(parsed.cover_image_alt_pt ?? ""),
       author_name: optionalNull(parsed.author_name ?? ""),
       published_at: parsed.status === "published" ? new Date().toISOString() : null
     })
@@ -331,7 +390,9 @@ export async function createBlogPostAction(formData: FormData) {
   }
 
   revalidatePath("/blog");
+  revalidatePath("/pt/blog");
   revalidatePath("/");
+  revalidatePath("/pt");
   redirect(`/admin/blog/${data.id}`);
 }
 
@@ -341,13 +402,18 @@ export async function updateBlogPostAction(formData: FormData) {
   const title = formText(formData, "title");
   const parsed = blogPostSchema.parse({
     title,
+    title_pt: formText(formData, "title_pt"),
     slug: slugify(formText(formData, "slug") || title),
     excerpt: formText(formData, "excerpt"),
+    excerpt_pt: formText(formData, "excerpt_pt"),
     content: formText(formData, "content"),
+    content_pt: formText(formData, "content_pt"),
     cover_image: formText(formData, "cover_image"),
     cover_image_alt: formText(formData, "cover_image_alt"),
+    cover_image_alt_pt: formText(formData, "cover_image_alt_pt"),
     author_name: formText(formData, "author_name"),
     tags: formList(formData, "tags"),
+    tags_pt: formList(formData, "tags_pt"),
     status: formText(formData, "status")
   });
 
@@ -357,6 +423,10 @@ export async function updateBlogPostAction(formData: FormData) {
       ...parsed,
       cover_image: optionalNull(parsed.cover_image ?? ""),
       cover_image_alt: optionalNull(parsed.cover_image_alt ?? ""),
+      title_pt: optionalNull(parsed.title_pt ?? ""),
+      excerpt_pt: optionalNull(parsed.excerpt_pt ?? ""),
+      content_pt: optionalNull(parsed.content_pt ?? ""),
+      cover_image_alt_pt: optionalNull(parsed.cover_image_alt_pt ?? ""),
       author_name: optionalNull(parsed.author_name ?? ""),
       published_at: parsed.status === "published" ? new Date().toISOString() : null
     })
@@ -367,8 +437,12 @@ export async function updateBlogPostAction(formData: FormData) {
   }
 
   revalidatePath("/blog");
+  revalidatePath("/pt/blog");
   revalidatePath("/");
+  revalidatePath("/pt");
   revalidatePath("/blog/[slug]", "page");
+  revalidatePath("/pt/blog/[slug]", "page");
+  revalidatePath(`/pt/blog/${parsed.slug}`);
   redirect(`/admin/blog/${id}?message=saved`);
 }
 

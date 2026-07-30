@@ -9,17 +9,25 @@ type FormAction = (formData: FormData) => void | Promise<void>;
 type CaseStudyFormValues = {
   id?: string;
   title?: string;
+  title_pt?: string | null;
   slug?: string;
   client_name?: string;
   location?: string | null;
   sector?: string | null;
+  sector_pt?: string | null;
   summary?: string;
+  summary_pt?: string | null;
   challenge?: string | null;
+  challenge_pt?: string | null;
   solution?: string | null;
+  solution_pt?: string | null;
   result?: string | null;
+  result_pt?: string | null;
   services?: string[] | null;
+  services_pt?: string[] | null;
   hero_image?: string | null;
   hero_image_alt?: string | null;
+  hero_image_alt_pt?: string | null;
   featured?: boolean;
   display_order?: number;
   status?: ContentStatus;
@@ -36,13 +44,18 @@ type CaseStudyFormValues = {
 type BlogFormValues = {
   id?: string;
   title?: string;
+  title_pt?: string | null;
   slug?: string;
   excerpt?: string;
+  excerpt_pt?: string | null;
   content?: string;
+  content_pt?: string | null;
   cover_image?: string | null;
   cover_image_alt?: string | null;
+  cover_image_alt_pt?: string | null;
   author_name?: string | null;
   tags?: string[] | null;
+  tags_pt?: string[] | null;
   status?: ContentStatus;
 };
 
@@ -147,6 +160,53 @@ export function CaseStudyForm({
           placeholder="Photography&#10;Social media direction"
         />
       </label>
+      <fieldset className="grid gap-5 rounded-[8px] border border-ink/14 p-5">
+        <legend className="px-2 font-serif text-2xl font-semibold text-ink">Portuguese content</legend>
+        <p className="text-sm leading-6 text-ink/60">
+          Optional. Empty fields automatically use the English version on the Portuguese website.
+        </p>
+        <label className={labelClass}>
+          Title in Portuguese
+          <input name="title_pt" defaultValue={initial?.title_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <label className={labelClass}>
+          Sector in Portuguese
+          <input name="sector_pt" defaultValue={initial?.sector_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <label className={labelClass}>
+          Summary in Portuguese
+          <textarea name="summary_pt" rows={4} defaultValue={initial?.summary_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <div className="grid gap-5 md:grid-cols-3">
+          <label className={labelClass}>
+            Challenge in Portuguese
+            <textarea name="challenge_pt" rows={5} defaultValue={initial?.challenge_pt ?? ""} className={inputClass} lang="pt-PT" />
+          </label>
+          <label className={labelClass}>
+            Solution in Portuguese
+            <textarea name="solution_pt" rows={5} defaultValue={initial?.solution_pt ?? ""} className={inputClass} lang="pt-PT" />
+          </label>
+          <label className={labelClass}>
+            Result in Portuguese
+            <textarea name="result_pt" rows={5} defaultValue={initial?.result_pt ?? ""} className={inputClass} lang="pt-PT" />
+          </label>
+        </div>
+        <label className={labelClass}>
+          Services in Portuguese
+          <textarea
+            name="services_pt"
+            rows={4}
+            defaultValue={(initial?.services_pt ?? []).join("\n")}
+            className={inputClass}
+            placeholder={"Fotografia\nEstratégia de redes sociais"}
+            lang="pt-PT"
+          />
+        </label>
+        <label className={labelClass}>
+          Hero image alt text in Portuguese
+          <input name="hero_image_alt_pt" defaultValue={initial?.hero_image_alt_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+      </fieldset>
       <CaseStudyMediaFields
         heroImage={initial?.hero_image ?? ""}
         heroImageAlt={initial?.hero_image_alt ?? ""}
@@ -201,6 +261,33 @@ export function BlogPostForm({
         required
         defaultValue={initial?.content}
       />
+      <fieldset className="grid gap-5 rounded-[8px] border border-ink/14 p-5">
+        <legend className="px-2 font-serif text-2xl font-semibold text-ink">Portuguese content</legend>
+        <p className="text-sm leading-6 text-ink/60">
+          Optional. Empty fields automatically use the English version on the Portuguese website.
+        </p>
+        <label className={labelClass}>
+          Title in Portuguese
+          <input name="title_pt" defaultValue={initial?.title_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <label className={labelClass}>
+          Excerpt in Portuguese
+          <textarea name="excerpt_pt" rows={3} defaultValue={initial?.excerpt_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <RichTextEditor
+          name="content_pt"
+          label="Article content in Portuguese"
+          defaultValue={initial?.content_pt ?? ""}
+        />
+        <label className={labelClass}>
+          Cover image alt text in Portuguese
+          <input name="cover_image_alt_pt" defaultValue={initial?.cover_image_alt_pt ?? ""} className={inputClass} lang="pt-PT" />
+        </label>
+        <label className={labelClass}>
+          Tags in Portuguese
+          <textarea name="tags_pt" rows={3} defaultValue={(initial?.tags_pt ?? []).join("\n")} className={inputClass} lang="pt-PT" />
+        </label>
+      </fieldset>
       <BlogCoverMediaFields coverImage={initial?.cover_image ?? ""} coverImageAlt={initial?.cover_image_alt ?? ""} />
       <div className="grid gap-5 md:grid-cols-3">
         <label className={labelClass}>

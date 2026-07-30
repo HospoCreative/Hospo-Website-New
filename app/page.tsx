@@ -25,8 +25,8 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const locale = await getRequestLocale();
   const [caseStudies, blogPosts, clientLogos] = await Promise.all([
-    getFeaturedCaseStudies(),
-    getPublishedBlogPosts(),
+    getFeaturedCaseStudies(locale),
+    getPublishedBlogPosts(locale),
     getPublishedClientLogos()
   ]);
 

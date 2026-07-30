@@ -14,7 +14,7 @@ export default async function EditCaseStudyPage({ params }: EditCaseStudyPagePro
   const { data } = await supabase
     .from("case_studies")
     .select(
-      "id,title,slug,client_name,location,sector,summary,challenge,solution,result,services,hero_image,hero_image_alt,featured,display_order,status,case_study_media(id,media_type,src,alt,caption,sort_order,published)"
+      "id,title,title_pt,slug,client_name,location,sector,sector_pt,summary,summary_pt,challenge,challenge_pt,solution,solution_pt,result,result_pt,services,services_pt,hero_image,hero_image_alt,hero_image_alt_pt,featured,display_order,status,case_study_media(id,media_type,src,alt,caption,sort_order,published)"
     )
     .eq("id", id)
     .maybeSingle();
