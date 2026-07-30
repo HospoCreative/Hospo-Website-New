@@ -36,10 +36,10 @@ export default async function Home() {
       <Header locale={locale} />
       <main id="main">
         <Hero locale={locale} />
-        <DigitalScanPromo locale={locale} />
         <WhoWeHelp locale={locale} />
         <DigitalFirstImpression locale={locale} />
         <DigitalRefresh locale={locale} />
+        <DigitalScanPromo locale={locale} />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <FourWaysWeHelp locale={locale} />
         <MarketingJourney locale={locale} />

@@ -29,7 +29,8 @@ const labels = {
 
 export function AutoSlidingGallery({ items, locale = "en" }: { items: SlidingGalleryItem[]; locale?: Locale }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [interacting, setInteracting] = useState(false);
+  const positionRef = useRef(0);
+  const pauseUntilRef = useRef(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const t = labels[locale];
 
@@ -44,17 +45,20 @@ export function AutoSlidingGallery({ items, locale = "en" }: { items: SlidingGal
       const elapsed = Math.min(time - previousTime, 50);
       previousTime = time;
 
-      if (!interacting) {
-        scroller.scrollLeft += elapsed * 0.018;
-        const loopPoint = scroller.scrollWidth / 2;
-        if (scroller.scrollLeft >= loopPoint) scroller.scrollLeft -= loopPoint;
+      const loopPoint = scroller.scrollWidth / 2;
+      if (time < pauseUntilRef.current) {
+        positionRef.current = scroller.scrollLeft;
+      } else {
+        positionRef.current += elapsed * 0.026;
+        if (positionRef.current >= loopPoint) positionRef.current -= loopPoint;
+        scroller.scrollLeft = Math.round(positionRef.current);
       }
       frame = window.requestAnimationFrame(animate);
     };
 
     frame = window.requestAnimationFrame(animate);
     return () => window.cancelAnimationFrame(frame);
-  }, [interacting, items.length]);
+  }, [items.length]);
 
   useEffect(() => {
     if (selectedIndex === null) return;
@@ -75,7 +79,14 @@ export function AutoSlidingGallery({ items, locale = "en" }: { items: SlidingGal
   function move(direction: -1 | 1) {
     const scroller = scrollerRef.current;
     if (!scroller) return;
-    scroller.scrollBy({ left: direction * Math.min(scroller.clientWidth * 0.78, 520), behavior: "smooth" });
+    const loopPoint = scroller.scrollWidth / 2;
+    const distance = Math.min(scroller.clientWidth * 0.78, 520);
+    let target = scroller.scrollLeft + direction * distance;
+    if (target < 0) target += loopPoint;
+    if (target >= loopPoint) target -= loopPoint;
+    pauseUntilRef.current = performance.now() + 700;
+    positionRef.current = target;
+    scroller.scrollTo({ left: target, behavior: "smooth" });
   }
 
   if (!items.length) return null;
@@ -96,12 +107,14 @@ export function AutoSlidingGallery({ items, locale = "en" }: { items: SlidingGal
         role="region"
         aria-label={t.gallery}
         className="gallery-slider -mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8"
-        onPointerEnter={() => setInteracting(true)}
-        onPointerLeave={() => setInteracting(false)}
-        onPointerDown={() => setInteracting(true)}
-        onPointerUp={() => setInteracting(false)}
-        onFocusCapture={() => setInteracting(true)}
-        onBlurCapture={() => setInteracting(false)}
+        onPointerDown={() => { pauseUntilRef.current = performance.now() + 900; }}
+        onPointerUp={() => { positionRef.current = scrollerRef.current?.scrollLeft ?? positionRef.current; }}
+        onPointerCancel={() => { positionRef.current = scrollerRef.current?.scrollLeft ?? positionRef.current; }}
+        onScroll={() => {
+          if (performance.now() < pauseUntilRef.current && scrollerRef.current) {
+            positionRef.current = scrollerRef.current.scrollLeft;
+          }
+        }}
       >
         <div className="flex w-max gap-4 pr-4 sm:gap-5 sm:pr-5">
           {[0, 1].map((setIndex) => (
