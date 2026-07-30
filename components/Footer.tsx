@@ -1,9 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { siteContent } from "@/data/site";
+import { getSiteContent } from "@/data/site";
+import { localizedPath, translate, type Locale } from "@/lib/i18n";
 import { Logo } from "./Logo";
 
-export function Footer() {
+export function Footer({ locale = "en" }: { locale?: Locale }) {
+  const siteContent = getSiteContent(locale);
   const { contact, footer } = siteContent;
 
   return (
@@ -11,9 +13,9 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
         <div className="max-w-md">
           <Link
-            href="/"
+            href={localizedPath("/", locale)}
             className="inline-flex min-h-11 items-center transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
-            aria-label="Hospo Creative home"
+            aria-label={translate(locale, "Hospo Creative home")}
           >
             <Logo variant="white" className="h-10 w-auto" />
           </Link>
@@ -46,10 +48,10 @@ export function Footer() {
               </a>
             ))}
             <Link
-              href="/#home"
+              href={localizedPath("/#home", locale)}
               className="inline-flex min-h-11 items-center gap-1 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
             >
-              Back to top
+              {translate(locale, "Back to top")}
               <ArrowUpRight aria-hidden="true" size={14} />
             </Link>
           </div>

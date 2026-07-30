@@ -7,6 +7,8 @@ import { Header } from "@/components/Header";
 import { SmartImage } from "@/components/SmartImage";
 import { getCaseStudyBySlug } from "@/lib/supabase/queries";
 import type { CaseStudyMedia } from "@/types/caseStudy";
+import { getRequestLocale } from "@/lib/locale-server";
+import { localizedPath, translate } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +81,7 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+  const locale = await getRequestLocale();
   const { slug } = await params;
   const caseStudy = await getCaseStudyBySlug(slug);
 
@@ -104,20 +107,20 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main className="bg-white text-ink">
         <article>
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(22rem,0.58fr)] lg:items-end">
               <div>
                 <Link
-          href="/case-studies"
+          href={localizedPath("/case-studies", locale)}
                   className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-white/68 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                 >
                   <ArrowLeft aria-hidden="true" size={16} />
-                  Selected work
+                  {translate(locale, "Selected work")}
                 </Link>
-                <p className="section-eyebrow mt-8 text-yellow">Case Study</p>
+                <p className="section-eyebrow mt-8 text-yellow">{translate(locale, "Case Study")}</p>
                 <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
                   {caseStudy.title}
                 </h1>
@@ -127,18 +130,18 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
                 <div className="mt-8 grid gap-4 border-y border-white/14 py-6 text-sm text-white/72 sm:grid-cols-3">
                   <div>
-                    <p className="section-eyebrow text-white/42">Client</p>
+                    <p className="section-eyebrow text-white/42">{translate(locale, "Client")}</p>
                     <p className="mt-2 text-lg font-bold text-white">{caseStudy.clientName}</p>
                   </div>
                   {caseStudy.location ? (
                     <div>
-                      <p className="section-eyebrow text-white/42">Location</p>
+                      <p className="section-eyebrow text-white/42">{translate(locale, "Location")}</p>
                       <p className="mt-2 text-lg font-bold text-white">{caseStudy.location}</p>
                     </div>
                   ) : null}
                   {caseStudy.sector ? (
                     <div>
-                      <p className="section-eyebrow text-white/42">Sector</p>
+                      <p className="section-eyebrow text-white/42">{translate(locale, "Sector")}</p>
                       <p className="mt-2 text-lg font-bold text-white">{caseStudy.sector}</p>
                     </div>
                   ) : null}
@@ -175,9 +178,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             <section className="px-5 py-16 sm:px-8 lg:py-24">
               <div className="mx-auto max-w-7xl">
                 <div className="mb-10 max-w-4xl">
-                  <p className="section-eyebrow text-ink/55">Gallery</p>
+                  <p className="section-eyebrow text-ink/55">{translate(locale, "Gallery")}</p>
                   <h2 className="mt-4 font-serif text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-[1]">
-                    Visual story.
+                    {translate(locale, "Visual story.")}
                   </h2>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -205,36 +208,36 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <div className="grid border-y border-white/16 lg:grid-cols-3">
                 {caseStudy.challenge ? (
                   <section className="border-b border-white/16 p-6 lg:border-b-0 lg:border-r">
-                    <p className="section-eyebrow text-yellow">Challenge</p>
+                    <p className="section-eyebrow text-yellow">{translate(locale, "Challenge")}</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.challenge}</p>
                   </section>
                 ) : null}
                 {caseStudy.solution ? (
                   <section className="border-b border-white/16 p-6 lg:border-b-0 lg:border-r">
-                    <p className="section-eyebrow text-yellow">Solution</p>
+                    <p className="section-eyebrow text-yellow">{translate(locale, "Solution")}</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.solution}</p>
                   </section>
                 ) : null}
                 {caseStudy.result ? (
                   <section className="p-6">
-                    <p className="section-eyebrow text-yellow">Result</p>
+                    <p className="section-eyebrow text-yellow">{translate(locale, "Result")}</p>
                     <p className="mt-5 text-lg leading-8 text-white/74">{caseStudy.result}</p>
                   </section>
                 ) : null}
               </div>
 
               <Link
-                href="/#digital-review"
+                href={localizedPath("/#digital-review", locale)}
                 className="mt-10 inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.17em] text-ink transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
-                Discuss a similar project
+                {translate(locale, "Discuss a similar project")}
                 <ArrowUpRight aria-hidden="true" size={18} />
               </Link>
             </div>
           </section>
         </article>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

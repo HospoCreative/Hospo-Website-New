@@ -18,10 +18,12 @@ import {
   getFeaturedCaseStudies,
   getPublishedClientLogos
 } from "@/lib/supabase/queries";
+import { getRequestLocale } from "@/lib/locale-server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const locale = await getRequestLocale();
   const [caseStudies, blogPosts, clientLogos] = await Promise.all([
     getFeaturedCaseStudies(),
     getPublishedBlogPosts(),
@@ -30,23 +32,23 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main id="main">
-        <Hero />
-        <WhoWeHelp />
-        <DigitalFirstImpression />
-        <DigitalRefresh />
-        <SelectedProjects caseStudies={caseStudies} />
-        <FourWaysWeHelp />
-        <MarketingJourney />
-        <ServiceEnquiry />
-        <About />
-        <ClientLogosSection logos={clientLogos} />
-        <BlogPreviewSection posts={blogPosts} />
-        <FaqSection />
-        <FinalCta />
+        <Hero locale={locale} />
+        <WhoWeHelp locale={locale} />
+        <DigitalFirstImpression locale={locale} />
+        <DigitalRefresh locale={locale} />
+        <SelectedProjects caseStudies={caseStudies} locale={locale} />
+        <FourWaysWeHelp locale={locale} />
+        <MarketingJourney locale={locale} />
+        <ServiceEnquiry locale={locale} />
+        <About locale={locale} />
+        <ClientLogosSection logos={clientLogos} locale={locale} />
+        <BlogPreviewSection posts={blogPosts} locale={locale} />
+        <FaqSection locale={locale} />
+        <FinalCta locale={locale} />
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

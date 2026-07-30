@@ -1,9 +1,11 @@
 import { ArrowUpRight, Mail } from "lucide-react";
-import { homepageContent } from "@/data/homepage";
-import { siteContent } from "@/data/site";
+import { getHomepageContent } from "@/data/homepage";
+import { getSiteContent } from "@/data/site";
+import type { Locale } from "@/lib/i18n";
 
-export function FinalCta() {
-  const content = homepageContent.finalCta;
+export function FinalCta({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).finalCta;
+  const siteContent = getSiteContent(locale);
   return (
     <section className="bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl border-y border-white/16 py-10 sm:py-12">

@@ -1,0 +1,236 @@
+export type Locale = "en" | "pt";
+
+export const defaultLocale: Locale = "en";
+
+const pt: Record<string, string> = {
+  "Work": "Projetos",
+  "Solutions": "Soluções",
+  "Services": "Serviços",
+  "About": "Sobre",
+  "Insights": "Artigos",
+  "Contact": "Contacto",
+  "Skip to content": "Saltar para o conteúdo",
+  "Hospo Creative home": "Página inicial da Hospo Creative",
+  "Request a Digital Review": "Pedir uma Análise Digital",
+  "Open menu": "Abrir menu",
+  "Close menu": "Fechar menu",
+  "Back to top": "Voltar ao topo",
+  "Hospitality content, strategy & digital optimisation": "Conteúdo, estratégia e otimização digital para hotelaria",
+  "Helping hospitality businesses stand out, attract more guests and strengthen direct bookings.": "Ajudamos negócios de hotelaria a destacar-se, atrair mais hóspedes e aumentar as reservas diretas.",
+  "We combine photography, video, digital strategy, websites, Google visibility and OTA optimisation to improve how hospitality businesses are discovered, compared and booked online.": "Combinamos fotografia, vídeo, estratégia digital, websites, visibilidade no Google e otimização de OTAs para melhorar a forma como os negócios de hotelaria são descobertos, comparados e reservados online.",
+  "View Our Work": "Ver os nossos projetos",
+  "Good hospitality starts before the guest walks through the door.": "Uma boa experiência de hospitalidade começa antes de o hóspede entrar pela porta.",
+  "Who we help": "Quem ajudamos",
+  "Built for hospitality businesses where presentation influences the decision.": "Pensado para negócios de hotelaria onde a apresentação influencia a decisão.",
+  "We work with independent hospitality businesses and growing hospitality brands that want to improve how guests discover, compare and choose them online.": "Trabalhamos com negócios independentes e marcas de hotelaria em crescimento que querem melhorar a forma como os hóspedes os descobrem, comparam e escolhem online.",
+  "Hotels & Resorts": "Hotéis e resorts",
+  "Boutique hotels, independent hotels, luxury hotels and resorts.": "Hotéis boutique, hotéis independentes, hotéis de luxo e resorts.",
+  "Stays & Accommodation": "Estadias e alojamento",
+  "Holiday rentals, apartments, guesthouses, rural stays and glamping.": "Alojamento local, apartamentos, guesthouses, turismo rural e glamping.",
+  "Restaurants & Food-led Venues": "Restaurantes e espaços gastronómicos",
+  "Restaurants, cafés, wine bars, beach clubs and food and drink brands.": "Restaurantes, cafés, wine bars, beach clubs e marcas de alimentação e bebidas.",
+  "Why great hospitality gets overlooked": "Porque é que excelentes negócios de hotelaria passam despercebidos",
+  "Your guest experience may be exceptional. Your digital presence may not show it.": "A experiência dos seus hóspedes pode ser excecional. A sua presença digital pode não o demonstrar.",
+  "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great hospitality experience can lose attention to a competitor.": "Antes de reservar ou visitar, os hóspedes avaliam o seu negócio através da fotografia, do Google, do website, das redes sociais e das plataformas de reservas. Quando estes pontos de contacto parecem desatualizados, inconsistentes ou difíceis de navegar, até uma excelente experiência pode perder atenção para a concorrência.",
+  "Outdated presentation: The photography and content no longer reflect the real quality of the experience.": "Apresentação desatualizada: a fotografia e o conteúdo já não refletem a verdadeira qualidade da experiência.",
+  "A fragmented booking journey: The website, Google profile and booking platforms do not guide guests clearly towards the next step.": "Um percurso de reserva fragmentado: o website, o perfil Google e as plataformas de reservas não orientam claramente os hóspedes para o passo seguinte.",
+  "Little differentiation: The business looks similar to competitors when guests are comparing their options.": "Pouca diferenciação: o negócio parece semelhante à concorrência quando os hóspedes comparam opções.",
+  "Inconsistent marketing: Social media and campaigns create activity, but they do not support one clear commercial direction.": "Marketing inconsistente: as redes sociais e campanhas criam atividade, mas não apoiam uma direção comercial clara.",
+  "When these touchpoints do not work together, your business becomes harder to discover, trust and book.": "Quando estes pontos de contacto não trabalham em conjunto, o seu negócio torna-se mais difícil de descobrir, confiar e reservar.",
+  "Our signature solution": "A nossa solução principal",
+  "Hospitality Digital Refresh": "Renovação Digital para Hotelaria",
+  "A connected review and transformation of how your hospitality business is presented, discovered and booked online.": "Uma análise e transformação integrada da forma como o seu negócio é apresentado, descoberto e reservado online.",
+  "Not just photography. Not just marketing. We bring the visual, strategic and digital parts of the guest journey together so they support the same commercial goal.": "Não é apenas fotografia. Não é apenas marketing. Unimos as componentes visual, estratégica e digital do percurso do hóspede para apoiar o mesmo objetivo comercial.",
+  "Visual Refresh": "Renovação Visual",
+  "Digital Refresh": "Renovação Digital",
+  "Growth Support": "Apoio ao Crescimento",
+  "For hospitality businesses whose photography and content no longer represent the experience.": "Para negócios cuja fotografia e conteúdo já não representam a experiência.",
+  "For businesses needing stronger content, website presentation, Google visibility and OTA performance.": "Para negócios que precisam de conteúdos mais fortes, melhor apresentação do website, visibilidade no Google e desempenho nas OTAs.",
+  "For businesses needing ongoing marketing, optimisation and campaign support.": "Para negócios que precisam de apoio contínuo em marketing, otimização e campanhas.",
+  "Explore the Digital Refresh": "Explorar a Renovação Digital",
+  "Selected work": "Projetos selecionados",
+  "Hospitality work with a commercial purpose.": "Projetos de hotelaria com um objetivo comercial.",
+  "Projects connecting strategy, content and digital execution to improve how hospitality businesses are seen, experienced and chosen online.": "Projetos que ligam estratégia, conteúdo e execução digital para melhorar a forma como os negócios de hotelaria são vistos, experienciados e escolhidos online.",
+  "View all case studies": "Ver todos os casos de estudo",
+  "The challenge": "O desafio",
+  "What Hospo changed": "O que a Hospo mudou",
+  "View case study": "Ver caso de estudo",
+  "How we help": "Como ajudamos",
+  "Four ways we strengthen your hospitality business online.": "Quatro formas de fortalecer o seu negócio de hotelaria online.",
+  "From the first image a guest sees to the moment they book, we connect your content, visibility, digital experience and ongoing marketing.": "Desde a primeira imagem que um hóspede vê até ao momento da reserva, ligamos o seu conteúdo, visibilidade, experiência digital e marketing contínuo.",
+  "Show the experience at its best": "Mostrar a experiência no seu melhor",
+  "Help more guests find you": "Ajudar mais hóspedes a encontrar o seu negócio",
+  "Turn interest into bookings": "Transformar interesse em reservas",
+  "Stay visible and grow": "Manter a visibilidade e crescer",
+  "Photography, video and content production that communicate the real quality, atmosphere and personality of your hospitality business.": "Fotografia, vídeo e produção de conteúdo que comunicam a verdadeira qualidade, atmosfera e personalidade do seu negócio.",
+  "Search, advertising and booking-platform optimisation that improve your visibility when potential guests are researching and comparing.": "Pesquisa, publicidade e otimização de plataformas de reservas que aumentam a sua visibilidade quando potenciais hóspedes pesquisam e comparam.",
+  "Websites and clearer digital journeys that make it easier for potential guests to understand the experience and take the next step.": "Websites e percursos digitais mais claros que ajudam potenciais hóspedes a compreender a experiência e a dar o passo seguinte.",
+  "Ongoing campaigns and marketing support that keep your business relevant, consistent and connected to past and potential guests.": "Campanhas e apoio de marketing contínuo que mantêm o seu negócio relevante, consistente e ligado a hóspedes anteriores e potenciais.",
+  "Services at a glance": "Serviços em resumo",
+  "Choose focused support for a specific challenge or combine services through one connected hospitality marketing approach.": "Escolha apoio específico para um desafio ou combine serviços através de uma abordagem integrada de marketing para hotelaria.",
+  "Show the experience": "Mostrar a experiência",
+  "Help guests find you": "Ajudar os hóspedes a encontrá-lo",
+  "Explore all services": "Explorar todos os serviços",
+  "The digital guest journey": "O percurso digital do hóspede",
+  "Every digital touchpoint influences the booking decision.": "Cada ponto de contacto digital influencia a decisão de reserva.",
+  "Guests may discover a business through social media, compare it on Google or an OTA, visit the website and return later through an advertisement or email. Those moments should feel connected.": "Os hóspedes podem descobrir um negócio nas redes sociais, compará-lo no Google ou numa OTA, visitar o website e regressar mais tarde através de um anúncio ou email. Estes momentos devem estar ligados.",
+  "Discover": "Descobrir",
+  "Compare": "Comparar",
+  "Trust": "Confiar",
+  "Book": "Reservar",
+  "Return": "Regressar",
+  "Complimentary Digital Presence Review": "Análise Gratuita da Presença Digital",
+  "Not sure where to start?": "Não sabe por onde começar?",
+  "We will review your main digital touchpoints and identify the clearest opportunities to improve how your hospitality business is presented and discovered online.": "Vamos analisar os seus principais pontos de contacto digitais e identificar as oportunidades mais claras para melhorar a apresentação e descoberta online do seu negócio.",
+  "This is an initial review highlighting three to five practical observations. It is not a complete free marketing strategy.": "Esta é uma análise inicial com três a cinco observações práticas. Não é uma estratégia de marketing completa e gratuita.",
+  "Why Hospo": "Porquê a Hospo",
+  "Hospitality knowledge behind every recommendation.": "Conhecimento de hotelaria por detrás de cada recomendação.",
+  "Hospo Creative combines hospitality marketing, strategic direction and visual production in one specialist team.": "A Hospo Creative reúne marketing para hotelaria, direção estratégica e produção visual numa equipa especializada.",
+  "We understand how guests choose where to stay, eat and experience a destination. Every image, campaign and recommendation is created to improve the digital journey before the guest arrives.": "Compreendemos como os hóspedes escolhem onde ficar, comer e viver um destino. Cada imagem, campanha e recomendação é criada para melhorar o percurso digital antes da chegada.",
+  "Hospitality knowledge, marketing direction and visual production in one team.": "Conhecimento de hotelaria, direção de marketing e produção visual numa só equipa.",
+  "FAQ": "Perguntas frequentes",
+  "Common questions before starting a project.": "Perguntas frequentes antes de iniciar um projeto.",
+  "Ready to strengthen how your hospitality business is seen and booked?": "Pronto para melhorar a forma como o seu negócio é visto e reservado?",
+  "Tell us where your business is now, what you would like to improve and where you want your digital presence to take you.": "Conte-nos onde está o seu negócio, o que gostaria de melhorar e onde quer que a sua presença digital o leve.",
+  "Request Your Digital Review": "Pedir a sua Análise Digital",
+  "Practical thinking for stronger hospitality marketing.": "Ideias práticas para um marketing de hotelaria mais forte.",
+  "All articles": "Todos os artigos",
+  "Read article": "Ler artigo",
+  "Hospitality marketing": "Marketing para hotelaria",
+  "Clients & partners": "Clientes e parceiros",
+  "Hospitality marketing, photography, content and digital optimisation for hotels, restaurants and hospitality brands.": "Marketing, fotografia, conteúdo e otimização digital para hotéis, restaurantes e marcas de hotelaria.",
+  "Hospo Creative. All rights reserved.": "Hospo Creative. Todos os direitos reservados."
+  ,"Hospitality photography": "Fotografia de hotelaria"
+  ,"Photography and video": "Fotografia e vídeo"
+  ,"Drone where appropriate": "Drone quando adequado"
+  ,"Lifestyle production": "Produção lifestyle"
+  ,"Social content library": "Biblioteca de conteúdo para redes sociais"
+  ,"Content organisation": "Organização de conteúdo"
+  ,"Website content review": "Análise de conteúdo do website"
+  ,"Google Business Profile": "Perfil de Empresa no Google"
+  ,"OTA image and copy review": "Análise de imagens e textos nas OTAs"
+  ,"Booking journey review": "Análise do percurso de reserva"
+  ,"Conversion recommendations": "Recomendações de conversão"
+  ,"Content planning": "Planeamento de conteúdo"
+  ,"Social media management": "Gestão de redes sociais"
+  ,"SEO and paid media": "SEO e publicidade paga"
+  ,"Email marketing": "Email marketing"
+  ,"Reporting and consultancy": "Relatórios e consultoria"
+  ,"Video production": "Produção de vídeo"
+  ,"Drone photography and video": "Fotografia e vídeo com drone"
+  ,"Lifestyle content production": "Produção de conteúdo lifestyle"
+  ,"Reels and short-form video": "Reels e vídeos de formato curto"
+  ,"Campaign content": "Conteúdo para campanhas"
+  ,"Image editing and post-production": "Edição de imagem e pós-produção"
+  ,"Social media content libraries": "Bibliotecas de conteúdo para redes sociais"
+  ,"Search engine optimisation": "Otimização para motores de pesquisa"
+  ,"Google Business Profile optimisation": "Otimização do Perfil de Empresa no Google"
+  ,"Google Ads": "Google Ads"
+  ,"Local search optimisation": "Otimização de pesquisa local"
+  ,"OTA listing optimisation": "Otimização de anúncios em OTAs"
+  ,"Booking.com presentation review": "Análise da apresentação no Booking.com"
+  ,"Listing copy improvements": "Melhoria dos textos dos anúncios"
+  ,"Image selection and sequencing": "Seleção e ordenação de imagens"
+  ,"Hospitality website design": "Design de websites para hotelaria"
+  ,"Website development": "Desenvolvimento de websites"
+  ,"Website management": "Gestão de websites"
+  ,"Landing pages": "Landing pages"
+  ,"Booking journey reviews": "Análise do percurso de reserva"
+  ,"Conversion-focused copy": "Textos orientados para a conversão"
+  ,"Mobile optimisation": "Otimização para dispositivos móveis"
+  ,"Direct-booking recommendations": "Recomendações para reservas diretas"
+  ,"Social media strategy": "Estratégia de redes sociais"
+  ,"Content calendars": "Calendários de conteúdo"
+  ,"Copywriting": "Copywriting"
+  ,"Meta Ads": "Meta Ads"
+  ,"Campaign planning": "Planeamento de campanhas"
+  ,"Reporting and optimisation": "Relatórios e otimização"
+  ,"Marketing consultancy": "Consultoria de marketing"
+  ,"Social media, search, advertising and recommendations create the first impression.": "As redes sociais, a pesquisa, a publicidade e as recomendações criam a primeira impressão."
+  ,"Photography, reviews, websites and booking platforms shape the shortlist.": "A fotografia, as avaliações, os websites e as plataformas de reserva definem a seleção."
+  ,"Clear information, consistent presentation and useful content reduce uncertainty.": "Informação clara, apresentação consistente e conteúdo útil reduzem a incerteza."
+  ,"A simple website, booking link or enquiry journey turns interest into action.": "Um website simples, um link de reserva ou um percurso de contacto transformam interesse em ação."
+  ,"Email, campaigns and continued communication keep the relationship active.": "O email, as campanhas e a comunicação contínua mantêm a relação ativa."
+  ,"Website": "Website"
+  ,"Google presence": "Presença no Google"
+  ,"Principal booking platform or OTA": "Principal plataforma de reservas ou OTA"
+  ,"Photography": "Fotografia"
+  ,"Guest journey": "Percurso do hóspede"
+  ,"Social media": "Redes sociais"
+  ,"Visual consistency": "Consistência visual"
+  ,"Marketing Director and Creative Strategist": "Diretora de Marketing e Estratega Criativa"
+  ,"Photographer, Videographer and Hospitality Creative": "Fotógrafo, Videógrafo e Criativo de Hotelaria"
+  ,"Andreia leads strategy, campaigns, social media, advertising, websites, SEO and digital communication, supported by more than seven years of hospitality marketing experience.": "Andreia lidera a estratégia, campanhas, redes sociais, publicidade, websites, SEO e comunicação digital, com mais de sete anos de experiência em marketing para hotelaria."
+  ,"Tiago leads photography, video and visual production, supported by approximately 15 years of hospitality experience.": "Tiago lidera a fotografia, vídeo e produção visual, com cerca de 15 anos de experiência em hotelaria."
+  ,"Do you work internationally?": "Trabalham internacionalmente?"
+  ,"Yes. Hospo works with hospitality businesses in the UK and internationally. Travel requirements are discussed as part of the proposal.": "Sim. A Hospo trabalha com negócios de hotelaria no Reino Unido e internacionalmente. As necessidades de deslocação são discutidas na proposta."
+  ,"Can we book photography or video only?": "Podemos contratar apenas fotografia ou vídeo?"
+  ,"Yes. Individual production services are available, although we may recommend additional improvements when they would strengthen the result.": "Sim. Os serviços de produção podem ser contratados individualmente, embora possamos recomendar melhorias adicionais quando reforçarem o resultado."
+  ,"Can you improve our Booking.com or OTA listing?": "Podem melhorar o nosso anúncio no Booking.com ou noutra OTA?"
+  ,"Yes. We can review photography, image ordering, copy, presentation and consistency across relevant booking platforms.": "Sim. Podemos analisar fotografia, ordem das imagens, textos, apresentação e consistência nas plataformas de reservas relevantes."
+  ,"Do you manage social media?": "Fazem gestão de redes sociais?"
+  ,"Yes. Hospo supports social media strategy, content planning, creation, publishing, campaigns and ongoing optimisation.": "Sim. A Hospo apoia estratégia, planeamento, criação, publicação, campanhas e otimização contínua nas redes sociais."
+  ,"Can you update our website?": "Podem atualizar o nosso website?"
+  ,"Yes. We can review, improve and manage hospitality websites, landing pages, content and booking journeys.": "Sim. Podemos analisar, melhorar e gerir websites de hotelaria, landing pages, conteúdo e percursos de reserva."
+  ,"How long does a project take?": "Quanto tempo demora um projeto?"
+  ,"Timelines depend on the scope, location, production requirements and approvals. A clear schedule is included before work begins.": "Os prazos dependem do âmbito, localização, necessidades de produção e aprovações. É apresentado um calendário claro antes do início do trabalho."
+  ,"What happens during the Digital Presence Review?": "O que acontece durante a Análise da Presença Digital?"
+  ,"We review the main digital touchpoints you provide and identify three to five practical opportunities before discussing the most relevant next steps.": "Analisamos os principais pontos de contacto digitais fornecidos e identificamos três a cinco oportunidades práticas antes de discutir os próximos passos mais relevantes."
+  ,"Name": "Nome"
+  ,"Business name": "Nome do negócio"
+  ,"Website or booking link": "Website ou link de reserva"
+  ,"Main challenge": "Principal desafio"
+  ,"Company website confirmation": "Confirmação do website da empresa"
+  ,"I am happy for Hospo Creative to use these details to reply to this request.": "Autorizo a Hospo Creative a utilizar estes dados para responder a este pedido."
+  ,"Sending request": "A enviar pedido"
+  ,"Thank you. Your review request has been sent and we will reply by email.": "Obrigado. O seu pedido de análise foi enviado e responderemos por email."
+  ,"You can also email info@hospoagency.com.": "Também pode enviar um email para info@hospoagency.com."
+  ,"Please add your name.": "Por favor, indique o seu nome."
+  ,"Please add your business name.": "Por favor, indique o nome do negócio."
+  ,"Please add a valid email address.": "Por favor, indique um endereço de email válido."
+  ,"Please tell us a little more about the main challenge.": "Conte-nos um pouco mais sobre o principal desafio."
+  ,"Please confirm that we may reply to your request.": "Confirme que podemos responder ao seu pedido."
+  ,"Unable to send your request.": "Não foi possível enviar o seu pedido."
+  ,"Hospitality brands we have supported.": "Marcas de hotelaria que apoiámos."
+  ,"Practical articles on visibility, content, campaigns, websites and guest journey improvements.": "Artigos práticos sobre visibilidade, conteúdo, campanhas, websites e melhorias no percurso do hóspede."
+  ,"Featured article": "Artigo em destaque"
+  ,"Read": "Ler"
+  ,"Back to insights": "Voltar aos artigos"
+  ,"Insight": "Artigo"
+  ,"Hospitality projects made to be seen, understood and chosen.": "Projetos de hotelaria criados para serem vistos, compreendidos e escolhidos."
+  ,"Strategy, content and digital execution designed around the way guests discover, compare and choose hospitality businesses.": "Estratégia, conteúdo e execução digital pensados em torno da forma como os hóspedes descobrem, comparam e escolhem negócios de hotelaria."
+  ,"Case Study": "Caso de estudo"
+  ,"Client": "Cliente"
+  ,"Location": "Localização"
+  ,"Sector": "Setor"
+  ,"Gallery": "Galeria"
+  ,"Visual story.": "História visual."
+  ,"Challenge": "Desafio"
+  ,"Solution": "Solução"
+  ,"Result": "Resultado"
+  ,"Discuss a similar project": "Falar sobre um projeto semelhante"
+  ,"Hospo Creative | Hospitality Marketing & Digital Optimisation": "Hospo Creative | Marketing e Otimização Digital para Hotelaria"
+  ,"Hospitality photography, content, strategy, websites, OTA optimisation and digital marketing for hotels, restaurants and accommodation brands.": "Fotografia, conteúdo, estratégia, websites, otimização de OTAs e marketing digital para hotéis, restaurantes e marcas de alojamento."
+};
+
+export function translate(locale: Locale, value: string) {
+  return locale === "pt" ? (pt[value] ?? value) : value;
+}
+
+export function localizeTree<T>(locale: Locale, value: T): T {
+  if (locale === "en") return value;
+  if (typeof value === "string") return translate(locale, value) as T;
+  if (Array.isArray(value)) return value.map((item) => localizeTree(locale, item)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, localizeTree(locale, item)])) as T;
+  }
+  return value;
+}
+
+export function localizedPath(path: string, locale: Locale) {
+  if (locale === "en") return path;
+  if (path.startsWith("#")) return `/pt/${path}`;
+  const [pathname, hash] = path.split("#");
+  const prefixed = pathname === "/" ? "/pt" : `/pt${pathname}`;
+  return hash ? `${prefixed}#${hash}` : prefixed;
+}

@@ -1,11 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { homepageContent } from "@/data/homepage";
+import { getHomepageContent } from "@/data/homepage";
+import type { Locale } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
-export function MarketingJourney() {
-  const content = homepageContent.journey;
+export function MarketingJourney({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).journey;
   const reduceMotion = useReducedMotion();
   return (
     <section id="guest-journey" className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">

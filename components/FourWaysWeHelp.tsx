@@ -1,11 +1,12 @@
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { homepageContent } from "@/data/homepage";
+import { getHomepageContent } from "@/data/homepage";
+import { localizedPath, translate, type Locale } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 
-export function FourWaysWeHelp() {
-  const content = homepageContent.pillars;
+export function FourWaysWeHelp({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).pillars;
   return (
     <section id="services" className="bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
@@ -58,8 +59,8 @@ export function FourWaysWeHelp() {
             ))}
           </div>
 
-          <Link href="/#digital-refresh" className="mt-14 inline-flex min-h-11 items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-ink transition hover:opacity-65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
-            Explore all services <ArrowUpRight size={16} aria-hidden="true" />
+          <Link href={localizedPath("/#digital-refresh", locale)} className="mt-14 inline-flex min-h-11 items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-ink transition hover:opacity-65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+            {translate(locale, "Explore all services")} <ArrowUpRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>

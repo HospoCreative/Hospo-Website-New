@@ -2,10 +2,10 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import type { homepageContent } from "@/data/homepage";
+import type { HomepageContent } from "@/data/homepage";
 import { SmartImage } from "./SmartImage";
 
-type HeroProps = { hero: typeof homepageContent.hero };
+type HeroProps = { hero: HomepageContent["hero"] };
 
 export function HeroClient({ hero }: HeroProps) {
   const reduceMotion = useReducedMotion();

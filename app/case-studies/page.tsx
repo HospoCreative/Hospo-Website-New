@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SmartImage } from "@/components/SmartImage";
 import { getPublishedCaseStudies } from "@/lib/supabase/queries";
+import { getRequestLocale } from "@/lib/locale-server";
+import { localizedPath, translate } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -12,19 +14,20 @@ function isVideo(src: string) {
 }
 
 export default async function CaseStudiesPage() {
+  const locale = await getRequestLocale();
   const caseStudies = await getPublishedCaseStudies();
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main id="main" className="bg-white text-ink">
         <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-20">
           <div className="mx-auto max-w-7xl">
-            <p className="section-eyebrow text-yellow">Selected work</p>
+            <p className="section-eyebrow text-yellow">{translate(locale, "Selected work")}</p>
             <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
-              Hospitality projects made to be seen, understood and chosen.
+              {translate(locale, "Hospitality projects made to be seen, understood and chosen.")}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">Strategy, content and digital execution designed around the way guests discover, compare and choose hospitality businesses.</p>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">{translate(locale, "Strategy, content and digital execution designed around the way guests discover, compare and choose hospitality businesses.")}</p>
           </div>
         </section>
 
@@ -41,7 +44,7 @@ export default async function CaseStudiesPage() {
                     className="group grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12"
                   >
                     {mediaSrc ? (
-                      <Link href={`/case-studies/${caseStudy.slug}`} className={`relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
+                      <Link href={localizedPath(`/case-studies/${caseStudy.slug}`, locale)} className={`relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
                         {isVideo(mediaSrc) ? (
                           <video className="absolute inset-0 h-full w-full object-cover" autoPlay loop muted playsInline preload="metadata">
                             <source src={mediaSrc} />
@@ -57,7 +60,7 @@ export default async function CaseStudiesPage() {
                       </p>
                       <h2 className="mt-3 font-serif text-[clamp(2.2rem,4vw,3.4rem)] font-semibold leading-[1]">{caseStudy.title}</h2>
                       <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/70">{caseStudy.summary}</p>
-                      <Link href={`/case-studies/${caseStudy.slug}`} className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-black uppercase tracking-[0.16em] transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">View case study <ArrowUpRight size={17} aria-hidden="true" /></Link>
+                      <Link href={localizedPath(`/case-studies/${caseStudy.slug}`, locale)} className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-black uppercase tracking-[0.16em] transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">{translate(locale, "View case study")} <ArrowUpRight size={17} aria-hidden="true" /></Link>
                     </div>
                   </article>
                 );
@@ -66,7 +69,7 @@ export default async function CaseStudiesPage() {
           </section>
         ) : null}
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

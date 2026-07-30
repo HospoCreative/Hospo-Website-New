@@ -1,25 +1,30 @@
 import type { Metadata } from "next";
-import { siteContent } from "@/data/site";
+import { getSiteContent } from "@/data/site";
+import { getRequestLocale } from "@/lib/locale-server";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.hospoagency.com"),
-  title: siteContent.metadata.title,
-  description: siteContent.metadata.description,
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const siteContent = getSiteContent(await getRequestLocale());
+  return {
+    metadataBase: new URL("https://www.hospoagency.com"),
     title: siteContent.metadata.title,
     description: siteContent.metadata.description,
-    images: [siteContent.hero.backgroundImage.src]
-  }
-};
+    openGraph: {
+      title: siteContent.metadata.title,
+      description: siteContent.metadata.description,
+      images: [siteContent.hero.backgroundImage.src]
+    }
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getRequestLocale();
   return (
-    <html lang="en-GB">
+    <html lang={locale === "pt" ? "pt-PT" : "en-GB"}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

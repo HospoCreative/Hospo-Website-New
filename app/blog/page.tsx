@@ -3,6 +3,8 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SmartImage } from "@/components/SmartImage";
 import { getPublishedBlogPosts } from "@/lib/supabase/queries";
+import { getRequestLocale } from "@/lib/locale-server";
+import { localizedPath, translate } from "@/lib/i18n";
 
 export const metadata = {
   title: "Hospitality Marketing Insights | Hospo Creative",
@@ -12,21 +14,22 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
+  const locale = await getRequestLocale();
   const posts = await getPublishedBlogPosts();
   const [featuredPost, ...otherPosts] = posts;
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main className="bg-white text-ink">
         <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
-            <p className="section-eyebrow text-yellow">Insights</p>
+            <p className="section-eyebrow text-yellow">{translate(locale, "Insights")}</p>
             <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
-              Practical thinking for stronger hospitality marketing.
+              {translate(locale, "Practical thinking for stronger hospitality marketing.")}
             </h1>
             <p className="mt-7 max-w-3xl text-xl leading-9 text-white/72 sm:text-2xl sm:leading-10">
-              Practical articles on visibility, content, campaigns, websites and guest journey improvements.
+              {translate(locale, "Practical articles on visibility, content, campaigns, websites and guest journey improvements.")}
             </p>
           </div>
         </section>
@@ -38,7 +41,7 @@ export default async function BlogPage() {
                 <article className="grid gap-8 border-b border-ink/12 pb-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.72fr)] lg:items-stretch">
                   {featuredPost.coverImage ? (
                     <a
-                      href={`/blog/${featuredPost.slug}`}
+                      href={localizedPath(`/blog/${featuredPost.slug}`, locale)}
                       className="group relative aspect-[16/11] overflow-hidden rounded-[8px] bg-white shadow-soft lg:aspect-auto lg:h-full lg:min-h-[28rem]"
                     >
                       <SmartImage
@@ -52,7 +55,7 @@ export default async function BlogPage() {
                     </a>
                   ) : null}
                   <div className="flex flex-col justify-center">
-                    <p className="section-eyebrow text-ink/50">Featured article</p>
+                    <p className="section-eyebrow text-ink/50">{translate(locale, "Featured article")}</p>
                     <h2 className="mt-4 font-serif text-[clamp(2.4rem,4.8vw,3.7rem)] font-semibold leading-[1]">
                       {featuredPost.title}
                     </h2>
@@ -60,10 +63,10 @@ export default async function BlogPage() {
                       {featuredPost.excerpt}
                     </p>
                     <a
-                      href={`/blog/${featuredPost.slug}`}
+                      href={localizedPath(`/blog/${featuredPost.slug}`, locale)}
                       className="mt-7 inline-flex items-center gap-3 text-sm font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                     >
-                      Read article
+                      {translate(locale, "Read article")}
                       <ArrowUpRight aria-hidden="true" size={18} />
                     </a>
                   </div>
@@ -75,7 +78,7 @@ export default async function BlogPage() {
                       <article key={post.slug} className="rounded-[8px] border border-ink/10 bg-white p-4 shadow-soft">
                         {post.coverImage ? (
                           <a
-                            href={`/blog/${post.slug}`}
+                            href={localizedPath(`/blog/${post.slug}`, locale)}
                             className="group relative mb-5 block aspect-[4/3] overflow-hidden rounded-[8px] bg-ink"
                           >
                             <SmartImage
@@ -91,10 +94,10 @@ export default async function BlogPage() {
                         <h2 className="font-serif text-3xl font-semibold leading-none">{post.title}</h2>
                         <p className="mt-4 text-base leading-7 text-ink/70">{post.excerpt}</p>
                         <a
-                          href={`/blog/${post.slug}`}
+                          href={localizedPath(`/blog/${post.slug}`, locale)}
                           className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-ink transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
                         >
-                          Read
+                          {translate(locale, "Read")}
                           <ArrowUpRight aria-hidden="true" size={16} />
                         </a>
                       </article>
@@ -108,7 +111,7 @@ export default async function BlogPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

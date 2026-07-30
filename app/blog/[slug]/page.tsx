@@ -6,6 +6,8 @@ import { Header } from "@/components/Header";
 import { RichArticleContent } from "@/components/RichArticleContent";
 import { SmartImage } from "@/components/SmartImage";
 import { getBlogPostBySlug } from "@/lib/supabase/queries";
+import { getRequestLocale } from "@/lib/locale-server";
+import { localizedPath, translate } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +35,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const locale = await getRequestLocale();
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
 
@@ -42,18 +45,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
-      <Header />
+      <Header locale={locale} />
       <main className="bg-white text-ink">
         <article>
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto max-w-5xl">
               <Link
-                href="/blog"
+                href={localizedPath("/blog", locale)}
                 className="text-xs font-black uppercase tracking-[0.2em] text-white/62 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
-                Back to insights
+                {translate(locale, "Back to insights")}
               </Link>
-              <p className="section-eyebrow mt-8 text-yellow">Insight</p>
+              <p className="section-eyebrow mt-8 text-yellow">{translate(locale, "Insight")}</p>
               <h1 className="mt-5 font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
                 {post.title}
               </h1>
@@ -91,7 +94,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </article>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

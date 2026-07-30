@@ -1,11 +1,12 @@
 import { Check } from "lucide-react";
-import { homepageContent } from "@/data/homepage";
+import { getHomepageContent } from "@/data/homepage";
+import type { Locale } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 import { SmartImage } from "./SmartImage";
 
-export function DigitalFirstImpression() {
-  const content = homepageContent.problem;
+export function DigitalFirstImpression({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).problem;
   return (
     <section className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.08fr_0.72fr] lg:items-center lg:gap-16">

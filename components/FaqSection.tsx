@@ -2,11 +2,12 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { homepageContent } from "@/data/homepage";
+import { getHomepageContent } from "@/data/homepage";
+import type { Locale } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
-export function FaqSection() {
-  const content = homepageContent.faq;
+export function FaqSection({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).faq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   return (
     <section className="bg-white px-5 py-[var(--hc-section-compact)] text-ink sm:px-8">

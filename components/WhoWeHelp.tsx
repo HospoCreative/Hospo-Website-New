@@ -1,10 +1,11 @@
-import { homepageContent } from "@/data/homepage";
+import { getHomepageContent } from "@/data/homepage";
+import type { Locale } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
 import { SmartImage } from "./SmartImage";
 
-export function WhoWeHelp() {
-  const content = homepageContent.whoWeHelp;
+export function WhoWeHelp({ locale = "en" }: { locale?: Locale }) {
+  const content = getHomepageContent(locale).whoWeHelp;
   return (
     <section id="who-we-help" className="bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
