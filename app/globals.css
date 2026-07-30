@@ -102,6 +102,22 @@ video {
     border-radius: 999px;
   }
 
+  .gallery-slider {
+    cursor: grab;
+    overscroll-behavior-inline: contain;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gallery-slider:active {
+    cursor: grabbing;
+  }
+
+  .gallery-slider::-webkit-scrollbar {
+    display: none;
+  }
+
   .mobile-scroll-cue {
     position: relative;
   }
