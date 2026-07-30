@@ -633,15 +633,25 @@ export async function runDigitalScan(input: {
   const googleLinks = links.filter((link) =>
     /(^|\.)google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/i.test(link)
   );
-  const directBookingLinks = unique(anchorLinks
+  const linkedDirectBookingRoutes = anchorLinks
     .filter(({ url, text }) => {
       const parsed = new URL(url);
       const isEditorial = /\/(?:blog|case-studies|insights|news)(?:\/|$)/i.test(parsed.pathname);
       const urlSignal = /book(?:ing)?|reserve|reservation|availability/i.test(`${parsed.hostname}${parsed.pathname}`);
       const actionText = text.length <= 90 && /\b(?:book now|book direct|check availability|reserve now|make a reservation|book a room|book a table|reservations?)\b/i.test(text);
-      return !isEditorial && (urlSignal || actionText) && !linksForDomains([url], otaDomains).length;
+      const isSocial = linksForDomains([url], socialDomains).length > 0;
+      const isOta = linksForDomains([url], otaDomains).length > 0;
+      return !isEditorial && !isSocial && !isOta && (urlSignal || actionText);
     })
-    .map(({ url }) => url));
+    .map(({ url }) => url);
+  const hasOnsiteBookingForm =
+    /<form\b[^>]*(?:id|class)=["'][^"']*(?:booking|reservation)[^"']*["']/i.test(html) ||
+    /<input\b[^>]*(?:value=["'](?:book now|check availability|reserve now)["']|name=["']booknow["'])/i.test(html) ||
+    /\baccorBookingArgs\b/i.test(html);
+  const directBookingLinks = unique([
+    ...linkedDirectBookingRoutes,
+    ...(hasOnsiteBookingForm ? [finalUrl.toString()] : [])
+  ]);
   const enquiryLinks = unique(anchorLinks
     .filter(({ url, text }) => /enquir|inquir|contact|get in touch|request/i.test(`${url} ${text}`))
     .map(({ url }) => url));
