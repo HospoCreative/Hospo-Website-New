@@ -10,7 +10,7 @@ const copy = {
   en: {
     eyebrow: "Instant public scan",
     title: "See how your hospitality business appears online.",
-    body: "Enter your public website and contact details. We will review the signals guests can see across your website, booking journey, Google links, social profiles and OTA connections.",
+    body: "Enter your public website and contact details. We will review the signals that shape discovery, direct bookings, trust and brand presentation.",
     website: "Website URL",
     business: "Business name",
     businessOptional: "Optional",
@@ -32,14 +32,17 @@ const copy = {
     report: "Your public digital presence report",
     score: "Overall score",
     priorities: "Immediate priorities",
-    discovered: "Discovered public links",
+    discovered: "Evidence checked",
+    evidenceHelp: "These links provide supporting evidence only. OTA links are not required or scored because a strong direct booking journey is the priority.",
+    directBooking: "Direct booking routes",
+    enquiries: "Enquiry routes",
     socials: "Social profiles",
     socialCoverage: "Automatic social coverage",
     scanned: "Scanned",
+    partial: "Partial",
     blocked: "Blocked",
-    otas: "OTAs and reservations",
-    google: "Google links",
-    none: "None confirmed",
+    otas: "OTA listings found",
+    google: "Google profile found",
     limitations: "What this scan does not access",
     print: "Print or save report",
     discuss: "Discuss the results",
@@ -47,15 +50,16 @@ const copy = {
     emailed: "A copy of the report has also been sent to your email.",
     notEmailed: "Email delivery is not configured yet. You can print or save this report below.",
     notSaved: "Your report is ready, but lead storage was unavailable. Please contact Hospo directly if you would like follow-up.",
-    verified: "Found",
-    partial: "Partial",
-    not_confirmed: "Not confirmed",
+    strong: "Strong",
+    opportunity: "Opportunity",
+    priority: "Priority",
+    review: "Needs review",
     error: "We could not complete the scan. Please check the website address and try again."
   },
   pt: {
     eyebrow: "Análise pública instantânea",
     title: "Veja como o seu negócio de hotelaria aparece online.",
-    body: "Introduza o website público e os dados de contacto. Vamos analisar os sinais que os hóspedes encontram no website, percurso de reserva, ligações Google, redes sociais e OTAs.",
+    body: "Introduza o website público e os dados de contacto. Vamos analisar os sinais que influenciam a descoberta, as reservas diretas, a confiança e a apresentação da marca.",
     website: "URL do website",
     business: "Nome do negócio",
     businessOptional: "Opcional",
@@ -77,14 +81,17 @@ const copy = {
     report: "Relatório da sua presença digital pública",
     score: "Pontuação geral",
     priorities: "Prioridades imediatas",
-    discovered: "Ligações públicas encontradas",
+    discovered: "Elementos verificados",
+    evidenceHelp: "Estas ligações servem apenas como evidência. As ligações a OTAs não são obrigatórias nem afetam a pontuação, porque a prioridade é um percurso de reserva direta forte.",
+    directBooking: "Percursos de reserva direta",
+    enquiries: "Percursos de contacto",
     socials: "Redes sociais",
     socialCoverage: "Cobertura automática das redes sociais",
     scanned: "Analisado",
+    partial: "Parcial",
     blocked: "Bloqueado",
-    otas: "OTAs e reservas",
-    google: "Ligações Google",
-    none: "Nenhuma confirmada",
+    otas: "Listagens OTA encontradas",
+    google: "Perfil Google encontrado",
     limitations: "O que esta análise não consulta",
     print: "Imprimir ou guardar relatório",
     discuss: "Falar sobre os resultados",
@@ -92,9 +99,10 @@ const copy = {
     emailed: "Uma cópia do relatório também foi enviada para o seu email.",
     notEmailed: "O envio por email ainda não está configurado. Pode imprimir ou guardar o relatório abaixo.",
     notSaved: "O relatório está pronto, mas não foi possível guardar o contacto. Contacte diretamente a Hospo se pretender acompanhamento.",
-    verified: "Encontrado",
-    partial: "Parcial",
-    not_confirmed: "Não confirmado",
+    strong: "Forte",
+    opportunity: "Oportunidade",
+    priority: "Prioridade",
+    review: "Precisa de análise",
     error: "Não foi possível concluir a análise. Confirme o endereço do website e tente novamente."
   }
 } as const;
@@ -107,10 +115,11 @@ function domainLabel(value: string) {
   }
 }
 
-function confidenceClass(confidence: ScanConfidence) {
-  if (confidence === "verified") return "bg-yellow text-ink";
-  if (confidence === "partial") return "border border-yellow/60 text-white";
-  return "border border-white/20 text-white/58";
+function statusPresentation(score: number, confidence: ScanConfidence, t: typeof copy.en | typeof copy.pt) {
+  if (confidence === "not_confirmed") return { label: t.review, className: "border border-white/20 text-white/65" };
+  if (score >= 75) return { label: t.strong, className: "bg-yellow text-ink" };
+  if (score >= 50) return { label: t.opportunity, className: "border border-yellow/60 text-white" };
+  return { label: t.priority, className: "border border-yellow/60 text-white" };
 }
 
 export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
@@ -275,21 +284,23 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
             </div>
 
             <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {report.areas.map((item) => (
-                <article key={item.key} className="flex h-full flex-col bg-ink p-6 text-white">
+              {report.areas.map((item) => {
+                const presentation = statusPresentation(item.score, item.confidence, t);
+                return (
+                <article key={item.key} className="flex min-h-[25rem] h-full flex-col bg-ink p-6 text-white">
                   <div className="flex items-start justify-between gap-4">
                     <h3 className="font-serif text-2xl font-semibold leading-tight">{item.title}</h3>
                     <span className="text-3xl font-black text-yellow">{item.score}</span>
                   </div>
-                  <span className={`mt-4 w-fit rounded-full px-3 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.14em] ${confidenceClass(item.confidence)}`}>
-                    {t[item.confidence]}
+                  <span className={`mt-4 w-fit rounded-full px-3 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.14em] ${presentation.className}`}>
+                    {presentation.label}
                   </span>
                   <p className="mt-4 text-sm leading-6 text-white/62">{item.summary}</p>
                   <ul className="mt-5 space-y-3 border-t border-white/12 pt-5 text-sm leading-6 text-white/76">
-                    {item.findings.map((finding) => <li key={finding} className="flex gap-2"><Check className="mt-1 shrink-0 text-yellow" size={14} />{finding}</li>)}
+                    {item.findings.slice(0, 3).map((finding) => <li key={finding} className="flex gap-2"><Check className="mt-1 shrink-0 text-yellow" size={14} />{finding}</li>)}
                   </ul>
                 </article>
-              ))}
+              );})}
             </div>
 
             <div className="mt-12 grid gap-10 border-y border-ink/15 py-10 lg:grid-cols-2">
@@ -299,8 +310,9 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
                   {report.priorities.map((priority) => <li key={priority} className="border-l-2 border-yellow pl-4 text-base leading-7">{priority}</li>)}
                 </ol>
               </div>
-              <div>
+              <div className="border border-ink/15 p-6 sm:p-8">
                 <h3 className="font-serif text-3xl font-semibold">{t.discovered}</h3>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-ink/60">{t.evidenceHelp}</p>
                 {(report.discovered.socialProfiles ?? []).length ? (
                   <div className="mt-5">
                     <p className="text-xs font-black uppercase tracking-[0.16em] text-ink/48">{t.socialCoverage}</p>
@@ -317,16 +329,18 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
                   </div>
                 ) : null}
                 {[
+                  [t.directBooking, report.discovered.directBookingLinks ?? []],
+                  [t.enquiries, report.discovered.enquiryLinks ?? []],
                   [t.socials, report.discovered.socialLinks],
-                  [t.otas, report.discovered.otaLinks],
-                  [t.google, report.discovered.googleLinks]
-                ].map(([label, values]) => (
+                  [t.google, report.discovered.googleLinks],
+                  [t.otas, report.discovered.otaLinks]
+                ].filter(([, values]) => (values as string[]).length > 0).map(([label, values]) => (
                   <div key={label as string} className="mt-5">
                     <p className="text-xs font-black uppercase tracking-[0.16em] text-ink/48">{label as string}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      {(values as string[]).length ? (values as string[]).map((value) => (
+                      {(values as string[]).map((value) => (
                         <a key={value} href={value} target="_blank" rel="noreferrer" className="rounded-full border border-ink/15 px-3 py-2 text-xs font-bold hover:border-yellow">{domainLabel(value)}</a>
-                      )) : <span className="text-sm text-ink/55">{t.none}</span>}
+                      ))}
                     </div>
                   </div>
                 ))}

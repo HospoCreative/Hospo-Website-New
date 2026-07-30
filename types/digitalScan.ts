@@ -53,6 +53,8 @@ export type DigitalScanReport = {
     socialLinks: string[];
     otaLinks: string[];
     googleLinks: string[];
+    directBookingLinks?: string[];
+    enquiryLinks?: string[];
     socialProfiles?: PublicSocialProfileScan[];
   };
   limitations: string[];

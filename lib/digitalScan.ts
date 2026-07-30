@@ -104,6 +104,18 @@ function extractLinks(html: string, base: URL) {
   );
 }
 
+function extractAnchorLinks(html: string, base: URL) {
+  return (html.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) ?? [])
+    .map((anchor) => {
+      const openingTag = anchor.match(/^<a\b[^>]*>/i)?.[0] ?? "";
+      return {
+        url: normaliseLink(tagAttribute(openingTag, "href"), base),
+        text: decodeEntities(anchor.replace(/^<a\b[^>]*>/i, "").replace(/<\/a>$/i, "").replace(/<[^>]+>/g, " "))
+      };
+    })
+    .filter((link) => Boolean(link.url));
+}
+
 function linksForDomains(links: string[], domains: string[]) {
   return links.filter((link) => {
     try {
@@ -359,7 +371,7 @@ function area(
   summary: string,
   findings: string[]
 ): ScanArea {
-  return { key, title, score: clamp(score), confidence, summary, findings };
+  return { key, title, score: clamp(score), confidence, summary, findings: findings.slice(0, 3) };
 }
 
 function combineFeedMetrics(automatic: SocialFeedMetrics | null, screenshot?: SocialFeedMetrics | null) {
@@ -385,12 +397,12 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Technical foundations and mobile readiness.", "Fundamentos técnicos e preparação para dispositivos móveis."],
     ["SEO and performance", "SEO e desempenho"],
     ["Search foundations and mobile performance signals.", "Fundamentos de pesquisa e sinais de desempenho móvel."],
-    ["Booking journey", "Percurso de reserva"],
-    ["How clearly the website guides a guest towards action.", "Clareza com que o website orienta o hóspede para uma ação."],
-    ["Public Google listing match", "Correspondência com a presença pública no Google"],
-    ["Public Google and local business signals linked from the website.", "Sinais públicos do Google e do negócio local ligados a partir do website."],
-    ["Social and OTA links", "Ligações a redes sociais e OTAs"],
-    ["Public platform links that support discovery and comparison.", "Ligações públicas que apoiam a descoberta e comparação."],
+    ["Direct booking journey", "Percurso de reserva direta"],
+    ["How easily a guest can move from interest to a direct booking or enquiry.", "Facilidade com que um hóspede passa do interesse para uma reserva direta ou contacto."],
+    ["Local discovery readiness", "Preparação para descoberta local"],
+    ["Signals that help search engines understand the business, location and contact details.", "Sinais que ajudam os motores de pesquisa a compreender o negócio, a localização e os contactos."],
+    ["Social presence connections", "Ligações à presença nas redes sociais"],
+    ["How clearly the website connects guests with the brand's active social channels.", "Clareza com que o website liga os hóspedes aos canais sociais ativos da marca."],
     ["Social feed visual consistency", "Consistência visual do feed"],
     ["Rules-based visual signals from public thumbnails and an optional private screenshot.", "Sinais visuais calculados a partir de miniaturas públicas e de uma captura privada opcional."],
     ["A feed screenshot was analysed privately in the browser. The image was not uploaded.", "Uma captura do feed foi analisada em privado no navegador. A imagem não foi enviada."],
@@ -427,18 +439,20 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["No JSON-LD structured data was detected.", "Não foram detetados dados estruturados JSON-LD."],
     ["Live PageSpeed data was unavailable during this scan.", "Os dados PageSpeed em tempo real não estavam disponíveis durante esta análise."],
     ["No clear booking, reservation or enquiry link was detected.", "Não foi detetada uma ligação clara para reserva ou contacto."],
-    ["At least one external booking or hospitality platform is linked.", "Existe uma ligação a pelo menos uma plataforma externa de reservas ou hotelaria."],
-    ["No supported OTA or reservation platform link was detected.", "Não foi detetada uma ligação a uma OTA ou plataforma de reservas suportada."],
+    ["Guests can reach a direct booking or reservation action from the homepage.", "Os hóspedes conseguem chegar a uma ação de reserva direta a partir da página inicial."],
+    ["A clearer direct booking action could reduce guest drop-off and reliance on third-party platforms.", "Uma ação de reserva direta mais clara pode reduzir o abandono e a dependência de plataformas externas."],
+    ["An enquiry route is available as a useful fallback for guests who are not ready to book.", "Existe um percurso de contacto útil para hóspedes que ainda não estão prontos para reservar."],
+    ["A telephone route is available for guests who prefer direct contact.", "Existe um contacto telefónico para hóspedes que preferem contacto direto."],
+    ["Search engines can identify this as a local hospitality business.", "Os motores de pesquisa conseguem identificar este negócio como uma empresa local de hotelaria."],
+    ["The website provides a clear location signal for local discovery.", "O website apresenta um sinal de localização claro para a descoberta local."],
+    ["Public contact details support local trust and discovery.", "Os contactos públicos reforçam a confiança e a descoberta local."],
+    ["Add hospitality business structured data so search engines can understand the business type, location and contact details.", "Adicione dados estruturados de hotelaria para que os motores de pesquisa compreendam o tipo de negócio, a localização e os contactos."],
+    ["The website links guests to its active social profiles.", "O website direciona os hóspedes para os seus perfis sociais ativos."],
+    ["Add links to the active social channels guests use to assess the experience.", "Adicione ligações aos canais sociais ativos que os hóspedes usam para avaliar a experiência."],
+    ["Structured profile connections help search engines associate these channels with the business.", "As ligações estruturadas aos perfis ajudam os motores de pesquisa a associar estes canais ao negócio."],
     ["A telephone contact signal is present.", "Existe um sinal de contacto telefónico."],
     ["A telephone contact signal was not found.", "Não foi encontrado um sinal de contacto telefónico."],
-    ["A public Google Maps or Business Profile link was found on the website.", "Foi encontrada no website uma ligação pública ao Google Maps ou Perfil de Empresa."],
-    ["A direct Google Maps or Business Profile link was not found on the website.", "Não foi encontrada no website uma ligação direta ao Google Maps ou Perfil de Empresa."],
-    ["Local hospitality business structured data was detected.", "Foram detetados dados estruturados de um negócio local de hotelaria."],
-    ["LocalBusiness, Hotel, Restaurant or LodgingBusiness schema was not detected.", "Não foi detetado esquema LocalBusiness, Hotel, Restaurant ou LodgingBusiness."],
-    ["This public scan does not access private Google Business Profile analytics.", "Esta análise pública não acede a dados privados do Perfil de Empresa no Google."],
     ["No supported social profile links were detected.", "Não foram detetadas ligações a redes sociais suportadas."],
-    ["No supported OTA or reservation links were detected.", "Não foram detetadas ligações a OTAs ou plataformas de reservas suportadas."],
-    ["Profiles that are not linked from the website may require a connected or licensed platform search.", "Perfis que não estejam ligados a partir do website podem exigir uma pesquisa numa plataforma ligada ou licenciada."],
     ["An email contact signal was found.", "Foi encontrado um sinal de contacto por email."],
     ["A public email contact signal was not found.", "Não foi encontrado um email de contacto público."],
     ["A telephone contact signal was found.", "Foi encontrado um sinal de contacto telefónico."],
@@ -451,9 +465,9 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Add one prominent booking or enquiry action in the header and key landing sections.", "Adicione uma ação de reserva ou contacto bem visível no cabeçalho e nas secções principais."],
     ["Write a clear meta description that communicates the hospitality experience and location.", "Escreva uma descrição meta clara que comunique a experiência e a localização."],
     ["Add appropriate hospitality business structured data with address, contact and profile links.", "Adicione dados estruturados adequados ao negócio, com endereço, contactos e ligações aos perfis."],
-    ["Link the verified Google Business Profile clearly from the website.", "Ligue claramente o Perfil de Empresa no Google verificado a partir do website."],
     ["Connect the website to the active social profiles guests use to assess the experience.", "Ligue o website às redes sociais ativas que os hóspedes usam para avaliar a experiência."],
-    ["Review and link the principal OTA or reservation listing where it supports the guest journey.", "Reveja e ligue a principal OTA ou plataforma de reservas quando apoiar o percurso do hóspede."],
+    ["Add one prominent direct booking action in the header and key landing sections.", "Adicione uma ação de reserva direta bem visível no cabeçalho e nas secções principais."],
+    ["The available visual evidence shows a consistent foundation for the social feed.", "A evidência visual disponível mostra uma base consistente para o feed das redes sociais."],
     ["Improve image alt text so photography is accessible and easier for search engines to understand.", "Melhore o texto alternativo das imagens para tornar a fotografia acessível e mais clara para os motores de pesquisa."],
     ["Use a stronger, curated photography sequence to communicate rooms, food, atmosphere and guest experience.", "Use uma sequência fotográfica mais forte e cuidada para comunicar espaços, gastronomia, ambiente e experiência."],
     ["Add complete social sharing metadata so links present consistently when shared.", "Adicione metadados completos para que as ligações tenham uma apresentação consistente quando são partilhadas."],
@@ -515,6 +529,7 @@ export async function runDigitalScan(input: {
     : `https://${input.websiteUrl}`;
   const initialUrl = new URL(suppliedUrl);
   const { html, finalUrl } = await fetchPublicHomepage(initialUrl);
+  const anchorLinks = extractAnchorLinks(html, finalUrl);
   const links = unique([...extractLinks(html, finalUrl), ...structuredProfileLinks(html, finalUrl)]);
   const lowerHtml = html.toLowerCase();
   const title = textContent(html, "title");
@@ -530,9 +545,18 @@ export async function runDigitalScan(input: {
   const googleLinks = links.filter((link) =>
     /(^|\.)google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/i.test(link)
   );
-  const bookingLinks = links.filter((link) =>
-    /book|booking|reserve|reservation|availability|room|table|enquir|contact/i.test(link)
-  );
+  const directBookingLinks = unique(anchorLinks
+    .filter(({ url, text }) => {
+      const parsed = new URL(url);
+      const isEditorial = /\/(?:blog|case-studies|insights|news)(?:\/|$)/i.test(parsed.pathname);
+      const urlSignal = /book(?:ing)?|reserve|reservation|availability/i.test(`${parsed.hostname}${parsed.pathname}`);
+      const actionText = text.length <= 90 && /\b(?:book now|book direct|check availability|reserve now|make a reservation|book a room|book a table|reservations?)\b/i.test(text);
+      return !isEditorial && (urlSignal || actionText) && !linksForDomains([url], otaDomains).length;
+    })
+    .map(({ url }) => url));
+  const enquiryLinks = unique(anchorLinks
+    .filter(({ url, text }) => /enquir|inquir|contact|get in touch|request/i.test(`${url} ${text}`))
+    .map(({ url }) => url));
   const hasEmail = /mailto:/i.test(html) || /[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(html);
   const hasPhone = /tel:/i.test(html) || schema.hasTelephone;
   const hasAddress = schema.hasAddress || /\baddress\b/i.test(lowerHtml);
@@ -571,43 +595,40 @@ export async function runDigitalScan(input: {
       : "Live PageSpeed data was unavailable during this scan."
   ];
 
-  const bookingScore = Math.min(100, bookingLinks.length * 18 + (otaLinks.length ? 15 : 0) + (hasPhone ? 10 : 0));
+  const bookingScore = Math.min(100, (directBookingLinks.length ? 70 : 0) + (enquiryLinks.length ? 15 : 0) + (hasPhone ? 15 : 0));
   const bookingFindings = [
-    bookingLinks.length
-      ? `${bookingLinks.length} booking, reservation or enquiry link${bookingLinks.length === 1 ? "" : "s"} detected.`
-      : "No clear booking, reservation or enquiry link was detected.",
-    otaLinks.length
-      ? "At least one external booking or hospitality platform is linked."
-      : "No supported OTA or reservation platform link was detected.",
-    hasPhone ? "A telephone contact signal is present." : "A telephone contact signal was not found."
-  ];
+    directBookingLinks.length
+      ? "Guests can reach a direct booking or reservation action from the homepage."
+      : "A clearer direct booking action could reduce guest drop-off and reliance on third-party platforms.",
+    enquiryLinks.length ? "An enquiry route is available as a useful fallback for guests who are not ready to book." : null,
+    hasPhone ? "A telephone route is available for guests who prefer direct contact." : null
+  ].filter((item): item is string => Boolean(item));
 
-  const googleScore = googleLinks.length ? 90 : schema.localBusiness ? 58 : schema.hasAddress ? 35 : 15;
-  const googleConfidence: ScanConfidence = googleLinks.length
-    ? "verified"
-    : schema.localBusiness || schema.hasAddress
-      ? "partial"
-      : "not_confirmed";
+  const localSignals = [schema.localBusiness, hasAddress, hasPhone || hasEmail].filter(Boolean).length;
+  const googleScore = Math.min(100,
+    (schema.localBusiness ? 45 : 0) +
+    (hasAddress ? 30 : 0) +
+    (hasPhone || hasEmail ? 25 : 0)
+  );
+  const googleConfidence: ScanConfidence = localSignals >= 3 ? "verified" : localSignals ? "partial" : "not_confirmed";
   const googleFindings = [
-    googleLinks.length
-      ? "A public Google Maps or Business Profile link was found on the website."
-      : "A direct Google Maps or Business Profile link was not found on the website.",
     schema.localBusiness
-      ? "Local hospitality business structured data was detected."
-      : "LocalBusiness, Hotel, Restaurant or LodgingBusiness schema was not detected.",
-    "This public scan does not access private Google Business Profile analytics."
-  ];
+      ? "Search engines can identify this as a local hospitality business."
+      : "Add hospitality business structured data so search engines can understand the business type, location and contact details.",
+    hasAddress ? "The website provides a clear location signal for local discovery." : null,
+    hasPhone || hasEmail ? "Public contact details support local trust and discovery." : null
+  ].filter((item): item is string => Boolean(item));
 
-  const visibilityScore = Math.min(100, socialLinks.length * 18 + otaLinks.length * 18 + (schema.hasSameAs ? 15 : 0));
+  const visibilityScore = socialLinks.length
+    ? Math.min(100, 35 + socialLinks.length * 18 + (schema.hasSameAs ? 10 : 0))
+    : 0;
   const visibilityFindings = [
     socialLinks.length
-      ? `${socialLinks.length} supported social profile link${socialLinks.length === 1 ? "" : "s"} detected.`
-      : "No supported social profile links were detected.",
-    otaLinks.length
-      ? `${otaLinks.length} supported OTA or reservation link${otaLinks.length === 1 ? "" : "s"} detected.`
-      : "No supported OTA or reservation links were detected.",
-    "Profiles that are not linked from the website may require a connected or licensed platform search."
-  ];
+      ? "The website links guests to its active social profiles."
+      : "Add links to the active social channels guests use to assess the experience.",
+    schema.hasSameAs ? "Structured profile connections help search engines associate these channels with the business." : null,
+    socialLinks.length ? `${socialLinks.length} supported social profile link${socialLinks.length === 1 ? "" : "s"} detected.` : null
+  ].filter((item): item is string => Boolean(item));
 
   const feed = combineFeedMetrics(publicSocial.metrics, input.socialFeedMetrics);
   const socialVisualScore = feed
@@ -619,11 +640,6 @@ export async function runDigitalScan(input: {
     : socialLinks.length
       ? 35
       : 15;
-  const profileFindings = publicSocial.profiles.map((profile) => {
-    if (profile.status === "scanned") return `${profile.platform}: automatic visual scan completed with ${profile.thumbnailCount} public thumbnail${profile.thumbnailCount === 1 ? "" : "s"}.`;
-    if (profile.status === "partial") return `${profile.platform}: public profile was reachable, but recent feed imagery was incomplete.`;
-    return `${profile.platform}: public access was blocked, so a screenshot is recommended.`;
-  });
   const evidenceFindings = [
     publicSocial.thumbnailCount
       ? `Automatic public analysis used ${publicSocial.thumbnailCount} recent thumbnail${publicSocial.thumbnailCount === 1 ? "" : "s"}.`
@@ -641,21 +657,18 @@ export async function runDigitalScan(input: {
   const socialVisualFindings = feed
     ? [
         ...evidenceFindings,
-        ...profileFindings,
         `Colour cohesion signal: ${feed.colourCohesion}/100.`,
-        `Exposure balance signal: ${feed.exposureBalance}/100.`,
-        `Contrast balance signal: ${feed.contrastBalance}/100.`,
-        `Source image quality signal: ${feed.imageQuality}/100.`,
-        `Possible visual repetition: ${feed.repetitionRisk}%.`,
-        "This free rules-based check measures visual consistency but does not recognise logos, read post copy or identify content subjects."
+        feed.colourCohesion < 55
+          ? "Use a more consistent colour treatment or recurring branded graphic system across the feed."
+          : feed.imageQuality < 60
+            ? "Use higher-resolution feed imagery and export graphics at platform-ready dimensions."
+            : feed.repetitionRisk > 35
+              ? "Increase the variety of recent visuals so repeated-looking posts do not weaken the feed."
+              : "The available visual evidence shows a consistent foundation for the social feed."
       ]
     : [
         ...evidenceFindings,
-        ...profileFindings,
         "No feed screenshot was supplied, so visual branding could not be measured.",
-        socialLinks.length
-          ? "Public social profile links were found on the website."
-          : "No public social profile links were found on the website.",
         "Upload a feed screenshot to add a free visual consistency check without connecting an account."
       ];
 
@@ -686,9 +699,9 @@ export async function runDigitalScan(input: {
   const areas = [
     area("website", "Website health", healthScore, "verified", "Technical foundations and mobile readiness.", healthFindings),
     area("seo", "SEO and performance", seoScore, speed ? "verified" : "partial", "Search foundations and mobile performance signals.", seoFindings),
-    area("booking", "Booking journey", bookingScore, "verified", "How clearly the website guides a guest towards action.", bookingFindings),
-    area("google", "Public Google listing match", googleScore, googleConfidence, "Public Google and local business signals linked from the website.", googleFindings),
-    area("visibility", "Social and OTA links", visibilityScore, "verified", "Public platform links that support discovery and comparison.", visibilityFindings),
+    area("booking", "Direct booking journey", bookingScore, directBookingLinks.length ? "verified" : "partial", "How easily a guest can move from interest to a direct booking or enquiry.", bookingFindings),
+    area("google", "Local discovery readiness", googleScore, googleConfidence, "Signals that help search engines understand the business, location and contact details.", googleFindings),
+    area("visibility", "Social presence connections", visibilityScore, socialLinks.length ? "verified" : "not_confirmed", "How clearly the website connects guests with the brand's active social channels.", visibilityFindings),
     area(
       "social_visual",
       "Social feed visual consistency",
@@ -706,7 +719,7 @@ export async function runDigitalScan(input: {
   ];
 
   const priorityPool = [
-    !bookingLinks.length && "Add one prominent booking or enquiry action in the header and key landing sections.",
+    !directBookingLinks.length && "Add one prominent direct booking action in the header and key landing sections.",
     !feed && "Upload a feed screenshot to add a free visual consistency check without connecting an account.",
     feed && feed.colourCohesion < 55 && "Use a more consistent colour treatment or recurring branded graphic system across the feed.",
     feed && feed.exposureBalance < 55 && "Balance very dark and very bright posts so the feed feels more intentional as a whole.",
@@ -714,9 +727,7 @@ export async function runDigitalScan(input: {
     feed && feed.repetitionRisk > 35 && "Increase the variety of recent visuals so repeated-looking posts do not weaken the feed.",
     !description && "Write a clear meta description that communicates the hospitality experience and location.",
     !schema.localBusiness && "Add appropriate hospitality business structured data with address, contact and profile links.",
-    !googleLinks.length && "Link the verified Google Business Profile clearly from the website.",
     !socialLinks.length && "Connect the website to the active social profiles guests use to assess the experience.",
-    !otaLinks.length && "Review and link the principal OTA or reservation listing where it supports the guest journey.",
     images.altCoverage < 0.75 && "Improve image alt text so photography is accessible and easier for search engines to understand.",
     images.count < 5 && "Use a stronger, curated photography sequence to communicate rooms, food, atmosphere and guest experience.",
     !hasOpenGraph && "Add complete social sharing metadata so links present consistently when shared.",
@@ -736,7 +747,14 @@ export async function runDigitalScan(input: {
     pageSpeedAvailable: Boolean(speed),
     areas,
     priorities,
-    discovered: { socialLinks, otaLinks, googleLinks, socialProfiles: publicSocial.profiles },
+    discovered: {
+      socialLinks,
+      otaLinks,
+      googleLinks,
+      directBookingLinks,
+      enquiryLinks,
+      socialProfiles: publicSocial.profiles
+    },
     limitations: [
       "This scan reviews public signals available from the submitted website.",
       "It does not access private analytics, account dashboards or unpublished platform information.",
