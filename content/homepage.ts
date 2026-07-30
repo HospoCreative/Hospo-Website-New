@@ -161,6 +161,49 @@ export const homepageContent = {
       }
     ]
   },
+  statistics: {
+    eyebrow: "Why digital presence matters",
+    title: "Your guests make decisions before they arrive.",
+    body:
+      "From the images they see to the reviews they read and the website they browse, every digital touchpoint shapes whether they notice your business, trust it and choose it.",
+    cards: [
+      {
+        category: "Social media",
+        statistic: "60%+",
+        headline: "Travel inspiration starts online.",
+        body: "More than 60% of consumers use social media for travel inspiration. Without strong and consistent content, your business may never enter a potential guest’s consideration.",
+        source: "Source: Expedia Group, 2025 Traveler Value Index"
+      },
+      {
+        category: "Imagery",
+        statistic: "40%",
+        headline: "Guests are looking at your visuals.",
+        body: "Many travellers engage with travel photography and video while planning. Poor-quality or outdated imagery can make a strong experience appear less desirable than a competitor’s.",
+        source: "Source: Expedia Group, Traveler Path to Purchase Research"
+      },
+      {
+        category: "Discovery",
+        statistic: "77%",
+        headline: "Decisions begin before the search.",
+        body: "Most travellers who use social media during trip planning use it during the inspiration stage. By the time they search for prices, they may already know which businesses they prefer.",
+        source: "Source: Expedia Group, Path to Purchase Study"
+      },
+      {
+        category: "Reputation",
+        statistic: "63%",
+        headline: "Active businesses build more trust.",
+        body: "Guests are more likely to book when management responds consistently to reviews. An unmanaged profile can make a business appear inactive or unconcerned.",
+        source: "Source: Tripadvisor and Ipsos MORI"
+      },
+      {
+        category: "Competition",
+        statistic: "ONE CLICK",
+        headline: "Your competitor is always nearby.",
+        body: "Guests compare imagery, reviews, menus, rooms, websites and social profiles within minutes. When your digital presence is unclear or outdated, the opportunity often goes to the business that presents itself better.",
+        source: "Source: Insight based on hospitality path-to-purchase research"
+      }
+    ]
+  },
   journey: {
     eyebrow: "The digital guest journey",
     title: "Every digital touchpoint influences the booking decision.",

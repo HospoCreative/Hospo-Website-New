@@ -2,9 +2,9 @@
 // Change this file first when updating the landing page message.
 export const siteContent = {
   metadata: {
-    title: "Hospo Creative | Hospitality Marketing & Digital Optimisation",
+    title: "Hospo Creative | Hotel & Restaurant Marketing Agency",
     description:
-      "Photography, content, strategy, websites, OTA optimisation and digital marketing for hotels, restaurants and accommodation brands."
+      "Marketing, photography, websites and digital strategy for hotels, restaurants and stays in the UK and internationally."
   },
   navItems: [
     { label: "Work", href: "/#work" },

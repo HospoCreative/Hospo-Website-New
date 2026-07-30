@@ -6,8 +6,22 @@ import { SmartImage } from "@/components/SmartImage";
 import { getPublishedCaseStudies } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata() {
+  const locale = await getRequestLocale();
+  return buildPageMetadata({
+    title: locale === "pt" ? "Projetos Selecionados | Hospo Creative" : "Selected Work | Hospo Creative",
+    description:
+      locale === "pt"
+        ? "Projetos de estratégia, conteúdo e execução digital para hotéis, restaurantes, alojamentos e marcas de alimentação e bebidas."
+        : "Strategy, content and digital projects for hotels, restaurants, stays and food and drink brands.",
+    pathname: "/case-studies",
+    locale
+  });
+}
 
 function isVideo(src: string) {
   return /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src);

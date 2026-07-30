@@ -12,7 +12,8 @@ type LoginPageProps = {
 };
 
 export const metadata = {
-  title: "Admin Login | Hospo Creative"
+  title: "Admin Login | Hospo Creative",
+  robots: { index: false, follow: false, nocache: true }
 };
 
 export default async function AdminLoginPage({ searchParams }: LoginPageProps) {

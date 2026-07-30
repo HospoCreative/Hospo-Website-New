@@ -9,6 +9,8 @@ import { getCaseStudyBySlug } from "@/lib/supabase/queries";
 import type { CaseStudyMedia } from "@/types/caseStudy";
 import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
+import { buildPageMetadata, localizedUrls, SITE_URL } from "@/lib/seo";
+import { SeoStructuredData } from "@/components/SeoStructuredData";
 
 export const dynamic = "force-dynamic";
 
@@ -70,15 +72,13 @@ export async function generateMetadata({ params }: CaseStudyPageProps): Promise<
     return {};
   }
 
-  return {
+  return buildPageMetadata({
     title: `${caseStudy.title} | Hospo Creative`,
     description: caseStudy.summary,
-    openGraph: {
-      title: `${caseStudy.title} | Hospo Creative`,
-      description: caseStudy.summary,
-      images: caseStudy.heroImage ? [caseStudy.heroImage] : undefined
-    }
-  };
+    pathname: `/case-studies/${slug}`,
+    locale,
+    image: caseStudy.heroImage
+  });
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
@@ -105,9 +105,23 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const galleryMedia = heroMedia
     ? uploadedMedia.filter((item) => item.src !== heroMedia.src)
     : uploadedMedia;
+  const { english, portuguese } = localizedUrls(`/case-studies/${slug}`);
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: caseStudy.title,
+    description: caseStudy.summary,
+    image: caseStudy.heroImage || undefined,
+    datePublished: caseStudy.publishedAt || undefined,
+    creator: { "@id": `${SITE_URL}/#organization` },
+    about: caseStudy.clientName,
+    url: locale === "pt" ? portuguese : english,
+    inLanguage: locale === "pt" ? "pt-PT" : "en-GB"
+  };
 
   return (
     <>
+      <SeoStructuredData data={structuredData} />
       <Header locale={locale} />
       <main className="bg-white text-ink">
         <article>

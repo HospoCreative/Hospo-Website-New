@@ -5,11 +5,20 @@ import { SmartImage } from "@/components/SmartImage";
 import { getPublishedBlogPosts } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Marketing Insights | Hospo Creative",
-  description: "Practical marketing articles for hotels, restaurants, stays and food and drink brands."
-};
+export async function generateMetadata() {
+  const locale = await getRequestLocale();
+  return buildPageMetadata({
+    title: locale === "pt" ? "Ideias de Marketing | Hospo Creative" : "Marketing Insights | Hospo Creative",
+    description:
+      locale === "pt"
+        ? "Artigos práticos de marketing para hotéis, restaurantes, alojamentos e marcas de alimentação e bebidas."
+        : "Practical marketing articles for hotels, restaurants, stays and food and drink brands.",
+    pathname: "/blog",
+    locale
+  });
+}
 
 export const dynamic = "force-dynamic";
 

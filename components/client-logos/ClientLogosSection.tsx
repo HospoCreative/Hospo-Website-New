@@ -1,6 +1,3 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import type { ClientLogo } from "@/types/clientLogo";
 import { Reveal } from "@/components/Reveal";
@@ -12,7 +9,6 @@ type ClientLogosSectionProps = {
 };
 
 export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionProps) {
-  const reduceMotion = useReducedMotion();
   const publishedLogos = logos
     .filter((logo) => logo.published && logo.logoUrl)
     .sort((a, b) => a.sortOrder - b.sortOrder);
@@ -23,42 +19,51 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
 
   return (
     <section
-      className="border-t border-ink/10 bg-white px-5 py-12 text-ink sm:px-8 lg:py-14"
+      className="overflow-hidden border-y border-white/14 bg-ink py-10 text-white sm:py-12"
       aria-labelledby="client-logos-title"
     >
-      <Reveal className="mx-auto max-w-7xl">
-        <div className="max-w-5xl">
-          <p className="section-eyebrow text-ink/55">{translate(locale, "Clients & partners")}</p>
+      <Reveal className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <p className="section-eyebrow text-yellow">{translate(locale, "Clients & partners")}</p>
           <h2
             id="client-logos-title"
-            className="max-w-4xl font-serif text-[clamp(1.8rem,3.2vw,2.8rem)] font-semibold leading-[1.05]"
+            className="max-w-4xl font-serif text-[clamp(1.8rem,3.2vw,2.8rem)] font-semibold leading-[1.05] text-white"
           >
             {translate(locale, "Brands we have supported.")}
           </h2>
         </div>
+      </Reveal>
 
-        <div className="mt-10 grid grid-cols-2 items-center gap-x-10 gap-y-9 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-14 lg:gap-y-10">
-          {publishedLogos.map((logo, index) => (
-            <motion.div
-              key={`${logo.clientName}-${logo.logoUrl}`}
-              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.42, delay: index * 0.06, ease: "easeOut" }}
-              className="flex h-28 items-center justify-center rounded-[8px] bg-ink p-5 sm:h-32 lg:h-36"
-            >
+      <div className="mt-8 border-y border-white/14 py-6 sm:mt-10 sm:py-7">
+        <div className="marquee-track flex w-max items-center gap-12 px-6 sm:gap-16 sm:px-8 lg:gap-24">
+          {publishedLogos.map((logo) => (
+            <div key={`${logo.clientName}-${logo.logoUrl}`} className="flex h-20 w-44 shrink-0 items-center justify-center sm:h-24 sm:w-52 lg:h-28 lg:w-60">
               <Image
                 src={logo.logoUrl}
                 alt={logo.alt || `${logo.clientName} logo`}
-                width={240}
-                height={120}
-                sizes="(min-width: 1024px) 200px, (min-width: 640px) 28vw, 42vw"
-                className="h-auto max-h-[78%] w-auto max-w-full object-contain opacity-90 transition duration-500 hover:scale-105 hover:opacity-100"
+                width={320}
+                height={160}
+                sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 176px"
+                className="h-16 w-auto max-w-full object-contain sm:h-20 lg:h-24"
               />
-            </motion.div>
+            </div>
           ))}
+          <div className="flex items-center gap-12 sm:gap-16 lg:gap-24" aria-hidden="true">
+            {publishedLogos.map((logo) => (
+              <div key={`duplicate-${logo.clientName}-${logo.logoUrl}`} className="flex h-20 w-44 shrink-0 items-center justify-center sm:h-24 sm:w-52 lg:h-28 lg:w-60">
+                <Image
+                  src={logo.logoUrl}
+                  alt=""
+                  width={320}
+                  height={160}
+                  sizes="(min-width: 1024px) 240px, (min-width: 640px) 208px, 176px"
+                  className="h-16 w-auto max-w-full object-contain sm:h-20 lg:h-24"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

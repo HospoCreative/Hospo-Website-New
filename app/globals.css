@@ -231,7 +231,8 @@ video {
 }
 
 .marquee-track {
-  animation: marquee 88s linear infinite;
+  animation: marquee 52s linear infinite;
+  will-change: transform;
 }
 
 .marquee-track:hover {

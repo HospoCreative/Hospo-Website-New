@@ -4,6 +4,7 @@ export function middleware(request: NextRequest) {
   const isPortuguese = request.nextUrl.pathname === "/pt" || request.nextUrl.pathname.startsWith("/pt/");
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-hospo-locale", isPortuguese ? "pt" : "en");
+  requestHeaders.set("x-hospo-path", request.nextUrl.pathname);
 
   if (!isPortuguese) {
     return NextResponse.next({ request: { headers: requestHeaders } });

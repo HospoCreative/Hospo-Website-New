@@ -8,6 +8,8 @@ import { SmartImage } from "@/components/SmartImage";
 import { getBlogPostBySlug } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
+import { buildPageMetadata, localizedUrls, SITE_URL } from "@/lib/seo";
+import { SeoStructuredData } from "@/components/SeoStructuredData";
 
 export const dynamic = "force-dynamic";
 
@@ -24,13 +26,22 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     return {};
   }
 
-  return {
+  const metadata = buildPageMetadata({
     title: `${post.title} | Hospo Creative`,
     description: post.excerpt,
+    pathname: `/blog/${slug}`,
+    locale,
+    image: post.coverImage,
+    type: "article"
+  });
+  return {
+    ...metadata,
     openGraph: {
-      title: `${post.title} | Hospo Creative`,
-      description: post.excerpt,
-      images: post.coverImage ? [post.coverImage] : undefined
+      ...metadata.openGraph,
+      type: "article",
+      publishedTime: post.publishedAt ?? undefined,
+      authors: post.authorName ? [post.authorName] : undefined,
+      tags: post.tags
     }
   };
 }
@@ -44,8 +55,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const { english, portuguese } = localizedUrls(`/blog/${slug}`);
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage ? [post.coverImage] : undefined,
+    datePublished: post.publishedAt ?? undefined,
+    author: { "@type": "Person", name: post.authorName || "Hospo Creative" },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    mainEntityOfPage: locale === "pt" ? portuguese : english,
+    inLanguage: locale === "pt" ? "pt-PT" : "en-GB"
+  };
+
   return (
     <>
+      <SeoStructuredData data={structuredData} />
       <Header locale={locale} />
       <main className="bg-white text-ink">
         <article>

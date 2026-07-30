@@ -14,6 +14,7 @@ import { FourWaysWeHelp } from "@/components/FourWaysWeHelp";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
 import { DigitalScanPromo } from "@/components/DigitalScanPromo";
+import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import {
   getPublishedBlogPosts,
   getFeaturedCaseStudies,
@@ -37,6 +38,7 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
+        <DigitalPresenceStatistics locale={locale} />
         <DigitalFirstImpression locale={locale} />
         <DigitalRefresh locale={locale} />
         <DigitalScanPromo locale={locale} />
