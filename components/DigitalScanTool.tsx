@@ -17,8 +17,8 @@ const copy = {
     location: "Town or location",
     email: "Contact email",
     feedScreenshot: "Social feed screenshot",
-    feedOptional: "Optional, recommended",
-    feedHelp: "Upload a screenshot showing at least nine recent posts. It is analysed privately in this browser and is never uploaded or stored.",
+    feedOptional: "Optional fallback",
+    feedHelp: "We will scan linked public social profiles first. Add a screenshot showing at least nine recent posts only for fuller coverage when a platform blocks access. It is analysed privately in this browser and is never uploaded or stored.",
     feedChoose: "Choose feed screenshot",
     feedAnalysing: "Analysing screenshot",
     feedReady: "Feed screenshot analysed privately",
@@ -34,6 +34,9 @@ const copy = {
     priorities: "Immediate priorities",
     discovered: "Discovered public links",
     socials: "Social profiles",
+    socialCoverage: "Automatic social coverage",
+    scanned: "Scanned",
+    blocked: "Blocked",
     otas: "OTAs and reservations",
     google: "Google links",
     none: "None confirmed",
@@ -59,8 +62,8 @@ const copy = {
     location: "Localidade",
     email: "Email de contacto",
     feedScreenshot: "Captura do feed das redes sociais",
-    feedOptional: "Opcional, recomendado",
-    feedHelp: "Carregue uma captura que mostre pelo menos nove publicações recentes. A imagem é analisada em privado neste navegador e nunca é enviada ou guardada.",
+    feedOptional: "Alternativa opcional",
+    feedHelp: "Primeiro, vamos analisar automaticamente as redes sociais públicas ligadas ao website. Adicione uma captura com pelo menos nove publicações apenas para obter maior cobertura quando uma plataforma bloqueia o acesso. A imagem é analisada em privado neste navegador e nunca é enviada ou guardada.",
     feedChoose: "Escolher captura do feed",
     feedAnalysing: "A analisar a captura",
     feedReady: "Captura do feed analisada em privado",
@@ -76,6 +79,9 @@ const copy = {
     priorities: "Prioridades imediatas",
     discovered: "Ligações públicas encontradas",
     socials: "Redes sociais",
+    socialCoverage: "Cobertura automática das redes sociais",
+    scanned: "Analisado",
+    blocked: "Bloqueado",
     otas: "OTAs e reservas",
     google: "Ligações Google",
     none: "Nenhuma confirmada",
@@ -295,6 +301,21 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
               </div>
               <div>
                 <h3 className="font-serif text-3xl font-semibold">{t.discovered}</h3>
+                {(report.discovered.socialProfiles ?? []).length ? (
+                  <div className="mt-5">
+                    <p className="text-xs font-black uppercase tracking-[0.16em] text-ink/48">{t.socialCoverage}</p>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {(report.discovered.socialProfiles ?? []).map((profile) => (
+                        <a key={`${profile.platform}-${profile.url}`} href={profile.url} target="_blank" rel="noreferrer" className="flex min-h-12 items-center justify-between gap-3 border border-ink/15 px-3 py-2 text-xs font-bold hover:border-yellow">
+                          <span>{profile.platform}</span>
+                          <span className={profile.status === "scanned" ? "bg-yellow px-2 py-1 text-ink" : profile.status === "partial" ? "border border-yellow px-2 py-1 text-ink" : "border border-ink/20 px-2 py-1 text-ink/55"}>
+                            {profile.status === "scanned" ? t.scanned : profile.status === "partial" ? t.partial : t.blocked}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 {[
                   [t.socials, report.discovered.socialLinks],
                   [t.otas, report.discovered.otaLinks],

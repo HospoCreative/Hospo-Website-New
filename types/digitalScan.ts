@@ -9,7 +9,7 @@ export type ScanAreaKey =
   | "photography";
 
 export type SocialFeedMetrics = {
-  source: "screenshot";
+  source: "screenshot" | "automatic" | "combined";
   width: number;
   height: number;
   tileCount: number;
@@ -18,6 +18,13 @@ export type SocialFeedMetrics = {
   contrastBalance: number;
   imageQuality: number;
   repetitionRisk: number;
+};
+
+export type PublicSocialProfileScan = {
+  platform: "Instagram" | "Facebook" | "TikTok" | "YouTube" | "LinkedIn" | "Pinterest";
+  url: string;
+  status: "scanned" | "partial" | "blocked";
+  thumbnailCount: number;
 };
 
 export type ScanConfidence = "verified" | "partial" | "not_confirmed";
@@ -46,6 +53,7 @@ export type DigitalScanReport = {
     socialLinks: string[];
     otaLinks: string[];
     googleLinks: string[];
+    socialProfiles?: PublicSocialProfileScan[];
   };
   limitations: string[];
 };

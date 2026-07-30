@@ -10,6 +10,7 @@ import type {
   SocialFeedMetrics
 } from "@/types/digitalScan";
 import type { Locale } from "@/lib/i18n";
+import { scanPublicSocialProfiles } from "@/lib/publicSocialScan";
 
 const MAX_HTML_BYTES = 2_000_000;
 const MAX_REDIRECTS = 4;
@@ -114,6 +115,28 @@ function linksForDomains(links: string[], domains: string[]) {
   });
 }
 
+function isSocialProfileLink(link: string) {
+  try {
+    const url = new URL(link);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    const path = url.pathname.replace(/\/+$/, "");
+    const firstSegment = path.split("/").filter(Boolean)[0]?.toLowerCase() ?? "";
+    if (host === "tiktok.com" || host.endsWith(".tiktok.com")) return /^\/@[^/]+$/i.test(path);
+    if (host === "youtube.com" || host.endsWith(".youtube.com")) return /^\/(?:@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)$/i.test(path);
+    if (host === "linkedin.com" || host.endsWith(".linkedin.com")) return /^\/(?:company|in)\/[^/]+$/i.test(path);
+    if (host === "instagram.com" || host.endsWith(".instagram.com")) {
+      return Boolean(firstSegment) && !["p", "reel", "reels", "stories", "explore", "accounts"].includes(firstSegment) && path.split("/").filter(Boolean).length === 1;
+    }
+    if (host === "facebook.com" || host.endsWith(".facebook.com") || host === "fb.com") {
+      return Boolean(firstSegment) && !["share", "sharer", "plugins", "watch", "reel", "events", "groups"].includes(firstSegment);
+    }
+    if (host === "pinterest.com" || host.endsWith(".pinterest.com")) return Boolean(firstSegment) && !["pin", "ideas", "search"].includes(firstSegment);
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function imageSignals(html: string) {
   const images = html.match(/<img\b[^>]*>/gi) ?? [];
   const withAlt = images.filter((tag) => tagAttribute(tag, "alt").trim().length >= 3).length;
@@ -143,6 +166,39 @@ function structuredData(html: string) {
     hasTelephone: serialised.includes('"telephone"'),
     hasSameAs: serialised.includes('"sameas"')
   };
+}
+
+function structuredProfileLinks(html: string, base: URL) {
+  const links: string[] = [];
+  const visit = (value: unknown): void => {
+    if (!value || typeof value !== "object") return;
+    if (Array.isArray(value)) {
+      value.forEach(visit);
+      return;
+    }
+    for (const [key, child] of Object.entries(value)) {
+      if (key.toLowerCase() === "sameas") {
+        const values = Array.isArray(child) ? child : [child];
+        for (const item of values) {
+          if (typeof item === "string") {
+            const link = normaliseLink(item, base);
+            if (link) links.push(link);
+          }
+        }
+      } else {
+        visit(child);
+      }
+    }
+  };
+
+  for (const match of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    try {
+      visit(JSON.parse(match[1]));
+    } catch {
+      // Invalid third-party structured data is ignored without failing the scan.
+    }
+  }
+  return unique(links);
 }
 
 function isPrivateIpv4(address: string) {
@@ -306,6 +362,23 @@ function area(
   return { key, title, score: clamp(score), confidence, summary, findings };
 }
 
+function combineFeedMetrics(automatic: SocialFeedMetrics | null, screenshot?: SocialFeedMetrics | null) {
+  if (!automatic) return screenshot ?? null;
+  if (!screenshot) return automatic;
+  const weighted = (automaticValue: number, screenshotValue: number) => clamp(automaticValue * 0.4 + screenshotValue * 0.6);
+  return {
+    source: "combined" as const,
+    width: screenshot.width,
+    height: screenshot.height,
+    tileCount: automatic.tileCount + screenshot.tileCount,
+    colourCohesion: weighted(automatic.colourCohesion, screenshot.colourCohesion),
+    exposureBalance: weighted(automatic.exposureBalance, screenshot.exposureBalance),
+    contrastBalance: weighted(automatic.contrastBalance, screenshot.contrastBalance),
+    imageQuality: weighted(automatic.imageQuality, screenshot.imageQuality),
+    repetitionRisk: weighted(automatic.repetitionRisk, screenshot.repetitionRisk)
+  };
+}
+
 function portugueseReport(report: DigitalScanReport): DigitalScanReport {
   const exact = new Map<string, string>([
     ["Website health", "Saúde do website"],
@@ -319,8 +392,12 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Social and OTA links", "Ligações a redes sociais e OTAs"],
     ["Public platform links that support discovery and comparison.", "Ligações públicas que apoiam a descoberta e comparação."],
     ["Social feed visual consistency", "Consistência visual do feed"],
-    ["Rules-based visual signals from a privately analysed feed screenshot.", "Sinais visuais calculados a partir de uma captura do feed analisada em privado."],
+    ["Rules-based visual signals from public thumbnails and an optional private screenshot.", "Sinais visuais calculados a partir de miniaturas públicas e de uma captura privada opcional."],
     ["A feed screenshot was analysed privately in the browser. The image was not uploaded.", "Uma captura do feed foi analisada em privado no navegador. A imagem não foi enviada."],
+    ["Automatic public profile and screenshot evidence were combined for this visual score.", "Foram combinados dados automáticos dos perfis públicos e da captura do feed para esta pontuação visual."],
+    ["No recent public thumbnails were accessible automatically.", "Não foi possível aceder automaticamente a miniaturas públicas recentes."],
+    ["Public social thumbnails are analysed temporarily and are not stored.", "As miniaturas públicas das redes sociais são analisadas temporariamente e não são guardadas."],
+    ["No social profiles were linked from the website, so no automatic social scan was attempted.", "O website não apresenta ligações para redes sociais, por isso não foi possível realizar uma análise automática."],
     ["No feed screenshot was supplied, so visual branding could not be measured.", "Não foi fornecida uma captura do feed, por isso não foi possível medir a consistência visual da marca."],
     ["Public social profile links were found on the website.", "Foram encontradas no website ligações públicas para redes sociais."],
     ["No public social profile links were found on the website.", "Não foram encontradas no website ligações públicas para redes sociais."],
@@ -384,6 +461,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Maintain the current foundations and complete a human review of content quality and conversion.", "Mantenha os fundamentos atuais e complete uma avaliação humana da qualidade do conteúdo e conversão."],
     ["This scan reviews public signals available from the submitted website.", "Esta análise avalia sinais públicos disponíveis no website submetido."],
     ["It does not access private analytics, account dashboards or unpublished platform information.", "Não acede a análises privadas, painéis de conta ou informação não publicada das plataformas."],
+    ["Automatic social coverage depends on what each platform exposes publicly and may be incomplete.", "A cobertura automática das redes sociais depende da informação que cada plataforma disponibiliza publicamente e pode estar incompleta."],
     ["Creative quality, review sentiment and listing accuracy should be confirmed by a human specialist.", "A qualidade criativa, o sentimento das avaliações e a exatidão das listagens devem ser confirmados por um especialista."],
   ]);
 
@@ -405,7 +483,11 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
       .replace(/^Exposure balance signal: (\d+)\/100\.$/, "Sinal de equilíbrio de exposição: $1/100.")
       .replace(/^Contrast balance signal: (\d+)\/100\.$/, "Sinal de equilíbrio de contraste: $1/100.")
       .replace(/^Source image quality signal: (\d+)\/100\.$/, "Sinal de qualidade da imagem de origem: $1/100.")
-      .replace(/^Possible visual repetition: (\d+)%\.$/, "Possível repetição visual: $1%.");
+      .replace(/^Possible visual repetition: (\d+)%\.$/, "Possível repetição visual: $1%.")
+      .replace(/^Automatic public analysis used (\d+) recent thumbnails?\.$/, "A análise pública automática utilizou $1 miniaturas recentes.")
+      .replace(/^(.+): automatic visual scan completed with (\d+) public thumbnails?\.$/, "$1: análise visual automática concluída com $2 miniaturas públicas.")
+      .replace(/^(.+): public profile was reachable, but recent feed imagery was incomplete\.$/, "$1: o perfil público estava acessível, mas as imagens recentes do feed estavam incompletas.")
+      .replace(/^(.+): public access was blocked, so a screenshot is recommended\.$/, "$1: o acesso público foi bloqueado, por isso recomendamos uma captura do feed.");
   }
 
   return {
@@ -433,7 +515,7 @@ export async function runDigitalScan(input: {
     : `https://${input.websiteUrl}`;
   const initialUrl = new URL(suppliedUrl);
   const { html, finalUrl } = await fetchPublicHomepage(initialUrl);
-  const links = extractLinks(html, finalUrl);
+  const links = unique([...extractLinks(html, finalUrl), ...structuredProfileLinks(html, finalUrl)]);
   const lowerHtml = html.toLowerCase();
   const title = textContent(html, "title");
   const description = metaContent(html, "description");
@@ -443,7 +525,7 @@ export async function runDigitalScan(input: {
   const language = html.match(/<html\b[^>]*\blang=["']([^"']+)["']/i)?.[1] ?? "";
   const schema = structuredData(html);
   const images = imageSignals(html);
-  const socialLinks = linksForDomains(links, socialDomains);
+  const socialLinks = linksForDomains(links, socialDomains).filter(isSocialProfileLink);
   const otaLinks = linksForDomains(links, otaDomains);
   const googleLinks = links.filter((link) =>
     /(^|\.)google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/i.test(link)
@@ -455,7 +537,10 @@ export async function runDigitalScan(input: {
   const hasPhone = /tel:/i.test(html) || schema.hasTelephone;
   const hasAddress = schema.hasAddress || /\baddress\b/i.test(lowerHtml);
   const hasOpenGraph = Boolean(metaContent(html, "og:title") && metaContent(html, "og:image"));
-  const speed = await pageSpeed(finalUrl.toString());
+  const [speed, publicSocial] = await Promise.all([
+    pageSpeed(finalUrl.toString()),
+    scanPublicSocialProfiles(socialLinks)
+  ]);
 
   const healthFindings = [
     finalUrl.protocol === "https:" ? "The website uses HTTPS." : "The website is not using HTTPS.",
@@ -524,7 +609,7 @@ export async function runDigitalScan(input: {
     "Profiles that are not linked from the website may require a connected or licensed platform search."
   ];
 
-  const feed = input.socialFeedMetrics;
+  const feed = combineFeedMetrics(publicSocial.metrics, input.socialFeedMetrics);
   const socialVisualScore = feed
     ? feed.colourCohesion * 0.3 +
       feed.exposureBalance * 0.2 +
@@ -534,9 +619,29 @@ export async function runDigitalScan(input: {
     : socialLinks.length
       ? 35
       : 15;
+  const profileFindings = publicSocial.profiles.map((profile) => {
+    if (profile.status === "scanned") return `${profile.platform}: automatic visual scan completed with ${profile.thumbnailCount} public thumbnail${profile.thumbnailCount === 1 ? "" : "s"}.`;
+    if (profile.status === "partial") return `${profile.platform}: public profile was reachable, but recent feed imagery was incomplete.`;
+    return `${profile.platform}: public access was blocked, so a screenshot is recommended.`;
+  });
+  const evidenceFindings = [
+    publicSocial.thumbnailCount
+      ? `Automatic public analysis used ${publicSocial.thumbnailCount} recent thumbnail${publicSocial.thumbnailCount === 1 ? "" : "s"}.`
+      : socialLinks.length
+        ? "No recent public thumbnails were accessible automatically."
+        : "No social profiles were linked from the website, so no automatic social scan was attempted.",
+    publicSocial.thumbnailCount ? "Public social thumbnails are analysed temporarily and are not stored." : null,
+    input.socialFeedMetrics
+      ? "A feed screenshot was analysed privately in the browser. The image was not uploaded."
+      : null,
+    publicSocial.metrics && input.socialFeedMetrics
+      ? "Automatic public profile and screenshot evidence were combined for this visual score."
+      : null
+  ].filter((item): item is string => Boolean(item));
   const socialVisualFindings = feed
     ? [
-        "A feed screenshot was analysed privately in the browser. The image was not uploaded.",
+        ...evidenceFindings,
+        ...profileFindings,
         `Colour cohesion signal: ${feed.colourCohesion}/100.`,
         `Exposure balance signal: ${feed.exposureBalance}/100.`,
         `Contrast balance signal: ${feed.contrastBalance}/100.`,
@@ -545,6 +650,8 @@ export async function runDigitalScan(input: {
         "This free rules-based check measures visual consistency but does not recognise logos, read post copy or identify content subjects."
       ]
     : [
+        ...evidenceFindings,
+        ...profileFindings,
         "No feed screenshot was supplied, so visual branding could not be measured.",
         socialLinks.length
           ? "Public social profile links were found on the website."
@@ -582,7 +689,18 @@ export async function runDigitalScan(input: {
     area("booking", "Booking journey", bookingScore, "verified", "How clearly the website guides a guest towards action.", bookingFindings),
     area("google", "Public Google listing match", googleScore, googleConfidence, "Public Google and local business signals linked from the website.", googleFindings),
     area("visibility", "Social and OTA links", visibilityScore, "verified", "Public platform links that support discovery and comparison.", visibilityFindings),
-    area("social_visual", "Social feed visual consistency", socialVisualScore, feed ? "verified" : "not_confirmed", "Rules-based visual signals from a privately analysed feed screenshot.", socialVisualFindings),
+    area(
+      "social_visual",
+      "Social feed visual consistency",
+      socialVisualScore,
+      input.socialFeedMetrics || publicSocial.profiles.some((profile) => profile.status === "scanned")
+        ? "verified"
+        : feed
+          ? "partial"
+          : "not_confirmed",
+      "Rules-based visual signals from public thumbnails and an optional private screenshot.",
+      socialVisualFindings
+    ),
     area("brand", "Brand and contact consistency", brandScore, "verified", "Contact, location and sharing signals available to guests.", brandFindings),
     area("photography", "Photography presentation", photographyScore, "partial", "Image quantity, accessibility and technical presentation.", photographyFindings)
   ];
@@ -618,10 +736,11 @@ export async function runDigitalScan(input: {
     pageSpeedAvailable: Boolean(speed),
     areas,
     priorities,
-    discovered: { socialLinks, otaLinks, googleLinks },
+    discovered: { socialLinks, otaLinks, googleLinks, socialProfiles: publicSocial.profiles },
     limitations: [
       "This scan reviews public signals available from the submitted website.",
       "It does not access private analytics, account dashboards or unpublished platform information.",
+      "Automatic social coverage depends on what each platform exposes publicly and may be incomplete.",
       "Creative quality, review sentiment and listing accuracy should be confirmed by a human specialist."
     ]
   };
