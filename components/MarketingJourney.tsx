@@ -9,7 +9,7 @@ export function MarketingJourney({ locale = "en" }: { locale?: Locale }) {
   const content = getHomepageContent(locale).journey;
   const reduceMotion = useReducedMotion();
   return (
-    <section id="guest-journey" className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
+    <section id="guest-journey" className="bg-ink px-5 pb-[var(--hc-section)] pt-[var(--hc-section-compact)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
         <SectionHeading tone="light" eyebrow={content.eyebrow} title={content.title} body={content.body} width="wide" />
         <div className="relative mt-12">

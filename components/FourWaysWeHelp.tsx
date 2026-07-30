@@ -23,7 +23,7 @@ export function FourWaysWeHelp({ locale = "en" }: { locale?: Locale }) {
           ))}
         </div>
 
-        <div className="mt-20 border-t border-ink/16 pt-12">
+        <div className="pt-12">
           <Reveal>
             <h3 className="font-serif text-4xl font-semibold text-ink sm:text-5xl">{content.servicesHeading}</h3>
             <p className="mt-4 max-w-3xl text-[1.0625rem] leading-7 text-ink/68">{content.servicesBody}</p>

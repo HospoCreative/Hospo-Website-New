@@ -100,7 +100,7 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
   }
 
   return (
-    <section className="overflow-hidden bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
+    <section className="overflow-hidden bg-ink px-5 pb-[var(--hc-section-compact)] pt-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(20rem,0.48fr)] lg:items-end">
           <div>

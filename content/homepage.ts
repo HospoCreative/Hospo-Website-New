@@ -230,8 +230,8 @@ export const homepageContent = {
     supporting: "We understand how guests choose where to stay, eat and experience a destination. Every image, campaign and recommendation is created to improve the digital journey before the guest arrives.",
     closing: "Industry knowledge, marketing direction and visual production in one team.",
     founders: [
-      { name: "Andreia Oliveira", role: "CO-FOUNDER, MARKETING AND GROWTH DIRECTOR", bio: "Andreia leads marketing strategy, brand positioning, campaigns, social media, advertising, SEO and digital communication. With more than seven years of hospitality marketing experience, she helps hotels and restaurants strengthen their presence and turn attention into measurable growth." },
-      { name: "Tiago Bastos", role: "CO-FOUNDER, CREATIVE AND BUSINESS DEVELOPMENT DIRECTOR", bio: "Tiago leads photography, video, web development and visual production, supported by approximately 15 years of industry experience. He also drives business development and commercial strategy, connecting creative execution with the long-term direction of Hospo." }
+      { name: "Andreia Oliveira", role: "CO-FOUNDER, MARKETING AND GROWTH DIRECTOR", bio: "With 10 years of experience in hospitality marketing and digital strategy, Andreia leads Hospo’s brand positioning, campaigns, social media, advertising, SEO and digital communication. She helps hotels and restaurants strengthen their visibility, connect with the right audience and turn attention into measurable growth." },
+      { name: "Tiago Bastos", role: "CO-FOUNDER, CREATIVE AND BUSINESS DEVELOPMENT DIRECTOR", bio: "With 15 years of experience in hospitality and F&B operations, Tiago brings a strong understanding of how hospitality businesses work from the inside. He leads Hospo’s photography, video, web development, creative direction and business development, combining operational knowledge, visual expertise and commercial strategy to support long-term growth." }
     ],
     image: { src: "/images/about/andreia-tiago.jpg", alt: "Andreia Oliveira and Tiago Bastos, founders of Hospo Creative" }
   },
