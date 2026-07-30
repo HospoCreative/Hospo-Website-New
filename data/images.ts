@@ -14,13 +14,13 @@ export const imageFolders = {
 // New files in public/images/strip appear automatically.
 export const movingStripImageText = {
   "strip-01.jpg": {
-    alt: "Boutique resort pool and hospitality architecture"
+    alt: "Boutique resort pool and architecture"
   },
   "strip-02.jpg": {
     alt: "Restaurant table with drinks and plated food"
   },
   "strip-03.jpg": {
-    alt: "Coastal landscape captured for a hospitality brand"
+    alt: "Coastal landscape captured for a client brand"
   },
   "strip-04.jpg": {
     alt: "A travel couple on a boutique hotel balcony"
@@ -35,7 +35,7 @@ export const movingStripImageText = {
     alt: "Cinematic coastal resort at golden hour"
   },
   "strip-08.jpg": {
-    alt: "Hospitality food and beverage detail"
+    alt: "Food and beverage detail"
   }
 } as const;
 
@@ -46,16 +46,16 @@ export const photoGalleryImageText = {
     alt: "Luxury hotel pool captured at golden hour"
   },
   "gallery-02.jpg": {
-    alt: "Coastal villa and hospitality atmosphere"
+    alt: "Coastal villa and relaxed atmosphere"
   },
   "gallery-03.jpg": {
     alt: "Restaurant table with cocktails and plated dishes"
   },
   "gallery-04.jpg": {
-    alt: "Coastal view captured for a hospitality portfolio"
+    alt: "Coastal view captured for the portfolio"
   },
   "gallery-05.jpg": {
-    alt: "Lifestyle content captured for a hospitality brand"
+    alt: "Lifestyle content captured for a client brand"
   },
   "gallery-06.jpg": {
     alt: "Tropical spa and wellness details"
@@ -64,18 +64,18 @@ export const photoGalleryImageText = {
     alt: "Luxury villa pool and architecture"
   },
   "gallery-08.jpg": {
-    alt: "Food and beverage details for hospitality brands"
+    alt: "Food and beverage details for client brands"
   },
   "gallery-09.jpg": {
-    alt: "Aerial coastal view captured for a hospitality brand"
+    alt: "Aerial coastal view captured for a client brand"
   },
   "gallery-10.jpg": {
     alt: "Travel-led couple portrait at a boutique stay"
   },
   "gallery-11.jpg": {
-    alt: "Hospitality wellness detail with calm textures"
+    alt: "Wellness detail with calm textures"
   },
   "gallery-12.jpg": {
-    alt: "Cinematic resort scene for hospitality storytelling"
+    alt: "Cinematic resort scene for destination storytelling"
   }
 } as const;

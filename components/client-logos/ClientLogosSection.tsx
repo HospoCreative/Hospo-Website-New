@@ -33,7 +33,7 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
             id="client-logos-title"
             className="max-w-4xl font-serif text-[clamp(1.8rem,3.2vw,2.8rem)] font-semibold leading-[1.05]"
           >
-            {translate(locale, "Hospitality brands we have supported.")}
+            {translate(locale, "Brands we have supported.")}
           </h2>
         </div>
 

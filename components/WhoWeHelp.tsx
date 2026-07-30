@@ -10,7 +10,7 @@ export function WhoWeHelp({ locale = "en" }: { locale?: Locale }) {
   const content = getHomepageContent(locale).whoWeHelp;
   const galleryItems = getPublicImageList(imageFolders.photoGallery, {
     text: photoGalleryImageText,
-    altPrefix: "Hospo Creative hospitality portfolio image"
+    altPrefix: "Hospo Creative portfolio image"
   });
 
   return (

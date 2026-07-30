@@ -39,7 +39,7 @@ export function HeroClient({ hero }: HeroProps) {
 
         <div
           className="relative hidden h-[clamp(31rem,42vw,39rem)] min-w-0 grid-cols-[minmax(0,1.35fr)_minmax(13rem,0.72fr)] grid-rows-2 gap-4 lg:grid"
-          aria-label="Hospo Creative hospitality photography"
+          aria-label="Hospo Creative portfolio photography"
         >
           <div className="min-h-0 min-w-0 row-span-2">
             <HeroImage image={hero.images[0]} priority delay={0.12} />
@@ -65,7 +65,7 @@ export function HeroClient({ hero }: HeroProps) {
           transition={{ duration: 0.75, delay: 0.1 }}
           className="relative aspect-[4/5] overflow-hidden rounded-[8px] lg:hidden"
         >
-          <SmartImage src={hero.images[0].src} alt={hero.images[0].alt} fill priority sizes="calc(100vw - 40px)" className="object-cover object-center" fallbackLabel="Hospitality photography" />
+          <SmartImage src={hero.images[0].src} alt={hero.images[0].alt} fill priority sizes="calc(100vw - 40px)" className="object-cover object-center" fallbackLabel="Portfolio photography" />
         </motion.div>
       </div>
     </section>
@@ -81,7 +81,7 @@ function HeroImage({ image, priority = false, delay }: { image: { src: string; a
       transition={{ duration: 0.7, delay, ease: "easeOut" }}
       className="group relative h-full overflow-hidden rounded-[8px] shadow-soft"
     >
-      <SmartImage src={image.src} alt={image.alt} fill priority={priority} sizes="(min-width: 1024px) 38vw, 90vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]" fallbackLabel="Hospitality photography" />
+      <SmartImage src={image.src} alt={image.alt} fill priority={priority} sizes="(min-width: 1024px) 38vw, 90vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]" fallbackLabel="Portfolio photography" />
     </motion.div>
   );
 }

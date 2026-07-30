@@ -26,7 +26,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/1.1.jpg",
-      alt: "Hospitality social content captured in portrait format"
+      alt: "Social content captured in portrait format"
     }
   },
   {
@@ -34,7 +34,7 @@ export const services: ServiceItem[] = [
     challenge:
       "Your venue offers a strong real-world experience, but your online content does not communicate it clearly or consistently.",
     how:
-      "We create hospitality content that helps potential guests understand the food, rooms, drinks, atmosphere, people and details that make your business worth visiting.",
+      "We create content that helps potential guests understand the food, rooms, drinks, atmosphere, people and details that make your business worth visiting.",
     support: [
       "Social media photography",
       "Short-form video",
@@ -44,25 +44,25 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/1.2.jpg",
-      alt: "Portrait hospitality content showing food and atmosphere"
+      alt: "Portrait content showing food and atmosphere"
     }
   },
   {
     title: "Photography & Video",
     challenge:
-      "Your current visuals do not capture the quality, atmosphere or personality of your hospitality experience.",
+      "Your current visuals do not capture the quality, atmosphere or personality of the real guest experience.",
     how:
       "We produce professional photography and video that tell the story of your venue and create a stronger first impression before a guest arrives.",
     support: [
       "Food, drink and restaurant photography",
       "Hotel, interior and lifestyle photography",
-      "Hospitality video and promotional films",
+      "Promotional video and films",
       "Campaign and website content",
       "OTA imagery"
     ],
     image: {
       src: "/images/gallery/5.1.jpg",
-      alt: "Professional portrait hospitality photography"
+      alt: "Professional portrait brand photography"
     }
   },
   {
@@ -80,7 +80,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/DSC02655.jpg",
-      alt: "Hospitality campaign photography with editorial depth"
+      alt: "Campaign photography with editorial depth"
     }
   },
   {
@@ -98,7 +98,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/13.jpg",
-      alt: "Hospitality advertising visual asset in portrait format"
+      alt: "Advertising visual asset in portrait format"
     }
   },
   {
@@ -106,7 +106,7 @@ export const services: ServiceItem[] = [
     challenge:
       "Your website is outdated, unclear, slow to update or making it difficult for guests to find the information they need.",
     how:
-      "We create and improve hospitality websites that present the experience clearly and make important actions easier, including viewing menus, exploring rooms, understanding offers, making reservations and submitting enquiries.",
+      "We create and improve websites that present the experience clearly and make important actions easier, including viewing menus, exploring rooms, understanding offers, making reservations and submitting enquiries.",
     support: [
       "Website design and creation",
       "Mobile optimisation",
@@ -116,7 +116,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/22.jpg",
-      alt: "Hospitality website content photography"
+      alt: "Website content photography"
     }
   },
   {
@@ -134,7 +134,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/24.jpg",
-      alt: "Local hospitality visibility content"
+      alt: "Local search visibility content"
     }
   },
   {
@@ -170,7 +170,7 @@ export const services: ServiceItem[] = [
     ],
     image: {
       src: "/images/gallery/35.jpg",
-      alt: "Hospitality retention and guest communication visual"
+      alt: "Customer retention and guest communication visual"
     }
   }
 ];

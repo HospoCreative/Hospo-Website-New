@@ -7,8 +7,8 @@ import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
 
 export const metadata = {
-  title: "Hospitality Marketing Insights | Hospo Creative",
-  description: "Practical hospitality marketing articles from Hospo Creative."
+  title: "Marketing Insights | Hospo Creative",
+  description: "Practical marketing articles for hotels, restaurants, stays and food and drink brands."
 };
 
 export const dynamic = "force-dynamic";
@@ -26,7 +26,7 @@ export default async function BlogPage() {
           <div className="mx-auto max-w-7xl">
             <p className="section-eyebrow text-yellow">{translate(locale, "Insights")}</p>
             <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
-              {translate(locale, "Practical thinking for stronger hospitality marketing.")}
+              {translate(locale, "Practical thinking for stronger marketing.")}
             </h1>
             <p className="mt-7 max-w-3xl text-xl leading-9 text-white/72 sm:text-2xl sm:leading-10">
               {translate(locale, "Practical articles on visibility, content, campaigns, websites and guest journey improvements.")}

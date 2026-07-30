@@ -12,14 +12,14 @@ type SlidingGalleryItem = {
 
 const labels = {
   en: {
-    gallery: "Hospitality portfolio gallery",
+    gallery: "Hospo Creative portfolio gallery",
     previous: "View previous images",
     next: "View next images",
     open: "Open image full screen",
     close: "Close full screen image"
   },
   pt: {
-    gallery: "Galeria do portefólio de hotelaria",
+    gallery: "Galeria do portefólio Hospo Creative",
     previous: "Ver imagens anteriores",
     next: "Ver imagens seguintes",
     open: "Abrir imagem em ecrã inteiro",

@@ -538,7 +538,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Telephone contact gives high-intent guests another direct route to the business.", "O contacto telefónico oferece aos hóspedes com maior intenção outro percurso direto para o negócio."],
     ["Add a prominent direct booking action in the header and repeat it near high-intent content.", "Adicione uma ação de reserva direta bem visível no cabeçalho e repita-a junto do conteúdo com maior intenção."],
     ["Add a clear enquiry route for group bookings, events or questions that cannot be completed online.", "Adicione um percurso de contacto claro para reservas de grupo, eventos ou questões que não possam ser tratadas online."],
-    ["Search engines can recognise the site as a local hospitality business.", "Os motores de pesquisa conseguem reconhecer o website como um negócio local de hotelaria."],
+    ["Search engines can recognise the site as a local business in the correct category.", "Os motores de pesquisa conseguem reconhecer o website como um negócio local na categoria correta."],
     ["A visible location signal helps guests and search engines connect the business with its destination.", "Uma localização visível ajuda os hóspedes e os motores de pesquisa a associar o negócio ao destino."],
     ["Public contact details give guests a way to verify and contact the business.", "Os contactos públicos permitem aos hóspedes verificar e contactar o negócio."],
     ["Add Hotel, Restaurant or LocalBusiness structured data with the correct name, address and contact details.", "Adicione dados estruturados Hotel, Restaurant ou LocalBusiness com o nome, morada e contactos corretos."],
@@ -567,7 +567,6 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Make both email and telephone contact easy to find for guests with different preferences.", "Torne o email e o telefone fáceis de encontrar para hóspedes com diferentes preferências."],
     ["Add a consistent business address or service location to strengthen trust and local relevance.", "Adicione uma morada ou área de serviço consistente para reforçar a confiança e a relevância local."],
     ["Set a branded title and image for shared links so the business looks intentional outside the website.", "Defina um título e uma imagem de marca para as ligações partilhadas, para que o negócio pareça cuidado fora do website."],
-    ["The homepage has enough photography to communicate the hospitality experience without relying on a single image.", "A página inicial tem fotografia suficiente para comunicar a experiência de hotelaria sem depender de uma única imagem."],
     ["Most images are described for accessibility and image search.", "A maioria das imagens está descrita para acessibilidade e pesquisa de imagens."],
     ["Most images reserve their display space, reducing disruptive layout movement while the page loads.", "A maioria das imagens reserva o seu espaço de apresentação, reduzindo movimentos durante o carregamento."],
     ["Use a tighter edit of the strongest images so the page feels curated and loads more efficiently.", "Faça uma seleção mais rigorosa das melhores imagens para que a página pareça cuidada e carregue com maior eficiência."],
@@ -594,10 +593,10 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["A clearer direct booking action could reduce guest drop-off and reliance on third-party platforms.", "Uma ação de reserva direta mais clara pode reduzir o abandono e a dependência de plataformas externas."],
     ["An enquiry route is available as a useful fallback for guests who are not ready to book.", "Existe um percurso de contacto útil para hóspedes que ainda não estão prontos para reservar."],
     ["A telephone route is available for guests who prefer direct contact.", "Existe um contacto telefónico para hóspedes que preferem contacto direto."],
-    ["Search engines can identify this as a local hospitality business.", "Os motores de pesquisa conseguem identificar este negócio como uma empresa local de hotelaria."],
+    ["Search engines can identify the business category and local details.", "Os motores de pesquisa conseguem identificar a categoria e os dados locais do negócio."],
     ["The website provides a clear location signal for local discovery.", "O website apresenta um sinal de localização claro para a descoberta local."],
     ["Public contact details support local trust and discovery.", "Os contactos públicos reforçam a confiança e a descoberta local."],
-    ["Add hospitality business structured data so search engines can understand the business type, location and contact details.", "Adicione dados estruturados de hotelaria para que os motores de pesquisa compreendam o tipo de negócio, a localização e os contactos."],
+    ["Add structured business data so search engines can understand the category, location and contact details.", "Adicione dados estruturados para que os motores de pesquisa compreendam a categoria, a localização e os contactos."],
     ["The website links guests to its active social profiles.", "O website direciona os hóspedes para os seus perfis sociais ativos."],
     ["Add links to the active social channels guests use to assess the experience.", "Adicione ligações aos canais sociais ativos que os hóspedes usam para avaliar a experiência."],
     ["Structured profile connections help search engines associate these channels with the business.", "As ligações estruturadas aos perfis ajudam os motores de pesquisa a associar estes canais ao negócio."],
@@ -614,8 +613,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Complete social sharing metadata was not detected.", "Não foram detetados metadados completos para partilha social."],
     ["Creative quality and brand suitability still require human review.", "A qualidade criativa e adequação à marca continuam a exigir avaliação humana."],
     ["Add one prominent booking or enquiry action in the header and key landing sections.", "Adicione uma ação de reserva ou contacto bem visível no cabeçalho e nas secções principais."],
-    ["Write a clear meta description that communicates the hospitality experience and location.", "Escreva uma descrição meta clara que comunique a experiência e a localização."],
-    ["Add appropriate hospitality business structured data with address, contact and profile links.", "Adicione dados estruturados adequados ao negócio, com endereço, contactos e ligações aos perfis."],
+    ["Write a clear meta description that communicates the experience and location.", "Escreva uma descrição meta clara que comunique a experiência e a localização."],
     ["Connect the website to the active social profiles guests use to assess the experience.", "Ligue o website às redes sociais ativas que os hóspedes usam para avaliar a experiência."],
     ["Add one prominent direct booking action in the header and key landing sections.", "Adicione uma ação de reserva direta bem visível no cabeçalho e nas secções principais."],
     ["The available visual evidence shows a consistent foundation for the social feed.", "A evidência visual disponível mostra uma base consistente para o feed das redes sociais."],
@@ -904,13 +902,13 @@ export async function runDigitalScan(input: {
     : "Search engines may struggle to connect the business, location and contact details confidently.";
   let discoveryFindings = [
     schema.localBusiness
-      ? "Search engines can identify this as a local hospitality business."
-      : "Add hospitality business structured data so search engines can understand the business type, location and contact details.",
+      ? "Search engines can identify the business category and local details."
+      : "Add structured business data so search engines can understand the category, location and contact details.",
     hasAddress ? "The website provides a clear location signal for local discovery." : null,
     hasPhone || hasEmail ? "Public contact details support local trust and discovery." : null
   ].filter((item): item is string => Boolean(item));
   let discoveryStrengths = [
-    schema.localBusiness ? "Search engines can recognise the site as a local hospitality business." : null,
+    schema.localBusiness ? "Search engines can recognise the site as a local business in the correct category." : null,
     hasAddress ? "A visible location signal helps customers and search engines connect the business with its destination." : null,
     hasPhone || hasEmail ? "Public contact details give customers a way to verify and contact the business." : null
   ].filter((item): item is string => Boolean(item));
@@ -1208,7 +1206,7 @@ export async function runDigitalScan(input: {
     feed && feed.exposureBalance < 55 && "Balance very dark and very bright posts so the feed feels more intentional as a whole.",
     feed && feed.imageQuality < 60 && "Use higher-resolution feed imagery and export graphics at platform-ready dimensions.",
     feed && feed.repetitionRisk > 35 && "Increase the variety of recent visuals so repeated-looking posts do not weaken the feed.",
-    !description && "Write a clear meta description that communicates the hospitality experience and location.",
+    !description && "Write a clear meta description that communicates the experience and location.",
     !socialLinks.length && "Connect the website to the active social profiles guests use to assess the experience.",
     images.altCoverage < 0.75 && "Improve image alt text so photography is accessible and easier for search engines to understand.",
     images.count < 5 && imageSequenceImprovement,

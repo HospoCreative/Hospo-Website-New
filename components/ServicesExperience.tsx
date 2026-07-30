@@ -19,7 +19,7 @@ export function ServicesExperience() {
       className="border-t border-white/10 bg-ink px-5 py-20 text-white sm:px-8 lg:py-28"
     >
       <div className="mx-auto max-w-7xl">
-        <SectionHeading tone="light" width="wide" eyebrow={servicesContent.eyebrow} title="Marketing support that makes hospitality brands easier to find, trust and book." body={servicesContent.body} />
+        <SectionHeading tone="light" width="wide" eyebrow={servicesContent.eyebrow} title="Marketing support that makes your business easier to find, trust and choose." body={servicesContent.body} />
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(270px,0.36fr)_minmax(0,1fr)] lg:items-start">
           <div className="border-y border-white/12 py-1 lg:sticky lg:top-28">

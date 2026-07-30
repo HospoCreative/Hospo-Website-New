@@ -1,23 +1,23 @@
 export const homepageContent = {
   hero: {
-    eyebrow: "Hospitality content, strategy & digital optimisation",
-    title: "Helping hospitality businesses stand out, attract more guests and strengthen direct bookings.",
+    eyebrow: "Content, strategy & digital optimisation for guest-led brands",
+    title: "Helping hotels, restaurants and stays stand out, attract more guests and grow direct revenue.",
     body:
-      "We combine photography, video, digital strategy, websites, Google visibility and OTA optimisation to improve how hospitality businesses are discovered, compared and booked online.",
+      "We combine photography, video, digital strategy, websites, Google visibility and OTA optimisation to improve how your business is discovered, compared and chosen online.",
     primaryCta: "Request a Digital Review",
     secondaryCta: "View Our Work",
-    note: "Good hospitality starts before the guest walks through the door.",
+    note: "The guest experience starts before anyone walks through the door.",
     images: [
-      { src: "/images/hero/collage/1.jpg", alt: "Restaurant dish photographed for a hospitality client" },
+      { src: "/images/hero/collage/1.jpg", alt: "Restaurant dish photographed for a client" },
       { src: "/images/hero/collage/2.jpg", alt: "Hotel pool and grounds photographed from above" },
-      { src: "/images/hero/collage/3.jpg", alt: "Hospitality destination and guest experience photography" }
+      { src: "/images/hero/collage/3.jpg", alt: "Destination and guest experience photography" }
     ]
   },
   whoWeHelp: {
     eyebrow: "Who we help",
-    title: "Built for hospitality businesses where presentation influences the decision.",
+    title: "Built for businesses where presentation influences the decision.",
     body:
-      "We work with independent hospitality businesses and growing hospitality brands that want to improve how guests discover, compare and choose them online.",
+      "We work with independent hotels, restaurants, stays and food and drink brands that want to improve how people discover, compare and choose them online.",
     categories: [
       {
         title: "Hotels & Resorts",
@@ -32,15 +32,15 @@ export const homepageContent = {
       {
         title: "Restaurants & Food-led Venues",
         body: "Restaurants, cafés, wine bars, beach clubs and food and drink brands.",
-        image: { src: "/images/work/food.jpg", alt: "Food-led hospitality venue and dining experience" }
+        image: { src: "/images/work/food.jpg", alt: "Food-led venue and dining experience" }
       }
     ]
   },
   problem: {
-    eyebrow: "Why great hospitality gets overlooked",
+    eyebrow: "Why strong businesses get overlooked",
     title: "Your guest experience may be exceptional. Your digital presence may not show it.",
     body:
-      "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great hospitality experience can lose attention to a competitor.",
+      "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great guest experience can lose attention to a competitor.",
     problems: [
       "Outdated presentation: The photography and content no longer reflect the real quality of the experience.",
       "A fragmented booking journey: The website, Google profile and booking platforms do not guide guests clearly towards the next step.",
@@ -48,18 +48,18 @@ export const homepageContent = {
       "Inconsistent marketing: Social media and campaigns create activity, but they do not support one clear commercial direction."
     ],
     closing: "When these touchpoints do not work together, your business becomes harder to discover, trust and book.",
-    image: { src: "/images/gallery/1.8.jpg", alt: "Guest considering a hospitality experience" }
+    image: { src: "/images/gallery/1.8.jpg", alt: "Guest considering where to visit" }
   },
   refresh: {
     eyebrow: "Our signature solution",
-    title: "Hospitality Digital Refresh",
-    body: "A connected review and transformation of how your hospitality business is presented, discovered and booked online.",
+    title: "Hospo Digital Refresh",
+    body: "A connected review and transformation of how your business is presented, discovered and chosen online.",
     supporting:
       "Not just photography. Not just marketing. We bring the visual, strategic and digital parts of the guest journey together so they support the same commercial goal.",
     pathways: [
       {
         title: "Visual Refresh",
-        body: "For hospitality businesses whose photography and content no longer represent the experience.",
+        body: "For businesses whose photography and content no longer represent the real experience.",
         items: ["Photography and video", "Drone where appropriate", "Lifestyle production", "Social content library", "Content organisation"]
       },
       {
@@ -76,18 +76,18 @@ export const homepageContent = {
   },
   work: {
     eyebrow: "Selected work",
-    title: "Hospitality work with a commercial purpose.",
-    body: "Projects connecting strategy, content and digital execution to improve how hospitality businesses are seen, experienced and chosen online."
+    title: "Work with a commercial purpose.",
+    body: "Projects connecting strategy, content and digital execution to improve how businesses are seen, experienced and chosen online."
   },
   pillars: {
     eyebrow: "How we help",
-    title: "Four ways we strengthen your hospitality business online.",
+    title: "Four ways we strengthen your business online.",
     body:
       "From the first image a guest sees to the moment they book, we connect your content, visibility, digital experience and ongoing marketing.",
     items: [
       {
         title: "Show the experience at its best",
-        body: "Photography, video and content production that communicate the real quality, atmosphere and personality of your hospitality business."
+        body: "Photography, video and content production that communicate the real quality, atmosphere and personality of your business."
       },
       {
         title: "Help more guests find you",
@@ -104,12 +104,12 @@ export const homepageContent = {
     ],
     servicesHeading: "Services at a glance",
     servicesBody:
-      "Choose focused support for a specific challenge or combine services through one connected hospitality marketing approach.",
+      "Choose focused support for a specific challenge or combine services through one connected marketing approach.",
     groups: [
       {
         title: "Show the experience",
         services: [
-          "Hospitality photography",
+          "Brand photography",
           "Video production",
           "Drone photography and video",
           "Lifestyle content production",
@@ -135,7 +135,7 @@ export const homepageContent = {
       {
         title: "Turn interest into bookings",
         services: [
-          "Hospitality website design",
+          "Website design",
           "Website development",
           "Website management",
           "Landing pages",
@@ -176,19 +176,19 @@ export const homepageContent = {
   review: {
     eyebrow: "Complimentary Digital Presence Review",
     title: "Not sure where to start?",
-    body: "We will review your main digital touchpoints and identify the clearest opportunities to improve how your hospitality business is presented and discovered online.",
+    body: "We will review your main digital touchpoints and identify the clearest opportunities to improve how your business is presented and discovered online.",
     clarification: "This is an initial review highlighting three to five practical observations. It is not a complete free marketing strategy.",
     areas: ["Website", "Google presence", "Principal booking platform or OTA", "Photography", "Guest journey", "Social media", "Visual consistency"]
   },
   whyHospo: {
     eyebrow: "Why Hospo",
-    title: "Hospitality knowledge behind every recommendation.",
-    body: "Hospo Creative combines hospitality marketing, strategic direction and visual production in one specialist team.",
+    title: "Sector knowledge behind every recommendation.",
+    body: "Hospo Creative combines marketing expertise, strategic direction and visual production in one specialist team.",
     supporting: "We understand how guests choose where to stay, eat and experience a destination. Every image, campaign and recommendation is created to improve the digital journey before the guest arrives.",
-    closing: "Hospitality knowledge, marketing direction and visual production in one team.",
+    closing: "Industry knowledge, marketing direction and visual production in one team.",
     founders: [
-      { name: "Andreia Oliveira", role: "Marketing Director and Creative Strategist", bio: "Andreia leads strategy, campaigns, social media, advertising, websites, SEO and digital communication, supported by more than seven years of hospitality marketing experience." },
-      { name: "Tiago Bastos", role: "Photographer, Videographer and Hospitality Creative", bio: "Tiago leads photography, video and visual production, supported by approximately 15 years of hospitality experience." }
+      { name: "Andreia Oliveira", role: "Marketing Director and Creative Strategist", bio: "Andreia leads strategy, campaigns, social media, advertising, websites, SEO and digital communication, supported by more than seven years of experience marketing hotels and restaurants." },
+      { name: "Tiago Bastos", role: "Photographer, Videographer and Creative Director", bio: "Tiago leads photography, video and visual production, supported by approximately 15 years of industry experience." }
     ],
     image: { src: "/images/about/andreia-tiago.jpg", alt: "Andreia Oliveira and Tiago Bastos, founders of Hospo Creative" }
   },
@@ -196,17 +196,17 @@ export const homepageContent = {
     eyebrow: "FAQ",
     title: "Common questions before starting a project.",
     items: [
-      { question: "Do you work internationally?", answer: "Yes. Hospo works with hospitality businesses in the UK and internationally. Travel requirements are discussed as part of the proposal." },
+      { question: "Do you work internationally?", answer: "Yes. Hospo works with hotels, restaurants, stays and food and drink brands in the UK and internationally. Travel requirements are discussed as part of the proposal." },
       { question: "Can we book photography or video only?", answer: "Yes. Individual production services are available, although we may recommend additional improvements when they would strengthen the result." },
       { question: "Can you improve our Booking.com or OTA listing?", answer: "Yes. We can review photography, image ordering, copy, presentation and consistency across relevant booking platforms." },
       { question: "Do you manage social media?", answer: "Yes. Hospo supports social media strategy, content planning, creation, publishing, campaigns and ongoing optimisation." },
-      { question: "Can you update our website?", answer: "Yes. We can review, improve and manage hospitality websites, landing pages, content and booking journeys." },
+      { question: "Can you update our website?", answer: "Yes. We can review, improve and manage websites, landing pages, content and booking journeys." },
       { question: "How long does a project take?", answer: "Timelines depend on the scope, location, production requirements and approvals. A clear schedule is included before work begins." },
       { question: "What happens during the Digital Presence Review?", answer: "We review the main digital touchpoints you provide and identify three to five practical opportunities before discussing the most relevant next steps." }
     ]
   },
   finalCta: {
-    title: "Ready to strengthen how your hospitality business is seen and booked?",
+    title: "Ready to strengthen how your business is seen and chosen?",
     body: "Tell us where your business is now, what you would like to improve and where you want your digital presence to take you.",
     primaryCta: "Request Your Digital Review",
     secondaryCta: "View Our Work"

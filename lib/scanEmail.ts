@@ -33,8 +33,8 @@ export async function emailDigitalScan(input: {
     ? `A sua análise digital Hospo: ${subjectName}`
     : `Your Hospo digital scan: ${subjectName}`;
   const intro = isPortuguese
-    ? "Aqui está o resumo da análise aos sinais públicos do seu negócio de hotelaria."
-    : "Here is the summary of your hospitality business public presence scan.";
+    ? "Aqui está o resumo da análise aos sinais públicos do seu negócio."
+    : "Here is the summary of your business public presence scan.";
   const priorityTitle = isPortuguese ? "Prioridades imediatas" : "Immediate priorities";
   const worksTitle = isPortuguese ? "O que está a funcionar" : "What is working";
   const improveTitle = isPortuguese ? "Melhorar a seguir" : "Improve next";

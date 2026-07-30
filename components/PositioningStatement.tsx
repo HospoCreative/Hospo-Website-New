@@ -26,7 +26,7 @@ export function PositioningStatement() {
             <div className="relative aspect-[3/4] overflow-hidden rounded-[8px] shadow-editorial">
               <SmartImage
                 src="/images/gallery/1.8.jpg"
-                alt="Portrait hospitality photography detail"
+                alt="Portrait brand photography detail"
                 fill
                 sizes="(min-width: 1024px) 32vw, 88vw"
                 className="object-cover"

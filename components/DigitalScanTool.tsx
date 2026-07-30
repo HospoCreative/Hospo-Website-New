@@ -9,7 +9,7 @@ import { analyseSocialFeedScreenshot } from "@/lib/socialFeedAnalysis";
 const copy = {
   en: {
     eyebrow: "Test your digital score",
-    title: "See how your hospitality business appears online.",
+    title: "See how your business appears online.",
     body: "Enter your public website and contact details. We will review how clearly customers can understand the offer, find the business and move towards a booking, order or purchase.",
     website: "Website URL",
     business: "Business name",
@@ -68,7 +68,7 @@ const copy = {
   },
   pt: {
     eyebrow: "Teste a sua presença digital",
-    title: "Veja como o seu negócio de hotelaria aparece online.",
+    title: "Veja como o seu negócio aparece online.",
     body: "Introduza o website público e os dados de contacto. Vamos analisar se os clientes compreendem a oferta, encontram o negócio e avançam para uma reserva, pedido ou compra.",
     website: "URL do website",
     business: "Nome do negócio",

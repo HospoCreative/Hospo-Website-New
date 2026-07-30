@@ -25,9 +25,9 @@ export default async function CaseStudiesPage() {
           <div className="mx-auto max-w-7xl">
             <p className="section-eyebrow text-yellow">{translate(locale, "Selected work")}</p>
             <h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.8rem,6vw,5rem)] font-semibold leading-[0.96]">
-              {translate(locale, "Hospitality projects made to be seen, understood and chosen.")}
+              {translate(locale, "Projects made to be seen, understood and chosen.")}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">{translate(locale, "Strategy, content and digital execution designed around the way guests discover, compare and choose hospitality businesses.")}</p>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">{translate(locale, "Strategy, content and digital execution designed around the way people discover, compare and choose where to stay, eat and visit.")}</p>
           </div>
         </section>
 
