@@ -1,9 +1,68 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getHomepageContent } from "@/data/homepage";
 import { translate, type Locale } from "@/lib/i18n";
+
+function StatisticValue({ statistic }: { statistic: string }) {
+  const elementRef = useRef<HTMLSpanElement>(null);
+  const reducedMotion = useReducedMotion();
+  const hasAnimated = useRef(false);
+  const match = statistic.match(/^(\d+)(.*)$/);
+  const target = match ? Number(match[1]) : null;
+  const suffix = match?.[2] ?? "";
+  const [value, setValue] = useState(target === null || reducedMotion ? target : 0);
+
+  useEffect(() => {
+    if (target === null || hasAnimated.current) return;
+
+    let frame = 0;
+    const startAnimation = () => {
+      if (hasAnimated.current) return;
+      hasAnimated.current = true;
+
+      if (reducedMotion) {
+        setValue(target);
+        return;
+      }
+
+      const startedAt = performance.now();
+      const duration = 560;
+      const tick = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        setValue(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+    };
+
+    const element = elementRef.current;
+    if (!element || !("IntersectionObserver" in window)) {
+      startAnimation();
+      return () => cancelAnimationFrame(frame);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startAnimation();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.55 }
+    );
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [reducedMotion, target]);
+
+  return <span ref={elementRef} aria-hidden="true">{target === null ? statistic : `${value ?? 0}${suffix}`}</span>;
+}
 
 export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }) {
   const content = getHomepageContent(locale).statistics;
@@ -102,8 +161,8 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
                 className="flex min-h-[31rem] basis-[88%] shrink-0 snap-start flex-col rounded-[8px] bg-white p-7 text-ink sm:min-h-[30rem] sm:basis-[58%] sm:p-8 lg:basis-[36%] xl:basis-[31.5%]"
               >
                 <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-ink/64">{card.category}</p>
-                <p className={`mt-7 font-serif font-semibold tracking-[-0.04em] text-ink ${card.statistic.length > 5 ? "text-[clamp(2.65rem,4.6vw,4.2rem)] leading-[0.9]" : "text-[clamp(3.7rem,6vw,5.8rem)] leading-[0.84]"}`}>
-                  {card.statistic}
+                <p aria-label={card.statistic} className={`mt-7 font-serif font-semibold tracking-[-0.04em] text-ink ${card.statistic.length > 5 ? "text-[clamp(2.65rem,4.6vw,4.2rem)] leading-[0.9]" : "text-[clamp(3.7rem,6vw,5.8rem)] leading-[0.84]"}`}>
+                  <StatisticValue statistic={card.statistic} />
                 </p>
                 <h3 className="mt-8 font-serif text-[1.8rem] font-semibold leading-[1.05]">{card.headline}</h3>
                 <p className="mt-5 text-[0.98rem] leading-7 text-ink/72">{card.body}</p>
