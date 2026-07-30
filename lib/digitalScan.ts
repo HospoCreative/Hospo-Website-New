@@ -6,7 +6,8 @@ import type {
   DigitalScanReport,
   ScanArea,
   ScanAreaKey,
-  ScanConfidence
+  ScanConfidence,
+  SocialFeedMetrics
 } from "@/types/digitalScan";
 import type { Locale } from "@/lib/i18n";
 
@@ -317,6 +318,18 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Public Google and local business signals linked from the website.", "Sinais públicos do Google e do negócio local ligados a partir do website."],
     ["Social and OTA links", "Ligações a redes sociais e OTAs"],
     ["Public platform links that support discovery and comparison.", "Ligações públicas que apoiam a descoberta e comparação."],
+    ["Social feed visual consistency", "Consistência visual do feed"],
+    ["Rules-based visual signals from a privately analysed feed screenshot.", "Sinais visuais calculados a partir de uma captura do feed analisada em privado."],
+    ["A feed screenshot was analysed privately in the browser. The image was not uploaded.", "Uma captura do feed foi analisada em privado no navegador. A imagem não foi enviada."],
+    ["No feed screenshot was supplied, so visual branding could not be measured.", "Não foi fornecida uma captura do feed, por isso não foi possível medir a consistência visual da marca."],
+    ["Public social profile links were found on the website.", "Foram encontradas no website ligações públicas para redes sociais."],
+    ["No public social profile links were found on the website.", "Não foram encontradas no website ligações públicas para redes sociais."],
+    ["Upload a feed screenshot to add a free visual consistency check without connecting an account.", "Carregue uma captura do feed para adicionar uma análise visual gratuita sem ligar qualquer conta."],
+    ["This free rules-based check measures visual consistency but does not recognise logos, read post copy or identify content subjects.", "Esta análise gratuita baseada em regras mede a consistência visual, mas não reconhece logótipos, não lê o texto das publicações nem identifica o conteúdo das imagens."],
+    ["Use a more consistent colour treatment or recurring branded graphic system across the feed.", "Use um tratamento de cor mais consistente ou um sistema gráfico de marca recorrente em todo o feed."],
+    ["Balance very dark and very bright posts so the feed feels more intentional as a whole.", "Equilibre publicações muito escuras e muito claras para que o feed pareça mais intencional no seu conjunto."],
+    ["Use higher-resolution feed imagery and export graphics at platform-ready dimensions.", "Use imagens de maior resolução e exporte os grafismos com dimensões adequadas à plataforma."],
+    ["Increase the variety of recent visuals so repeated-looking posts do not weaken the feed.", "Aumente a variedade visual das publicações recentes para evitar que imagens demasiado semelhantes enfraqueçam o feed."],
     ["Brand and contact consistency", "Consistência da marca e contactos"],
     ["Contact, location and sharing signals available to guests.", "Sinais de contacto, localização e partilha disponíveis para os hóspedes."],
     ["Photography presentation", "Apresentação fotográfica"],
@@ -387,7 +400,12 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
       .replace(/^(\d+) supported OTA or reservation links? detected\.$/, "$1 ligações a OTAs ou plataformas de reservas suportadas detetadas.")
       .replace(/^(\d+) images? detected on the homepage\.$/, "$1 imagens detetadas na página inicial.")
       .replace(/^(\d+)% of detected images include useful alt text\.$/, "$1% das imagens detetadas incluem texto alternativo útil.")
-      .replace(/^(\d+)% include explicit width and height attributes\.$/, "$1% incluem atributos explícitos de largura e altura.");
+      .replace(/^(\d+)% include explicit width and height attributes\.$/, "$1% incluem atributos explícitos de largura e altura.")
+      .replace(/^Colour cohesion signal: (\d+)\/100\.$/, "Sinal de coesão cromática: $1/100.")
+      .replace(/^Exposure balance signal: (\d+)\/100\.$/, "Sinal de equilíbrio de exposição: $1/100.")
+      .replace(/^Contrast balance signal: (\d+)\/100\.$/, "Sinal de equilíbrio de contraste: $1/100.")
+      .replace(/^Source image quality signal: (\d+)\/100\.$/, "Sinal de qualidade da imagem de origem: $1/100.")
+      .replace(/^Possible visual repetition: (\d+)%\.$/, "Possível repetição visual: $1%.");
   }
 
   return {
@@ -408,6 +426,7 @@ export async function runDigitalScan(input: {
   businessName: string;
   location: string;
   locale?: Locale;
+  socialFeedMetrics?: SocialFeedMetrics | null;
 }): Promise<DigitalScanReport> {
   const suppliedUrl = /^https?:\/\//i.test(input.websiteUrl)
     ? input.websiteUrl
@@ -505,6 +524,34 @@ export async function runDigitalScan(input: {
     "Profiles that are not linked from the website may require a connected or licensed platform search."
   ];
 
+  const feed = input.socialFeedMetrics;
+  const socialVisualScore = feed
+    ? feed.colourCohesion * 0.3 +
+      feed.exposureBalance * 0.2 +
+      feed.contrastBalance * 0.2 +
+      feed.imageQuality * 0.2 +
+      (100 - feed.repetitionRisk) * 0.1
+    : socialLinks.length
+      ? 35
+      : 15;
+  const socialVisualFindings = feed
+    ? [
+        "A feed screenshot was analysed privately in the browser. The image was not uploaded.",
+        `Colour cohesion signal: ${feed.colourCohesion}/100.`,
+        `Exposure balance signal: ${feed.exposureBalance}/100.`,
+        `Contrast balance signal: ${feed.contrastBalance}/100.`,
+        `Source image quality signal: ${feed.imageQuality}/100.`,
+        `Possible visual repetition: ${feed.repetitionRisk}%.`,
+        "This free rules-based check measures visual consistency but does not recognise logos, read post copy or identify content subjects."
+      ]
+    : [
+        "No feed screenshot was supplied, so visual branding could not be measured.",
+        socialLinks.length
+          ? "Public social profile links were found on the website."
+          : "No public social profile links were found on the website.",
+        "Upload a feed screenshot to add a free visual consistency check without connecting an account."
+      ];
+
   const brandScore =
     (hasEmail ? 25 : 0) +
     (hasPhone ? 25 : 0) +
@@ -535,12 +582,18 @@ export async function runDigitalScan(input: {
     area("booking", "Booking journey", bookingScore, "verified", "How clearly the website guides a guest towards action.", bookingFindings),
     area("google", "Public Google listing match", googleScore, googleConfidence, "Public Google and local business signals linked from the website.", googleFindings),
     area("visibility", "Social and OTA links", visibilityScore, "verified", "Public platform links that support discovery and comparison.", visibilityFindings),
+    area("social_visual", "Social feed visual consistency", socialVisualScore, feed ? "verified" : "not_confirmed", "Rules-based visual signals from a privately analysed feed screenshot.", socialVisualFindings),
     area("brand", "Brand and contact consistency", brandScore, "verified", "Contact, location and sharing signals available to guests.", brandFindings),
     area("photography", "Photography presentation", photographyScore, "partial", "Image quantity, accessibility and technical presentation.", photographyFindings)
   ];
 
   const priorityPool = [
     !bookingLinks.length && "Add one prominent booking or enquiry action in the header and key landing sections.",
+    !feed && "Upload a feed screenshot to add a free visual consistency check without connecting an account.",
+    feed && feed.colourCohesion < 55 && "Use a more consistent colour treatment or recurring branded graphic system across the feed.",
+    feed && feed.exposureBalance < 55 && "Balance very dark and very bright posts so the feed feels more intentional as a whole.",
+    feed && feed.imageQuality < 60 && "Use higher-resolution feed imagery and export graphics at platform-ready dimensions.",
+    feed && feed.repetitionRisk > 35 && "Increase the variety of recent visuals so repeated-looking posts do not weaken the feed.",
     !description && "Write a clear meta description that communicates the hospitality experience and location.",
     !schema.localBusiness && "Add appropriate hospitality business structured data with address, contact and profile links.",
     !googleLinks.length && "Link the verified Google Business Profile clearly from the website.",

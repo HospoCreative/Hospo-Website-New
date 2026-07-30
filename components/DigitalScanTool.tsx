@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowUpRight, Check, LoaderCircle, Printer, ShieldCheck } from "lucide-react";
-import { type FormEvent, useState } from "react";
-import type { DigitalScanReport, ScanConfidence } from "@/types/digitalScan";
+import { ArrowUpRight, Check, ImagePlus, LoaderCircle, Printer, ShieldCheck } from "lucide-react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import type { DigitalScanReport, ScanConfidence, SocialFeedMetrics } from "@/types/digitalScan";
 import type { Locale } from "@/lib/i18n";
+import { analyseSocialFeedScreenshot } from "@/lib/socialFeedAnalysis";
 
 const copy = {
   en: {
@@ -15,6 +16,14 @@ const copy = {
     businessOptional: "Optional",
     location: "Town or location",
     email: "Contact email",
+    feedScreenshot: "Social feed screenshot",
+    feedOptional: "Optional, recommended",
+    feedHelp: "Upload a screenshot showing at least nine recent posts. It is analysed privately in this browser and is never uploaded or stored.",
+    feedChoose: "Choose feed screenshot",
+    feedAnalysing: "Analysing screenshot",
+    feedReady: "Feed screenshot analysed privately",
+    feedRemove: "Remove",
+    feedError: "The screenshot could not be analysed. Try a JPG, PNG or WebP image under 10 MB.",
     privacy: "I agree that Hospo Creative may store this scan and contact me about the results.",
     submit: "Run my free scan",
     scanning: "Scanning your public presence",
@@ -49,6 +58,14 @@ const copy = {
     businessOptional: "Opcional",
     location: "Localidade",
     email: "Email de contacto",
+    feedScreenshot: "Captura do feed das redes sociais",
+    feedOptional: "Opcional, recomendado",
+    feedHelp: "Carregue uma captura que mostre pelo menos nove publicações recentes. A imagem é analisada em privado neste navegador e nunca é enviada ou guardada.",
+    feedChoose: "Escolher captura do feed",
+    feedAnalysing: "A analisar a captura",
+    feedReady: "Captura do feed analisada em privado",
+    feedRemove: "Remover",
+    feedError: "Não foi possível analisar a captura. Tente uma imagem JPG, PNG ou WebP com menos de 10 MB.",
     privacy: "Autorizo a Hospo Creative a guardar esta análise e a contactar-me sobre os resultados.",
     submit: "Fazer a minha análise gratuita",
     scanning: "A analisar a sua presença pública",
@@ -97,6 +114,34 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
   const [report, setReport] = useState<DigitalScanReport | null>(null);
   const [stored, setStored] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [feedMetrics, setFeedMetrics] = useState<SocialFeedMetrics | null>(null);
+  const [feedState, setFeedState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [feedFileName, setFeedFileName] = useState("");
+
+  async function analyseFeed(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setFeedState("loading");
+    setFeedMetrics(null);
+    setFeedFileName(file.name);
+    try {
+      const metrics = await analyseSocialFeedScreenshot(file);
+      setFeedMetrics(metrics);
+      setFeedState("ready");
+    } catch {
+      setFeedFileName("");
+      setFeedState("error");
+      event.target.value = "";
+    }
+  }
+
+  function removeFeed() {
+    setFeedMetrics(null);
+    setFeedFileName("");
+    setFeedState("idle");
+    const input = document.querySelector<HTMLInputElement>("#social-feed-screenshot");
+    if (input) input.value = "";
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -116,6 +161,7 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
           email: form.get("email"),
           companyWebsite: form.get("companyWebsite"),
           privacy: form.get("privacy") === "on",
+          socialFeedMetrics: feedMetrics,
           locale
         })
       });
@@ -172,6 +218,25 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
               {t.email}
               <input name="email" type="email" autoComplete="email" required className="mt-2 min-h-12 w-full rounded-[8px] border border-ink/18 px-4 py-3 text-base outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/30" />
             </label>
+            <div className="border-t border-ink/12 pt-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="text-sm font-bold">{t.feedScreenshot}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">{t.feedOptional}</p>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-ink/58">{t.feedHelp}</p>
+              <label htmlFor="social-feed-screenshot" className="mt-4 inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-ink/25 px-5 py-3 text-xs font-black uppercase tracking-[0.13em] transition hover:border-yellow">
+                {feedState === "loading" ? <LoaderCircle className="animate-spin" size={17} /> : <ImagePlus size={17} />}
+                {feedState === "loading" ? t.feedAnalysing : t.feedChoose}
+              </label>
+              <input id="social-feed-screenshot" type="file" accept="image/jpeg,image/png,image/webp" onChange={analyseFeed} disabled={feedState === "loading"} className="sr-only" />
+              {feedState === "ready" && feedMetrics ? (
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-l-2 border-yellow bg-yellow/10 px-4 py-3 text-sm">
+                  <div><p className="font-bold">{t.feedReady}</p><p className="mt-1 max-w-md truncate text-xs text-ink/55">{feedFileName}</p></div>
+                  <button type="button" onClick={removeFeed} className="min-h-11 px-3 text-xs font-black uppercase tracking-[0.12em] underline decoration-yellow decoration-2 underline-offset-4">{t.feedRemove}</button>
+                </div>
+              ) : null}
+              {feedState === "error" ? <p role="alert" className="mt-3 text-sm font-bold text-red-700">{t.feedError}</p> : null}
+            </div>
             <label className="sr-only" aria-hidden="true">
               {t.honeypot}
               <input name="companyWebsite" type="text" tabIndex={-1} autoComplete="off" />
@@ -203,7 +268,7 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
               </div>
             </div>
 
-            <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
               {report.areas.map((item) => (
                 <article key={item.key} className="flex h-full flex-col bg-ink p-6 text-white">
                   <div className="flex items-start justify-between gap-4">

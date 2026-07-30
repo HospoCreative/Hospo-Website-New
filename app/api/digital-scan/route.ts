@@ -17,6 +17,17 @@ const scanSchema = z.object({
   email: z.string().trim().email().max(254),
   locale: z.enum(["en", "pt"]).default("en"),
   privacy: z.literal(true),
+  socialFeedMetrics: z.object({
+    source: z.literal("screenshot"),
+    width: z.number().int().min(100).max(20_000),
+    height: z.number().int().min(100).max(20_000),
+    tileCount: z.literal(9),
+    colourCohesion: z.number().int().min(0).max(100),
+    exposureBalance: z.number().int().min(0).max(100),
+    contrastBalance: z.number().int().min(0).max(100),
+    imageQuality: z.number().int().min(0).max(100),
+    repetitionRisk: z.number().int().min(0).max(100)
+  }).strict().nullable().optional().default(null),
   companyWebsite: z.string().max(0).optional().default("")
 });
 
@@ -70,7 +81,8 @@ export async function POST(request: Request) {
         /^https?:\/\//i.test(input.websiteUrl) ? input.websiteUrl : `https://${input.websiteUrl}`
       ).hostname.replace(/^www\./, ""),
       location: input.location,
-      locale: input.locale
+      locale: input.locale,
+      socialFeedMetrics: input.socialFeedMetrics
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "The website could not be scanned.";

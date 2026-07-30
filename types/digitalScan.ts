@@ -4,8 +4,21 @@ export type ScanAreaKey =
   | "booking"
   | "google"
   | "visibility"
+  | "social_visual"
   | "brand"
   | "photography";
+
+export type SocialFeedMetrics = {
+  source: "screenshot";
+  width: number;
+  height: number;
+  tileCount: number;
+  colourCohesion: number;
+  exposureBalance: number;
+  contrastBalance: number;
+  imageQuality: number;
+  repetitionRisk: number;
+};
 
 export type ScanConfidence = "verified" | "partial" | "not_confirmed";
 
