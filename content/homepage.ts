@@ -81,12 +81,84 @@ export const homepageContent = {
   },
   pillars: {
     eyebrow: "How we help",
-    title: "Connected expertise across the digital guest journey.",
+    title: "Four ways we strengthen your hospitality business online.",
+    body:
+      "From the first image a guest sees to the moment they book, we connect your content, visibility, digital experience and ongoing marketing.",
     items: [
-      { title: "Present Better", body: "Photography, video, drone, lifestyle production and content creation that represent the real quality of the experience." },
-      { title: "Get Found", body: "SEO, Google Business Profile, Google Ads and OTA optimisation that help the right guests discover the business." },
-      { title: "Convert Better", body: "Websites, landing pages, booking journeys, content structure and digital improvements that make the next step clearer." },
-      { title: "Grow Consistently", body: "Social media, campaigns, Meta Ads, email marketing and ongoing consultancy that keep the business visible and relevant." }
+      {
+        title: "Show the experience at its best",
+        body: "Photography, video and content production that communicate the real quality, atmosphere and personality of your hospitality business."
+      },
+      {
+        title: "Help more guests find you",
+        body: "Search, advertising and booking-platform optimisation that improve your visibility when potential guests are researching and comparing."
+      },
+      {
+        title: "Turn interest into bookings",
+        body: "Websites and clearer digital journeys that make it easier for potential guests to understand the experience and take the next step."
+      },
+      {
+        title: "Stay visible and grow",
+        body: "Ongoing campaigns and marketing support that keep your business relevant, consistent and connected to past and potential guests."
+      }
+    ],
+    servicesHeading: "Services at a glance",
+    servicesBody:
+      "Choose focused support for a specific challenge or combine services through one connected hospitality marketing approach.",
+    groups: [
+      {
+        title: "Show the experience",
+        services: [
+          "Hospitality photography",
+          "Video production",
+          "Drone photography and video",
+          "Lifestyle content production",
+          "Reels and short-form video",
+          "Campaign content",
+          "Image editing and post-production",
+          "Social media content libraries"
+        ]
+      },
+      {
+        title: "Help guests find you",
+        services: [
+          "Search engine optimisation",
+          "Google Business Profile optimisation",
+          "Google Ads",
+          "Local search optimisation",
+          "OTA listing optimisation",
+          "Booking.com presentation review",
+          "Listing copy improvements",
+          "Image selection and sequencing"
+        ]
+      },
+      {
+        title: "Turn interest into bookings",
+        services: [
+          "Hospitality website design",
+          "Website development",
+          "Website management",
+          "Landing pages",
+          "Booking journey reviews",
+          "Conversion-focused copy",
+          "Mobile optimisation",
+          "Direct-booking recommendations"
+        ]
+      },
+      {
+        title: "Stay visible and grow",
+        services: [
+          "Social media strategy",
+          "Social media management",
+          "Content calendars",
+          "Copywriting",
+          "Meta Ads",
+          "Email marketing",
+          "Campaign planning",
+          "Reporting and optimisation",
+          "Marketing consultancy"
+        ]
+      }
     ]
   },
   journey: {
