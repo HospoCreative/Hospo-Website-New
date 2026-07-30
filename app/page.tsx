@@ -13,6 +13,7 @@ import { DigitalRefresh } from "@/components/DigitalRefresh";
 import { FourWaysWeHelp } from "@/components/FourWaysWeHelp";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
+import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import {
   getPublishedBlogPosts,
   getFeaturedCaseStudies,
@@ -35,6 +36,7 @@ export default async function Home() {
       <Header locale={locale} />
       <main id="main">
         <Hero locale={locale} />
+        <DigitalScanPromo locale={locale} />
         <WhoWeHelp locale={locale} />
         <DigitalFirstImpression locale={locale} />
         <DigitalRefresh locale={locale} />

@@ -4,6 +4,7 @@ export const defaultLocale: Locale = "en";
 
 const pt: Record<string, string> = {
   "Work": "Projetos",
+  "Free Scan": "Análise Gratuita",
   "Solutions": "Soluções",
   "Services": "Serviços",
   "About": "Sobre",

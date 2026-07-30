@@ -7,6 +7,7 @@ export const siteContent = {
       "Hospitality photography, content, strategy, websites, OTA optimisation and digital marketing for hotels, restaurants and accommodation brands."
   },
   navItems: [
+    { label: "Free Scan", href: "/digital-scan" },
     { label: "Work", href: "/#work" },
     { label: "Solutions", href: "/#digital-refresh" },
     { label: "Services", href: "/#services" },

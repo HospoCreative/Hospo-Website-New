@@ -63,6 +63,7 @@ const mediaSelectionSchema = z.object({
   publicUrl: z.string().min(1).max(5000)
 });
 const enquiryStatusSchema = z.enum(["new", "read", "replied", "archived"]);
+const digitalScanStatusSchema = z.enum(["new", "reviewed", "contacted", "archived"]);
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
 
@@ -787,4 +788,22 @@ export async function updateEnquiryAction(formData: FormData) {
 
   revalidatePath("/admin/inbox");
   redirect(`/admin/inbox?id=${id}&message=saved`);
+}
+
+export async function updateDigitalScanAction(formData: FormData) {
+  const supabase = await mutateTable();
+  const id = z.string().uuid().parse(formText(formData, "id"));
+  const status = digitalScanStatusSchema.parse(formText(formData, "status"));
+
+  const { error } = await supabase
+    .from("digital_scans")
+    .update({ status })
+    .eq("id", id);
+
+  if (error) {
+    redirect(`/admin/scans?id=${id}&error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/admin/scans");
+  redirect(`/admin/scans?id=${id}&message=saved`);
 }
