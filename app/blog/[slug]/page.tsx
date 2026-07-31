@@ -105,7 +105,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 lg:py-24">
             {post.coverImage ? (
-              <div className="relative mb-12 aspect-[16/10] overflow-hidden rounded-[8px] bg-ink shadow-soft">
+              <div className="relative mb-12 aspect-[4/5] overflow-hidden rounded-[8px] bg-ink shadow-soft">
                 <SmartImage
                   src={post.coverImage}
                   alt={post.coverImageAlt ?? post.title}

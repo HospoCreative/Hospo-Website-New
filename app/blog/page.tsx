@@ -51,7 +51,7 @@ export default async function BlogPage() {
                   {featuredPost.coverImage ? (
                     <a
                       href={localizedPath(`/blog/${featuredPost.slug}`, locale)}
-                      className="group relative aspect-[16/11] overflow-hidden rounded-[8px] bg-white shadow-soft lg:aspect-auto lg:h-full lg:min-h-[28rem]"
+                      className="group relative aspect-[4/5] overflow-hidden rounded-[8px] bg-white shadow-soft"
                     >
                       <SmartImage
                         src={featuredPost.coverImage}
@@ -88,7 +88,7 @@ export default async function BlogPage() {
                         {post.coverImage ? (
                           <a
                             href={localizedPath(`/blog/${post.slug}`, locale)}
-                            className="group relative mb-5 block aspect-[4/3] overflow-hidden rounded-[8px] bg-ink"
+                            className="group relative mb-5 block aspect-[4/5] overflow-hidden rounded-[8px] bg-ink"
                           >
                             <SmartImage
                               src={post.coverImage}

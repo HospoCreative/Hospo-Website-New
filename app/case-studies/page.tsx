@@ -58,13 +58,13 @@ export default async function CaseStudiesPage() {
                     className="group grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12"
                   >
                     {mediaSrc ? (
-                      <Link href={localizedPath(`/case-studies/${caseStudy.slug}`, locale)} className={`relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
+                      <Link href={localizedPath(`/case-studies/${caseStudy.slug}`, locale)} className={`relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
                         {isVideo(mediaSrc) ? (
                           <video className="absolute inset-0 h-full w-full object-cover" autoPlay loop muted playsInline preload="metadata">
                             <source src={mediaSrc} />
                           </video>
                         ) : (
-                          <SmartImage src={mediaSrc} alt={mediaAlt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" fallbackLabel={caseStudy.title} />
+                          <SmartImage src={mediaSrc} alt={mediaAlt} fill sizes="(min-width: 1024px) 38vw, (min-width: 768px) 50vw, 100vw" className="object-cover object-center transition duration-500 group-hover:scale-[1.03]" fallbackLabel={caseStudy.title} />
                         )}
                       </Link>
                     ) : null}

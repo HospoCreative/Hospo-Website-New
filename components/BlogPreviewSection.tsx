@@ -26,7 +26,7 @@ export function BlogPreviewSection({ posts = [], locale = "en" }: { posts?: Blog
                 className="group flex h-full min-h-[28rem] flex-col overflow-hidden bg-white text-ink transition duration-500 hover:-translate-y-2 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow"
               >
                 {post.coverImage ? (
-                  <div className="relative aspect-[4/3] overflow-hidden bg-ink/90">
+                  <div className="relative aspect-[4/5] overflow-hidden bg-ink/90">
                     <SmartImage
                       src={post.coverImage}
                       alt={post.coverImageAlt || post.title}

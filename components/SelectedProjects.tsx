@@ -17,7 +17,7 @@ function getMedia(caseStudy: CaseStudy): ProjectMedia | null {
 function ProjectMediaView({ media, title }: { media: ProjectMedia; title: string }) {
   const video = media.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(media.src);
   if (video) return <video className="h-full w-full object-cover object-center" muted playsInline preload="metadata" aria-label={media.alt || title}><source src={media.src} /></video>;
-  return <SmartImage src={media.src} alt={media.alt || title} fill sizes="(min-width: 1024px) 56vw, 94vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.025]" fallbackLabel={title} />;
+  return <SmartImage src={media.src} alt={media.alt || title} fill sizes="(min-width: 1024px) 38vw, 94vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.025]" fallbackLabel={title} />;
 }
 
 export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStudies?: CaseStudy[]; locale?: Locale }) {
@@ -37,7 +37,7 @@ export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStud
             return (
               <Reveal key={project.id || project.slug}>
                 <article className={`group grid gap-7 lg:items-center lg:gap-12 ${index % 2 ? "lg:grid-cols-[0.82fr_1.18fr]" : "lg:grid-cols-[1.18fr_0.82fr]"}`}>
-                  <div className={`relative aspect-[16/11] overflow-hidden rounded-[8px] bg-ink ${index % 2 ? "lg:order-2" : ""}`}><ProjectMediaView media={media} title={project.title} /></div>
+                  <div className={`relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink ${index % 2 ? "lg:order-2" : ""}`}><ProjectMediaView media={media} title={project.title} /></div>
                   <div className={index % 2 ? "lg:order-1" : ""}>
                     <p className="section-eyebrow text-yellow">{project.clientName}{project.sector ? ` · ${project.sector}` : ""}{project.location ? ` · ${project.location}` : ""}</p>
                     <h3 className="mt-4 font-serif text-[clamp(2rem,3.2vw,3rem)] font-semibold leading-[1.04]">{project.title}</h3>
