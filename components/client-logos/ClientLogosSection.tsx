@@ -31,30 +31,30 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
         />
       </Reveal>
 
-      <div className="mt-8 sm:mt-10">
-        <div className="marquee-track flex w-max items-center gap-12 px-6 sm:gap-16 sm:px-8 lg:gap-24">
+      <div className="mt-4 sm:mt-5">
+        <div className="marquee-track flex w-max items-center gap-14 px-6 sm:gap-20 sm:px-8 lg:gap-28">
           {publishedLogos.map((logo) => (
-            <div key={`${logo.clientName}-${logo.logoUrl}`} className="flex h-24 w-48 shrink-0 items-center justify-center sm:h-28 sm:w-56 lg:h-32 lg:w-64">
+            <div key={`${logo.clientName}-${logo.logoUrl}`} className="flex h-40 w-72 shrink-0 items-center justify-center sm:h-48 sm:w-96 lg:h-56 lg:w-[30rem]">
               <Image
                 src={logo.logoUrl}
                 alt={logo.alt || `${logo.clientName} logo`}
-                width={320}
-                height={160}
-                sizes="(min-width: 1024px) 256px, (min-width: 640px) 224px, 192px"
-                className="h-20 w-auto max-w-full object-contain sm:h-24 lg:h-28"
+                width={640}
+                height={320}
+                sizes="(min-width: 1024px) 480px, (min-width: 640px) 384px, 288px"
+                className="h-40 w-auto max-w-full object-contain sm:h-48 lg:h-56"
               />
             </div>
           ))}
-          <div className="flex items-center gap-12 sm:gap-16 lg:gap-24" aria-hidden="true">
+          <div className="flex items-center gap-14 sm:gap-20 lg:gap-28" aria-hidden="true">
             {publishedLogos.map((logo) => (
-              <div key={`duplicate-${logo.clientName}-${logo.logoUrl}`} className="flex h-24 w-48 shrink-0 items-center justify-center sm:h-28 sm:w-56 lg:h-32 lg:w-64">
+              <div key={`duplicate-${logo.clientName}-${logo.logoUrl}`} className="flex h-40 w-72 shrink-0 items-center justify-center sm:h-48 sm:w-96 lg:h-56 lg:w-[30rem]">
                 <Image
                   src={logo.logoUrl}
                   alt=""
-                  width={320}
-                  height={160}
-                  sizes="(min-width: 1024px) 256px, (min-width: 640px) 224px, 192px"
-                  className="h-20 w-auto max-w-full object-contain sm:h-24 lg:h-28"
+                  width={640}
+                  height={320}
+                  sizes="(min-width: 1024px) 480px, (min-width: 640px) 384px, 288px"
+                  className="h-40 w-auto max-w-full object-contain sm:h-48 lg:h-56"
                 />
               </div>
             ))}
