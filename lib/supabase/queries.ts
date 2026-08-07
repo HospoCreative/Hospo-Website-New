@@ -217,15 +217,13 @@ export async function getFeaturedCaseStudies(locale: Locale = "en") {
     .filter(
       (caseStudy) =>
         caseStudy.featured &&
-        Boolean(caseStudy.heroImage || caseStudy.media?.length) &&
-        Boolean(caseStudy.title && caseStudy.summary && caseStudy.challenge && caseStudy.solution)
+        Boolean(caseStudy.heroImage || caseStudy.media?.length)
     )
     .sort((a, b) => {
       const orderDifference = a.displayOrder - b.displayOrder;
       if (orderDifference !== 0) return orderDifference;
       return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
-    })
-    .slice(0, 3);
+    });
 }
 
 export async function getCaseStudyBySlug(slug: string, locale: Locale = "en") {

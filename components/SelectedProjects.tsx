@@ -31,7 +31,7 @@ export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStud
           <Link href={localizedPath("/case-studies", locale)} className="inline-flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">{translate(locale, "View all case studies")} <ArrowUpRight size={16} aria-hidden="true" /></Link>
         </Reveal>
         <div className="mt-12 space-y-14 lg:space-y-20">
-          {caseStudies.slice(0, 5).map((project, index) => {
+          {caseStudies.map((project, index) => {
             const media = getMedia(project);
             if (!media) return null;
             return (
