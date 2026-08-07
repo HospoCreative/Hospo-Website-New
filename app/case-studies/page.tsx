@@ -55,7 +55,7 @@ export default async function CaseStudiesPage() {
                 return (
                   <article
                     key={caseStudy.id}
-                    className="group grid gap-7 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12"
+                    className={`group grid gap-7 lg:items-center lg:gap-12 ${index % 2 ? "lg:grid-cols-[minmax(0,1fr)_24rem]" : "lg:grid-cols-[24rem_minmax(0,1fr)]"}`}
                   >
                     {mediaSrc ? (
                       <Link href={localizedPath(`/case-studies/${caseStudy.slug}`, locale)} className={`relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow ${index % 2 ? "lg:order-2" : ""}`}>
@@ -64,7 +64,7 @@ export default async function CaseStudiesPage() {
                             <source src={mediaSrc} />
                           </video>
                         ) : (
-                          <SmartImage src={mediaSrc} alt={mediaAlt} fill sizes="(min-width: 1024px) 38vw, (min-width: 768px) 50vw, 100vw" className="object-cover object-center transition duration-500 group-hover:scale-[1.03]" fallbackLabel={caseStudy.title} />
+                          <SmartImage src={mediaSrc} alt={mediaAlt} fill sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 100vw" className="object-cover object-center transition duration-500 group-hover:scale-[1.03]" fallbackLabel={caseStudy.title} />
                         )}
                       </Link>
                     ) : null}
