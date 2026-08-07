@@ -367,7 +367,9 @@ async function fetchPublicHomepage(initialUrl: URL) {
       redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       headers: {
-        "user-agent": "HospoCreativePublicScan/1.0 (+https://www.hospoagency.com)"
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "accept-language": "en-GB,en;q=0.9"
       }
     });
 
@@ -378,6 +380,14 @@ async function fetchPublicHomepage(initialUrl: URL) {
       continue;
     }
 
+    if ([401, 403, 429].includes(response.status)) {
+      return {
+        html: "",
+        finalUrl: current,
+        status: response.status,
+        accessLimited: true
+      };
+    }
     if (!response.ok) throw new Error(`The website returned HTTP ${response.status}.`);
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("text/html")) throw new Error("The website did not return an HTML page.");
@@ -385,7 +395,8 @@ async function fetchPublicHomepage(initialUrl: URL) {
     return {
       html: await readLimitedHtml(response),
       finalUrl: current,
-      status: response.status
+      status: response.status,
+      accessLimited: false
     };
   }
 
@@ -622,6 +633,7 @@ function portugueseReport(report: DigitalScanReport): DigitalScanReport {
     ["Add complete social sharing metadata so links present consistently when shared.", "Adicione metadados completos para que as ligações tenham uma apresentação consistente quando são partilhadas."],
     ["Prioritise mobile performance, especially image weight and loading behaviour.", "Dê prioridade ao desempenho móvel, especialmente ao peso e carregamento das imagens."],
     ["Maintain the current foundations and complete a human review of content quality and conversion.", "Mantenha os fundamentos atuais e complete uma avaliação humana da qualidade do conteúdo e conversão."],
+    ["The website restricted automated access. This report uses the public URL and available performance signals, so website-specific findings are marked as partial.", "O website restringiu o acesso automático. Este relatório utiliza o URL público e os sinais de desempenho disponíveis, pelo que as conclusões específicas do website estão assinaladas como parciais."],
     ["This scan reviews public signals available from the submitted website.", "Esta análise avalia sinais públicos disponíveis no website submetido."],
     ["It does not access private analytics, account dashboards or unpublished platform information.", "Não acede a análises privadas, painéis de conta ou informação não publicada das plataformas."],
     ["Automatic social coverage depends on what each platform exposes publicly and may be incomplete.", "A cobertura automática das redes sociais depende da informação que cada plataforma disponibiliza publicamente e pode estar incompleta."],
@@ -683,7 +695,7 @@ export async function runDigitalScan(input: {
     ? input.websiteUrl
     : `https://${input.websiteUrl}`;
   const initialUrl = new URL(suppliedUrl);
-  const { html, finalUrl } = await fetchPublicHomepage(initialUrl);
+  const { html, finalUrl, accessLimited } = await fetchPublicHomepage(initialUrl);
   const anchorLinks = extractAnchorLinks(html, finalUrl);
   const links = unique([...extractLinks(html, finalUrl), ...structuredProfileLinks(html, finalUrl)]);
   const lowerHtml = html.toLowerCase();
@@ -1154,10 +1166,10 @@ export async function runDigitalScan(input: {
       : orderLinks.length > 0 || productLinks.length > 0 || stockistLinks.length > 0;
 
   const areas = [
-    area("website", "Website health", healthScore, "verified", healthScore >= 75 ? "The website has a solid technical foundation for guest browsing." : "Technical gaps may make the website harder to use or trust.", healthFindings, healthStrengths, healthImprovements),
-    area("seo", "SEO and performance", seoScore, speed ? "verified" : "partial", seoScore >= 70 ? "The core search foundations are in place, with opportunities to improve visibility and speed." : "Important search signals are missing or need strengthening.", seoFindings, seoStrengths, seoImprovements),
-    area("booking", journeyTitle, journeyScore, journeyEvidence ? "verified" : "partial", journeySummary, journeyFindings, journeyStrengths, journeyImprovements),
-    area("google", discoveryTitle, discoveryScore, discoveryConfidence, discoverySummary, discoveryFindings, discoveryStrengths, discoveryImprovements),
+    area("website", "Website health", healthScore, accessLimited ? "partial" : "verified", healthScore >= 75 ? "The website has a solid technical foundation for guest browsing." : "Technical gaps may make the website harder to use or trust.", healthFindings, healthStrengths, healthImprovements),
+    area("seo", "SEO and performance", seoScore, accessLimited ? "partial" : speed ? "verified" : "partial", seoScore >= 70 ? "The core search foundations are in place, with opportunities to improve visibility and speed." : "Important search signals are missing or need strengthening.", seoFindings, seoStrengths, seoImprovements),
+    area("booking", journeyTitle, journeyScore, accessLimited ? "partial" : journeyEvidence ? "verified" : "partial", journeySummary, journeyFindings, journeyStrengths, journeyImprovements),
+    area("google", discoveryTitle, discoveryScore, accessLimited ? "partial" : discoveryConfidence, discoverySummary, discoveryFindings, discoveryStrengths, discoveryImprovements),
     area("visibility", "Social presence connections", visibilityScore, socialPlatforms.length ? "verified" : "not_confirmed", socialPlatforms.length >= 2 ? "The website supports guest research across several active social channels." : "The connection between the website and the wider social presence can be strengthened.", visibilityFindings, visibilityStrengths, visibilityImprovements),
     area(
       "social_visual",
@@ -1232,6 +1244,7 @@ export async function runDigitalScan(input: {
     scannedAt: new Date().toISOString(),
     overallScore: clamp(areas.reduce((total, item) => total + item.score, 0) / areas.length),
     pageSpeedAvailable: Boolean(speed),
+    accessLimited,
     areas,
     priorities,
     discovered: {
@@ -1243,6 +1256,7 @@ export async function runDigitalScan(input: {
       socialProfiles: publicSocial.profiles
     },
     limitations: [
+      ...(accessLimited ? ["The website restricted automated access. This report uses the public URL and available performance signals, so website-specific findings are marked as partial."] : []),
       "This scan reviews public signals available from the submitted website.",
       "It does not access private analytics, account dashboards or unpublished platform information.",
       "Automatic social coverage depends on what each platform exposes publicly and may be incomplete.",

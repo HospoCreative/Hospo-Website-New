@@ -38,6 +38,7 @@ const copy = {
     overview: "Quick overview",
     offerings: "Offerings detected",
     noOfferings: "No clear offering themes were confirmed from the public homepage.",
+    accessLimited: "This website limits automated access. Your report is available using public URL and performance signals, with website-specific findings clearly marked as partial.",
     score: "Overall score",
     whatWorks: "What is working",
     improveNext: "Improve next",
@@ -97,6 +98,7 @@ const copy = {
     overview: "Visão geral",
     offerings: "Ofertas identificadas",
     noOfferings: "Não foram confirmadas ofertas claras na página inicial pública.",
+    accessLimited: "Este website limita o acesso automático. O relatório está disponível com base no URL público e nos sinais de desempenho, com as conclusões específicas do website claramente assinaladas como parciais.",
     score: "Pontuação geral",
     whatWorks: "O que está a funcionar",
     improveNext: "Melhorar a seguir",
@@ -326,6 +328,8 @@ export function DigitalScanTool({ locale = "en" }: { locale?: Locale }) {
                 {report.overview.offerings.length ? <div className="mt-3 flex flex-wrap gap-2">{report.overview.offerings.map((offering) => <span key={offering} className="rounded-full border border-white/25 px-3 py-2 text-xs font-bold text-white">{offering}</span>)}</div> : <p className="mt-3 text-sm text-white/65">{t.noOfferings}</p>}
               </div>
             </div>
+
+            {report.accessLimited ? <p className="mt-6 border-l-2 border-yellow bg-yellow/10 px-4 py-3 text-sm leading-6 text-ink">{t.accessLimited}</p> : null}
 
             <div className="mt-10 grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
               {report.areas.map((item) => {

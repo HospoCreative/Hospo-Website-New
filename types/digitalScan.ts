@@ -55,6 +55,7 @@ export type DigitalScanReport = {
   scannedAt: string;
   overallScore: number;
   pageSpeedAvailable: boolean;
+  accessLimited?: boolean;
   areas: ScanArea[];
   overview: {
     typeLabel: string;
