@@ -189,35 +189,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             </div>
           </section>
 
-          {galleryMedia.length ? (
-            <section className="px-5 py-16 sm:px-8 lg:py-24">
-              <div className="mx-auto max-w-7xl">
-                <div className="mb-10 max-w-4xl">
-                  <p className="section-eyebrow text-ink/55">{translate(locale, "Gallery")}</p>
-                  <h2 className="mt-4 font-serif text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-[1]">
-                    {translate(locale, "Visual story.")}
-                  </h2>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {galleryMedia.map((item, index) => (
-                    <figure
-                      key={`${item.src}-${index}`}
-                      className="group overflow-hidden rounded-[8px] bg-ink shadow-soft"
-                    >
-                      <div className="relative aspect-[4/5]">
-                        <CaseStudyMediaAsset
-                          item={item}
-                          title={caseStudy.title}
-                          sizes="(min-width: 1024px) 31vw, (min-width: 640px) 50vw, 100vw"
-                        />
-                      </div>
-                    </figure>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ) : null}
-
           <section className="bg-ink px-5 py-16 text-white sm:px-8 lg:py-24">
             <div className="mx-auto max-w-7xl">
               <div className="grid border-y border-white/16 lg:grid-cols-3">
@@ -250,6 +221,35 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               </Link>
             </div>
           </section>
+
+          {galleryMedia.length ? (
+            <section className="px-5 py-16 sm:px-8 lg:py-24">
+              <div className="mx-auto max-w-7xl">
+                <div className="mb-10 max-w-4xl">
+                  <p className="section-eyebrow text-ink/55">{translate(locale, "Gallery")}</p>
+                  <h2 className="mt-4 font-serif text-[clamp(2.4rem,5vw,4rem)] font-semibold leading-[1]">
+                    {translate(locale, "Visual story.")}
+                  </h2>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {galleryMedia.map((item, index) => (
+                    <figure
+                      key={`${item.src}-${index}`}
+                      className="group overflow-hidden rounded-[8px] bg-ink shadow-soft"
+                    >
+                      <div className="relative aspect-[4/5]">
+                        <CaseStudyMediaAsset
+                          item={item}
+                          title={caseStudy.title}
+                          sizes="(min-width: 1024px) 31vw, (min-width: 640px) 50vw, 100vw"
+                        />
+                      </div>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
         </article>
       </main>
       <Footer locale={locale} />
