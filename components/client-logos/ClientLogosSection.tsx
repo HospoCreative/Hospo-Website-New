@@ -20,7 +20,7 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
 
   return (
     <section
-      className="overflow-hidden bg-ink py-[var(--hc-section-compact)] text-white"
+      className="overflow-hidden bg-ink pb-[clamp(1.75rem,2.5vw,2.5rem)] pt-[var(--hc-section-compact)] text-white"
       aria-labelledby="client-logos-title"
     >
       <Reveal className="mx-auto max-w-7xl px-5 sm:px-8">
