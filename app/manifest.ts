@@ -9,7 +9,6 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#002c5d",
-    icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }]
+    icons: [{ src: "/images/social/hospo-favicon.png", sizes: "500x500", type: "image/png" }]
   };
 }
-
