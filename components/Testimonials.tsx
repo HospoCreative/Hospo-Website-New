@@ -81,15 +81,15 @@ export function Testimonials({ locale = "en" }: { locale?: Locale }) {
                   aria-roledescription="slide"
                   aria-label={`${index + 1} of ${total}: ${t.slide}`}
                   aria-hidden={index !== activeIndex}
-                  className="w-full shrink-0 px-1 py-1 text-center sm:px-8"
+                  className="flex min-h-[20rem] w-full shrink-0 flex-col justify-center px-1 py-1 text-center sm:min-h-[21rem] sm:px-8"
                 >
                   <p className="section-eyebrow text-yellow">{testimonials.eyebrow}</p>
-                  <Quote aria-hidden="true" className="mx-auto mt-4 size-8 fill-yellow text-yellow sm:size-10" strokeWidth={0} />
-                  <blockquote className="mx-auto mt-5 max-w-5xl font-serif text-[clamp(1.3rem,2.2vw,2.05rem)] font-semibold leading-[1.22] tracking-[-0.02em]">
+                  <Quote aria-hidden="true" className="mx-auto mt-3 size-7 fill-yellow text-yellow sm:size-8" strokeWidth={0} />
+                  <blockquote className="mx-auto mt-4 max-w-4xl font-sans text-[clamp(1.05rem,1.7vw,1.35rem)] font-normal leading-[1.52] tracking-[-0.015em] text-ink/90">
                     <p>“{testimonial.quote}”</p>
                   </blockquote>
-                  <footer className="mt-7 flex flex-col gap-1">
-                    <cite className="not-italic text-base font-bold text-ink sm:text-lg">{testimonial.name}</cite>
+                  <footer className="mt-6 flex flex-col gap-1">
+                    <cite className="not-italic text-sm font-bold text-ink sm:text-base">{testimonial.name}</cite>
                     <p className="mx-auto max-w-2xl text-[0.62rem] font-black uppercase tracking-[0.14em] text-ink/58 sm:text-[0.67rem]">{testimonial.title}</p>
                   </footer>
                 </article>
