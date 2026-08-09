@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { Locale } from "./i18n";
 
-export const SITE_URL = "https://www.hospoagency.com";
+const FALLBACK_SITE_URL = "https://hospo-website-new-hospo-creative-s-projects.vercel.app";
+
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/$/, "");
 export const DEFAULT_OG_IMAGE = "/opengraph-image";
 
 function normalisePath(pathname: string) {
