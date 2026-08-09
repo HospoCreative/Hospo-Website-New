@@ -15,6 +15,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
 import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
+import { Testimonials } from "@/components/Testimonials";
 import {
   getPublishedBlogPosts,
   getFeaturedCaseStudies,
@@ -41,6 +42,7 @@ export default async function Home() {
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <DigitalFirstImpression locale={locale} />
         <DigitalRefresh locale={locale} />
+        <Testimonials locale={locale} />
         <DigitalScanPromo locale={locale} />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <FourWaysWeHelp locale={locale} />

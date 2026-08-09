@@ -74,6 +74,42 @@ export const homepageContent = {
       }
     ]
   },
+  testimonials: {
+    eyebrow: "Client feedback",
+    title: "Work that clients are proud to share.",
+    items: [
+      {
+        name: "Tin Le",
+        title: "Marketing Communications Manager, Pullman Danang Beach Resort",
+        quote:
+          "We have reviewed all of the deliverables, and they are truly eye-catching. We especially love the way you captured our Afternoon Tea set and the Nitrogen Ice Cream Show. The vibrant colours truly showcase the unique experiences we aim to offer our guests. The stunning shots of our beachfront, Epice Restaurant and resort façade will also be fantastic assets for our future social media content. Thank you for bringing Pullman Danang Beach Resort to life in such an authentic and inspiring way. We truly appreciate your professionalism and creativity."
+      },
+      {
+        name: "Raj Rana",
+        title: "Managing Director, Itihaas",
+        quote:
+          "Thank you so much for delivering such amazing work. You have done a fantastic job and I am very happy with the final result. We will be using the images to promote festive dining at Itihaas."
+      },
+      {
+        name: "Nouman Farooqui",
+        title: "Director, Asha’s Birmingham",
+        quote:
+          "Great results and great photos. We were really pleased with the final outcome and the quality of the content delivered for Asha’s Birmingham."
+      },
+      {
+        name: "Alexandre Gomes Ferreira",
+        title: "Influencer Marketing Consultant, M Public Relations",
+        quote:
+          "The final result from the YOTEL Porto photoshoot looks fantastic. We’re really pleased with the images and will be sharing them with our social media team to use across our digital channels."
+      },
+      {
+        name: "India Struthers",
+        title: "Marketing Manager, The Evolv Collection",
+        quote:
+          "We absolutely loved the final images from the Blackout Dinner x Lost Explorer shoot. The photography captured the atmosphere of the event."
+      }
+    ]
+  },
   work: {
     eyebrow: "Selected work",
     title: "Work with a commercial purpose.",
