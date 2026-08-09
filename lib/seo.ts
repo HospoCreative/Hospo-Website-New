@@ -4,7 +4,7 @@ import type { Locale } from "./i18n";
 const FALLBACK_SITE_URL = "https://hospo-website-new-hospo-creative-s-projects.vercel.app";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/$/, "");
-export const DEFAULT_OG_IMAGE = "/opengraph-image";
+export const DEFAULT_OG_IMAGE = "/images/social/hospo-creative-open-graph.png";
 
 function normalisePath(pathname: string) {
   const withoutLocale = pathname === "/pt" ? "/" : pathname.replace(/^\/pt(?=\/)/, "");
