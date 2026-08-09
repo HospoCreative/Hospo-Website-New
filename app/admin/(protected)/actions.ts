@@ -502,7 +502,9 @@ export async function deleteBlogPostAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/pt");
   revalidatePath("/blog");
+  revalidatePath("/pt/blog");
   revalidatePath("/blog/[slug]", "page");
   revalidatePath(`/blog/${post.slug}`);
   redirect("/admin/blog?message=deleted");
