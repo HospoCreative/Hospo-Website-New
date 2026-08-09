@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { Locale } from "./i18n";
 
 export const SITE_URL = "https://www.hospoagency.com";
-export const DEFAULT_OG_IMAGE = "/images/hero/collage/1.jpg";
+export const DEFAULT_OG_IMAGE = "/opengraph-image";
 
 function normalisePath(pathname: string) {
   const withoutLocale = pathname === "/pt" ? "/" : pathname.replace(/^\/pt(?=\/)/, "");
@@ -70,4 +70,3 @@ export function buildPageMetadata({
     }
   };
 }
-

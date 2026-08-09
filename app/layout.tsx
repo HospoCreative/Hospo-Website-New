@@ -12,8 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteContent.metadata.title,
     description: siteContent.metadata.description,
     pathname: await getRequestPath(),
-    locale,
-    image: siteContent.hero.backgroundImage.src
+    locale
   });
 }
 
