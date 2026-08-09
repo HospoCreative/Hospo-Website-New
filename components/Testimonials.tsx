@@ -83,7 +83,7 @@ export function Testimonials({ locale = "en" }: { locale?: Locale }) {
                   aria-hidden={index !== activeIndex}
                   className="flex min-h-[20rem] w-full shrink-0 flex-col justify-center px-1 py-1 text-center sm:min-h-[21rem] sm:px-8"
                 >
-                  <p className="section-eyebrow text-yellow">{testimonials.eyebrow}</p>
+                  <p className="section-eyebrow text-ink">{testimonials.eyebrow}</p>
                   <Quote aria-hidden="true" className="mx-auto mt-3 size-7 fill-yellow text-yellow sm:size-8" strokeWidth={0} />
                   <blockquote className="mx-auto mt-4 max-w-4xl font-sans text-[clamp(1.05rem,1.7vw,1.35rem)] font-normal leading-[1.52] tracking-[-0.015em] text-ink/90">
                     <p>“{testimonial.quote}”</p>
