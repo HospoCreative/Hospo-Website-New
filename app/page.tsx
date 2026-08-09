@@ -42,8 +42,8 @@ export default async function Home() {
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <DigitalFirstImpression locale={locale} />
         <DigitalRefresh locale={locale} />
-        <Testimonials locale={locale} />
         <DigitalScanPromo locale={locale} />
+        <Testimonials locale={locale} />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <FourWaysWeHelp locale={locale} />
         <DigitalPresenceStatistics locale={locale} />
