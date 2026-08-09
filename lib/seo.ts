@@ -5,6 +5,7 @@ const FALLBACK_SITE_URL = "https://hospo-website-new-hospo-creative-s-projects.v
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/$/, "");
 export const DEFAULT_OG_IMAGE = "/images/social/hospo-creative-open-graph.png";
+export const FAVICON = "/images/social/hospo-favicon.png";
 
 function normalisePath(pathname: string) {
   const withoutLocale = pathname === "/pt" ? "/" : pathname.replace(/^\/pt(?=\/)/, "");
@@ -46,6 +47,11 @@ export function buildPageMetadata({
     metadataBase: new URL(SITE_URL),
     title,
     description,
+    icons: {
+      icon: [{ url: FAVICON, type: "image/png", sizes: "500x500" }],
+      shortcut: FAVICON,
+      apple: FAVICON
+    },
     alternates: {
       canonical,
       languages: {
