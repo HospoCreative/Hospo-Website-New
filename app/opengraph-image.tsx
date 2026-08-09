@@ -48,8 +48,8 @@ export default function OpenGraphImage() {
         />
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative", width: "100%" }}>
           <div style={{ alignItems: "center", display: "flex", justifyContent: "space-between" }}>
-            <div style={{ fontFamily: "Arial", fontSize: 58, fontWeight: 800, letterSpacing: "-5px" }}>
-              hospo<span style={{ color: "#ffcc53" }}>.</span>
+            <div style={{ alignItems: "baseline", display: "flex", fontFamily: "Arial", fontSize: 58, fontWeight: 800, letterSpacing: "-5px" }}>
+              <span>hospo</span><span style={{ color: "#ffcc53" }}>.</span>
             </div>
             <div style={{ border: "1px solid rgba(255,255,255,0.48)", borderRadius: "999px", fontFamily: "Arial", fontSize: 16, fontWeight: 700, letterSpacing: "3px", padding: "12px 18px" }}>
               HOSPITALITY MARKETING
