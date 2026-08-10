@@ -23,6 +23,10 @@ export function About({ locale = "en" }: { locale?: Locale }) {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr] lg:items-start lg:gap-8">
           <Reveal className="md:col-span-2 lg:col-span-1">
             <SectionHeading tone="light" eyebrow={content.eyebrow} title={content.title} body={<><p>{content.body}</p><p className="mt-3">{content.supporting}</p></>} />
+            <div className="mt-7 border-y border-white/18 py-5">
+              <p className="font-serif text-xl font-semibold leading-7 text-white">{content.markets.title}</p>
+              <p className="mt-2 text-sm leading-6 text-white/68">{content.markets.body}</p>
+            </div>
             <p className="mt-7 border-l-2 border-yellow pl-4 font-serif text-xl italic leading-7">{content.closing}</p>
           </Reveal>
           {content.founders.map((founder, index) => {

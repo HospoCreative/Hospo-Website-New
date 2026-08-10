@@ -264,6 +264,10 @@ export const homepageContent = {
     title: "Sector knowledge behind every recommendation.",
     body: "Hospo Creative combines marketing expertise, strategic direction and visual production in one specialist team.",
     supporting: "We understand how guests choose where to stay, eat and experience a destination. Every image, campaign and recommendation is created to improve the digital journey before the guest arrives.",
+    markets: {
+      title: "Based in the UK and Portugal. Working worldwide.",
+      body: "Hospo Creative works primarily with hospitality businesses across the UK and Portugal, while also partnering with brands and properties on selected projects worldwide."
+    },
     closing: "Industry knowledge, marketing direction and visual production in one team.",
     founders: [
       { name: "Andreia Oliveira", role: "CO-FOUNDER, MARKETING AND GROWTH DIRECTOR", bio: "With 10 years of experience in hospitality marketing and digital strategy, Andreia leads Hospo’s brand positioning, campaigns, social media, advertising, SEO and digital communication. She helps hotels and restaurants strengthen their visibility, connect with the right audience and turn attention into measurable growth." },
@@ -275,7 +279,7 @@ export const homepageContent = {
     eyebrow: "FAQ",
     title: "Common questions before starting a project.",
     items: [
-      { question: "Do you work internationally?", answer: "Yes. Hospo works with hotels, restaurants, stays and food and drink brands in the UK and internationally. Travel requirements are discussed as part of the proposal." },
+      { question: "Do you work internationally?", answer: "We work primarily across the UK and Portugal, with selected hospitality projects undertaken worldwide. For photography and video productions outside our main markets, travel requirements are discussed as part of the proposal." },
       { question: "Can we book photography or video only?", answer: "Yes. Individual production services are available, although we may recommend additional improvements when they would strengthen the result." },
       { question: "Can you improve our Booking.com or OTA listing?", answer: "Yes. We can review photography, image ordering, copy, presentation and consistency across relevant booking platforms." },
       { question: "Do you manage social media?", answer: "Yes. Hospo supports social media strategy, content planning, creation, publishing, campaigns and ongoing optimisation." },
