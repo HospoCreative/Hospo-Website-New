@@ -192,11 +192,14 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
     });
   }, [analyticsEnabled, pathname, scriptReady]);
 
-  if (isAdmin || !ready) return null;
+  // Keep the Google tag discoverable, but start it with every optional storage
+  // category denied. Analytics cookies and page-view events are still enabled
+  // only when the visitor grants consent below.
+  if (isAdmin) return null;
 
   return (
     <>
-      {analyticsEnabled ? (
+      {ready ? (
         <Script
           id="hospo-google-analytics"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
