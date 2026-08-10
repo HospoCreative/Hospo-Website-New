@@ -246,8 +246,8 @@ const pt: Record<string, string> = {
   ,"Previous statistics card": "Cartão de estatística anterior"
   ,"Next statistics card": "Cartão de estatística seguinte"
   ,"of": "de"
-  ,"Hospo Creative | Hotel & Restaurant Marketing Agency": "Hospo Creative | Marketing para Hotéis e Restaurantes"
-  ,"Marketing, photography, websites and digital strategy for hotels, restaurants and stays in the UK and internationally.": "Marketing, fotografia, websites e estratégia digital para hotéis, restaurantes e alojamentos no Reino Unido e internacionalmente."
+  ,"Hospo Creative | Hospitality Marketing Agency UK & Portugal": "Hospo Creative | Agência de Marketing para Hospitalidade no Reino Unido e Portugal"
+  ,"Hospitality marketing and creative support for hotels, restaurants and stays across the UK and Portugal, with selected projects worldwide.": "Marketing e apoio criativo para hotéis, restaurantes e alojamentos no Reino Unido e Portugal, com projetos selecionados em todo o mundo."
   ,"Ready to strengthen your marketing?": "Pronto para fortalecer o seu marketing?"
 };
 

@@ -6,12 +6,12 @@ export const revalidate = 3600;
 
 const staticRoutes = ["/", "/blog", "/case-studies", "/digital-scan"];
 
-function entriesForPath(pathname: string, lastModified = new Date()): MetadataRoute.Sitemap {
+function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Sitemap {
   const { english, portuguese } = localizedUrls(pathname);
   const languages = { "en-GB": english, "pt-PT": portuguese, "x-default": english };
   return [
-    { url: english, lastModified, alternates: { languages } },
-    { url: portuguese, lastModified, alternates: { languages } }
+    { url: english, ...(lastModified ? { lastModified } : {}), alternates: { languages } },
+    { url: portuguese, ...(lastModified ? { lastModified } : {}), alternates: { languages } }
   ];
 }
 
@@ -37,4 +37,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return staticEntries;
   }
 }
-

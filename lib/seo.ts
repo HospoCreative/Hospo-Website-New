@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { Locale } from "./i18n";
 
-const FALLBACK_SITE_URL = "https://hospo-website-new-hospo-creative-s-projects.vercel.app";
+// Keep public metadata on the canonical production domain even if an
+// environment variable is accidentally omitted during a deployment.
+const FALLBACK_SITE_URL = "https://hospocreative.com";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/$/, "");
 export const DEFAULT_OG_IMAGE = "/images/social/hospo-creative-open-graph.png";

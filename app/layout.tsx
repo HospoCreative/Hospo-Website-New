@@ -31,7 +31,7 @@ export default async function RootLayout({
         "@id": `${SITE_URL}/#organization`,
         name: "Hospo Creative",
         url: SITE_URL,
-        logo: `${SITE_URL}/icon.svg`,
+        logo: `${SITE_URL}/images/social/hospo-favicon-v2.png`,
         email: siteContent.contact.email,
         description: siteContent.metadata.description,
         sameAs: siteContent.contact.socials.map((social) => social.href)
