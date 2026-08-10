@@ -67,7 +67,7 @@ export default function OpenGraphImage() {
 
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.36)", display: "flex", fontFamily: "Arial", fontSize: 19, justifyContent: "space-between", letterSpacing: "1px", paddingTop: "18px" }}>
             <span>PHOTOGRAPHY · CONTENT · STRATEGY · WEBSITES</span>
-            <span style={{ color: "#ffcc53", fontWeight: 700 }}>HOSPOAGENCY.COM</span>
+            <span style={{ color: "#ffcc53", fontWeight: 700 }}>HOSPOCREATIVE.COM</span>
           </div>
         </div>
       </div>

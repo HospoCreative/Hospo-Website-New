@@ -128,7 +128,7 @@ async function fetchBounded(initialUrl: string, maxBytes: number) {
       redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       headers: {
-        "user-agent": "Mozilla/5.0 (compatible; HospoCreativePublicScan/1.0; +https://www.hospoagency.com)",
+        "user-agent": "Mozilla/5.0 (compatible; HospoCreativePublicScan/1.0; +https://hospocreative.com)",
         accept: "text/html,application/json,image/avif,image/webp,image/*,*/*;q=0.8"
       }
     });
