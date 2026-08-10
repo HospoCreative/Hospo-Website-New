@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getSiteContent } from "@/data/site";
 import { localizedPath, translate, type Locale } from "@/lib/i18n";
 import { Logo } from "./Logo";
+import { CookieSettingsButton } from "./CookieSettingsButton";
 
 export function Footer({ locale = "en" }: { locale?: Locale }) {
   const siteContent = getSiteContent(locale);
@@ -34,6 +35,7 @@ export function Footer({ locale = "en" }: { locale?: Locale }) {
           >
             {contact.email}
           </a>
+          <CookieSettingsButton locale={locale} />
           <div className="flex flex-wrap gap-x-5 gap-y-1">
             {contact.socials.map((link) => (
               <a

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SeoStructuredData } from "@/components/SeoStructuredData";
+import { CookieConsent } from "@/components/CookieConsent";
 import { getSiteContent } from "@/data/site";
 import { getRequestLocale, getRequestPath } from "@/lib/locale-server";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
@@ -51,6 +52,7 @@ export default async function RootLayout({
       <body className="font-sans antialiased">
         <SeoStructuredData data={structuredData} />
         {children}
+        <CookieConsent locale={locale} />
       </body>
     </html>
   );
