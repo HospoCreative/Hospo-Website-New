@@ -16,11 +16,12 @@ export const siteContent = {
   ],
   contact: {
     email: "info@hospoagency.com",
-    instagramHandle: "@hospo.agency",
-    instagramUrl: "https://www.instagram.com/hospo.agency/",
+    instagramHandle: "@hospo_creative",
+    instagramUrl: "https://www.instagram.com/hospo_creative/",
     socials: [
-      { label: "Instagram", href: "https://www.instagram.com/hospo.agency/" },
-      { label: "Website", href: "https://www.hospoagency.com" }
+      { label: "Instagram", href: "https://www.instagram.com/hospo_creative/" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/company/hospo-creative-agency" },
+      { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61553079607457" }
     ]
   },
   hero: {
