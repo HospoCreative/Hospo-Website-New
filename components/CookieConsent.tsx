@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Cookie, X } from "lucide-react";
 import {
   COOKIE_CONSENT_EVENT,
@@ -84,7 +84,28 @@ function ensureGoogleConsentMode() {
   window.gtag = window.gtag || ((...args: unknown[]) => window.dataLayer?.push(args));
 }
 
+function setGoogleAnalyticsDisabled(disabled: boolean) {
+  (window as unknown as Record<string, boolean>)[`ga-disable-${GA_MEASUREMENT_ID}`] = disabled;
+}
+
+function deleteGoogleAnalyticsCookies() {
+  const cookieNames = document.cookie
+    .split("; ")
+    .map((entry) => entry.split("=")[0])
+    .filter((name) => /^(?:_ga|_gid|_gat)(?:_|$)/.test(name));
+
+  const domains = [undefined, window.location.hostname, `.${window.location.hostname}`];
+  for (const name of cookieNames) {
+    for (const domain of domains) {
+      document.cookie = `${name}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; SameSite=Lax; Secure${domain ? `; Domain=${domain}` : ""}`;
+    }
+  }
+}
+
 function updateGoogleConsent(analytics: AnalyticsConsent) {
+  const hasAnalyticsConsent = analytics === "granted";
+  setGoogleAnalyticsDisabled(!hasAnalyticsConsent);
+  if (!hasAnalyticsConsent) deleteGoogleAnalyticsCookies();
   ensureGoogleConsentMode();
   window.gtag?.("consent", "update", {
     analytics_storage: analytics,
@@ -102,6 +123,8 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
   const [isManaging, setIsManaging] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
   const [scriptReady, setScriptReady] = useState(false);
+  const analyticsConfigured = useRef(false);
+  const dialogRef = useRef<HTMLElement>(null);
   const t = copy[locale];
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -117,6 +140,7 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
   useEffect(() => {
     if (isAdmin) return;
     ensureGoogleConsentMode();
+    setGoogleAnalyticsDisabled(true);
     window.gtag?.("consent", "default", {
       analytics_storage: "denied",
       ad_storage: "denied",
@@ -137,6 +161,14 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
   }, [isAdmin]);
 
   useEffect(() => {
+    if (isAdmin || !isOpen) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const firstFocusable = dialogRef.current?.querySelector<HTMLElement>("button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex='-1'])");
+    firstFocusable?.focus();
+    return () => previouslyFocused?.focus();
+  }, [isAdmin, isOpen]);
+
+  useEffect(() => {
     if (isAdmin) return;
     const openSettings = () => {
       setAnalyticsEnabled(consent === "granted");
@@ -149,11 +181,14 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
 
   useEffect(() => {
     if (!scriptReady || !analyticsEnabled || !pathname) return;
-    window.gtag?.("config", GA_MEASUREMENT_ID, {
+    if (!analyticsConfigured.current) {
+      window.gtag?.("config", GA_MEASUREMENT_ID, { send_page_view: false });
+      analyticsConfigured.current = true;
+    }
+    window.gtag?.("event", "page_view", {
       page_path: pathname,
       page_location: window.location.href,
-      page_title: document.title,
-      send_page_view: true
+      page_title: document.title
     });
   }, [analyticsEnabled, pathname, scriptReady]);
 
@@ -175,30 +210,51 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
       ) : null}
 
       {isOpen ? (
-        <div className="fixed inset-x-0 bottom-0 z-[100] p-3 sm:p-5" role="presentation">
+        <div className="fixed inset-x-0 bottom-0 z-[100] p-3 sm:p-5 md:left-6 md:right-auto md:w-[28rem] md:p-0" role="presentation">
           <section
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="cookie-consent-title"
-            className="mx-auto w-full max-w-2xl rounded-[0.75rem] border border-white/20 bg-ink p-5 text-white shadow-2xl sm:p-6"
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && consent) {
+                setIsOpen(false);
+                return;
+              }
+              if (event.key !== "Tab") return;
+
+              const focusable = Array.from(event.currentTarget.querySelectorAll<HTMLElement>("button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex='-1'])"));
+              const first = focusable[0];
+              const last = focusable.at(-1);
+              if (!first || !last) return;
+
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }}
+            className="mx-auto w-full max-w-[30rem] rounded-[0.75rem] border border-white/20 bg-ink p-5 text-white shadow-2xl sm:p-6"
           >
-            <div className="flex items-start gap-4">
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-yellow text-ink" aria-hidden="true">
-                <Cookie size={19} />
+            <div className="flex items-start gap-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-yellow text-ink" aria-hidden="true">
+                <Cookie size={17} />
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-4">
-                  <h2 id="cookie-consent-title" className="font-serif text-2xl font-semibold leading-none sm:text-3xl">{t.title}</h2>
+                  <h2 id="cookie-consent-title" className="font-serif text-[1.7rem] font-semibold leading-none sm:text-3xl">{t.title}</h2>
                   {consent ? (
                     <button type="button" onClick={() => setIsOpen(false)} aria-label={t.close} className="grid size-10 shrink-0 place-items-center rounded-full border border-white/25 text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
                       <X aria-hidden="true" size={18} />
                     </button>
                   ) : null}
                 </div>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-white/75">{t.body}</p>
+                <p className="mt-2.5 max-w-xl text-sm leading-6 text-white/75">{t.body}</p>
 
                 {isManaging ? (
-                  <div className="mt-5 border-y border-white/15 py-1">
+                  <div className="mt-4 border-y border-white/15 py-1">
                     <ConsentRow title={t.necessary} description={t.necessaryDescription} label={t.alwaysOn} />
                     <label className="flex cursor-pointer items-center justify-between gap-4 py-4">
                       <span>
@@ -216,21 +272,23 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
                   </div>
                 ) : null}
 
-                <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <div className="mt-4">
                   {!isManaging ? (
                     <>
-                      <button type="button" onClick={() => applyConsent("granted")} className="button-primary min-h-11 bg-yellow text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
-                        <Check aria-hidden="true" size={16} /> {t.accept}
-                      </button>
-                      <button type="button" onClick={() => applyConsent("denied")} className="button-secondary min-h-11 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
-                        {t.reject}
-                      </button>
-                      <button type="button" onClick={() => setIsManaging(true)} className="inline-flex min-h-11 items-center justify-center gap-2 px-3 text-xs font-extrabold uppercase tracking-[0.12em] text-white/75 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                        <button type="button" onClick={() => applyConsent("granted")} className="button-primary min-h-11 justify-center bg-yellow text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                          <Check aria-hidden="true" size={16} /> {t.accept}
+                        </button>
+                        <button type="button" onClick={() => applyConsent("denied")} className="button-secondary min-h-11 justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
+                          {t.reject}
+                        </button>
+                      </div>
+                      <button type="button" onClick={() => setIsManaging(true)} className="mt-2 inline-flex min-h-10 items-center gap-2 px-1 text-xs font-extrabold uppercase tracking-[0.12em] text-white/75 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">
                         {t.manage} <ChevronDown aria-hidden="true" size={15} />
                       </button>
                     </>
                   ) : (
-                    <button type="button" onClick={() => applyConsent(analyticsEnabled ? "granted" : "denied")} className="button-primary min-h-11 bg-yellow text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                    <button type="button" onClick={() => applyConsent(analyticsEnabled ? "granted" : "denied")} className="button-primary min-h-11 justify-center bg-yellow text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
                       {t.save}
                     </button>
                   )}
