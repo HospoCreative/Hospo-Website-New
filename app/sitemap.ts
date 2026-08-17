@@ -4,7 +4,23 @@ import { localizedUrls } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-const staticRoutes = ["/", "/blog", "/case-studies", "/digital-scan"];
+const staticRoutes = [
+  "/",
+  "/hotels-stays",
+  "/restaurants-fb",
+  "/services",
+  "/services/strategy-campaigns",
+  "/services/websites-direct-booking",
+  "/services/ota-optimisation",
+  "/services/seo-google-visibility",
+  "/services/photography-video",
+  "/services/social-media",
+  "/about",
+  "/contact",
+  "/blog",
+  "/case-studies",
+  "/digital-scan"
+];
 
 function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Sitemap {
   const { english, portuguese } = localizedUrls(pathname);

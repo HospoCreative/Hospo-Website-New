@@ -9,7 +9,7 @@ export async function Header({ locale = "en" }: { locale?: Locale }) {
     getPublishedBlogPosts(locale)
   ]);
   const navItems = siteContent.navItems.filter(
-    (item) => publishedArticles.length > 0 || item.href !== "/#insights"
+    (item) => publishedArticles.length > 0 || item.href !== "/blog"
   );
 
   return <HeaderClient locale={locale} navItems={navItems} />;

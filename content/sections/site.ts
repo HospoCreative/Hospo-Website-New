@@ -7,12 +7,12 @@ export const siteContent = {
       "Hospitality marketing and creative support for hotels, restaurants and stays across the UK and Portugal, with selected projects worldwide."
   },
   navItems: [
-    { label: "Work", href: "/#work" },
-    { label: "Solutions", href: "/#digital-refresh" },
-    { label: "Services", href: "/#services" },
-    { label: "About", href: "/#about" },
-    { label: "Insights", href: "/#insights" },
-    { label: "Contact", href: "/#digital-review" }
+    { label: "Hotels & Stays", href: "/hotels-stays" },
+    { label: "Restaurants & F&B", href: "/restaurants-fb" },
+    { label: "Services", href: "/services" },
+    { label: "Work", href: "/case-studies" },
+    { label: "Insights", href: "/blog" },
+    { label: "About", href: "/about" }
   ],
   contact: {
     email: "info@hospoagency.com",
