@@ -4,17 +4,15 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { ClientLogosSection } from "@/components/client-logos/ClientLogosSection";
 import { BlogPreviewSection } from "@/components/BlogPreviewSection";
-import { MarketingJourney } from "@/components/MarketingJourney";
+import { Campaigns } from "@/components/Campaigns";
 import { SelectedProjects } from "@/components/SelectedProjects";
-import { ServiceEnquiry } from "@/components/ServiceEnquiry";
+import { ServicesOverview } from "@/components/ServicesOverview";
 import { WhoWeHelp } from "@/components/WhoWeHelp";
 import { DigitalFirstImpression } from "@/components/DigitalFirstImpression";
 import { DigitalRefresh } from "@/components/DigitalRefresh";
-import { FourWaysWeHelp } from "@/components/FourWaysWeHelp";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
 import { DigitalScanPromo } from "@/components/DigitalScanPromo";
-import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
 import {
   getPublishedBlogPosts,
@@ -41,14 +39,12 @@ export default async function Home() {
         <WhoWeHelp locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <DigitalFirstImpression locale={locale} />
+        <Campaigns locale={locale} />
+        <SelectedProjects caseStudies={caseStudies} locale={locale} />
+        <Testimonials locale={locale} />
+        <ServicesOverview locale={locale} />
         <DigitalRefresh locale={locale} />
         <DigitalScanPromo locale={locale} />
-        <Testimonials locale={locale} />
-        <SelectedProjects caseStudies={caseStudies} locale={locale} />
-        <FourWaysWeHelp locale={locale} />
-        <DigitalPresenceStatistics locale={locale} />
-        <MarketingJourney locale={locale} />
-        <ServiceEnquiry locale={locale} />
         <About locale={locale} />
         <BlogPreviewSection posts={blogPosts} locale={locale} />
         <FaqSection locale={locale} />

@@ -1,12 +1,12 @@
 export const homepageContent = {
   hero: {
-    eyebrow: "Content, strategy & digital optimisation for guest-led brands",
-    title: "Helping hotels, restaurants and stays stand out, attract more guests and grow direct revenue.",
+    eyebrow: "Hospitality Marketing Agency · UK & Portugal",
+    title: "Helping hospitality businesses attract more guests, grow direct bookings and perform better online.",
     body:
-      "We combine photography, video, digital strategy, websites, Google visibility and OTA optimisation to improve how your business is discovered, compared and chosen online.",
-    primaryCta: "Request a Digital Review",
-    secondaryCta: "View Our Work",
-    note: "The guest experience starts before anyone walks through the door.",
+      "Hospo supports independent hotels, stays, restaurants and F&B brands with strategy, websites, OTA optimisation, campaigns, content and digital performance.",
+    primaryCta: "Digital Presence Review",
+    secondaryCta: "Explore Our Work",
+    note: "Hospitality expertise, creative execution and commercial thinking in one team.",
     images: [
       { src: "/images/hero/collage/1.jpg", alt: "Restaurant dish photographed for a client" },
       { src: "/images/hero/collage/2.jpg", alt: "Hotel pool and grounds photographed from above" },
@@ -15,47 +15,42 @@ export const homepageContent = {
   },
   whoWeHelp: {
     eyebrow: "Who we help",
-    title: "Built for businesses where presentation influences the decision.",
+    title: "Choose the support that fits your business.",
     body:
-      "We work with independent hotels, restaurants, stays and food and drink brands that want to improve how people discover, compare and choose them online.",
+      "Hospo works across two connected sectors, each with a different path from discovery to conversion.",
     categories: [
       {
-        title: "Hotels & Resorts",
-        body: "Boutique hotels, independent hotels, luxury hotels and resorts.",
+        title: "Hotels & Stays",
+        body: "Strengthen your direct booking journey, improve OTA presentation and turn more digital demand into guests.",
         image: { src: "/images/work/hotels.jpg", alt: "Independent hotel and resort setting" }
       },
       {
-        title: "Stays & Accommodation",
-        body: "Holiday rentals, apartments, guesthouses, rural stays and glamping.",
-        image: { src: "/images/work/places.jpg", alt: "Distinctive accommodation and destination setting" }
-      },
-      {
-        title: "Restaurants & Food-led Venues",
-        body: "Restaurants, cafés, wine bars, beach clubs and food and drink brands.",
+        title: "Restaurants & F&B",
+        body: "Build demand, increase reservations and create campaigns that keep your venue or brand relevant.",
         image: { src: "/images/work/food.jpg", alt: "Food-led venue and dining experience" }
       }
     ]
   },
   problem: {
-    eyebrow: "Why strong businesses get overlooked",
-    title: "Your guest experience may be exceptional. Your digital presence may not show it.",
+    eyebrow: "What we help you improve",
+    title: "Make every digital touchpoint work harder.",
     body:
-      "Before booking or visiting, guests judge your business through photography, Google, your website, social media and booking platforms. When those touchpoints feel outdated, inconsistent or difficult to navigate, even a great guest experience can lose attention to a competitor.",
+      "Hospo connects the points where people discover, assess and choose your business, so your marketing activity supports a clearer commercial outcome.",
     problems: [
-      "Outdated presentation: The photography and content no longer reflect the real quality of the experience.",
-      "A fragmented booking journey: The website, Google profile and booking platforms do not guide guests clearly towards the next step.",
-      "Little differentiation: The business looks similar to competitors when guests are comparing their options.",
-      "Inconsistent marketing: Social media and campaigns create activity, but they do not support one clear commercial direction."
+      "Be easier to find: strengthen search, Google, social, OTAs and local discovery.",
+      "Present the business better: align websites, photography, video, listings and content.",
+      "Convert more demand: improve direct bookings, reservations, offers and landing pages.",
+      "Keep guests coming back: connect email, reviews, CRM and retention activity."
     ],
-    closing: "When these touchpoints do not work together, your business becomes harder to discover, trust and book.",
+    closing: "Better visibility, a clearer offer and a stronger journey create more opportunities to be chosen.",
     image: { src: "/images/gallery/1.8.jpg", alt: "Guest considering where to visit" }
   },
   refresh: {
     eyebrow: "Our signature solution",
     title: "Hospo Digital Refresh",
-    body: "A connected review and transformation of how your business is presented, discovered and chosen online.",
+    body: "An integrated improvement programme for businesses that need more than one isolated marketing fix.",
     supporting:
-      "Not just photography. Not just marketing. We bring the visual, strategic and digital parts of the guest journey together so they support the same commercial goal.",
+      "When the opportunity is broader, we connect the visual, strategic and digital parts of your customer journey around one commercial goal.",
     pathways: [
       {
         title: "Visual Refresh",
@@ -112,14 +107,13 @@ export const homepageContent = {
   },
   work: {
     eyebrow: "Selected work",
-    title: "Work with a commercial purpose.",
-    body: "Projects connecting strategy, content and digital execution to improve how businesses are seen, experienced and chosen online."
+    title: "Hospitality work with a clear purpose.",
+    body: "A selection of verified client work across hotel, restaurant and F&B marketing, content and digital execution."
   },
   pillars: {
-    eyebrow: "How we help",
-    title: "Four ways we strengthen your business online.",
-    body:
-      "From the first image a guest sees to the moment they book, we connect your content, visibility, digital experience and ongoing marketing.",
+    eyebrow: "Core services",
+    title: "Focused expertise when you need it. Connected support when it matters.",
+    body: "Choose a specialist service or combine capabilities around one commercial priority.",
     items: [
       {
         title: "Show the experience at its best",
@@ -253,9 +247,9 @@ export const homepageContent = {
     ]
   },
   review: {
-    eyebrow: "Complimentary Digital Presence Review",
-    title: "Not sure where to start?",
-    body: "We will review your main digital touchpoints and identify the clearest opportunities to improve how your business is presented and discovered online.",
+    eyebrow: "Digital Presence Review",
+    title: "See where your digital presence could be working harder.",
+    body: "A practical public review of the main touchpoints that influence discovery, trust and a booking, reservation or purchase decision.",
     clarification: "This is an initial review highlighting three to five practical observations. It is not a complete free marketing strategy.",
     areas: ["Website", "Google presence", "Principal booking platform or OTA", "Photography", "Guest journey", "Social media", "Visual consistency"]
   },
@@ -289,9 +283,9 @@ export const homepageContent = {
     ]
   },
   finalCta: {
-    title: "Ready to strengthen how your business is seen and chosen?",
-    body: "Tell us where your business is now, what you would like to improve and where you want your digital presence to take you.",
-    primaryCta: "Request Your Digital Review",
-    secondaryCta: "View Our Work"
+    title: "Ready to make your digital presence work harder?",
+    body: "Start with a Digital Presence Review, or explore the work and support that fit your next commercial priority.",
+    primaryCta: "Digital Presence Review",
+    secondaryCta: "Explore Our Work"
   }
 } as const;

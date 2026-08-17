@@ -5,18 +5,18 @@ import { Reveal } from "./Reveal";
 
 const content = {
   en: {
-    eyebrow: "Your digital score",
-    title: "How strong is your digital presence?",
-    body: "Get a quick public review of how clearly customers can find you, understand your offer and take the next step. No account connection required.",
-    cta: "Test your digital score",
-    points: ["Visibility", "Customer journey", "Brand presentation"]
+    eyebrow: "Digital Presence Review",
+    title: "See where your digital presence could be working harder.",
+    body: "Get a practical public review of your website, Google presence, booking or reservation journey, photography, content and social signals. No account connection is required.",
+    cta: "Get your Digital Presence Review",
+    points: ["Website & Google", "Booking or reservation journey", "Content & visibility"]
   },
   pt: {
-    eyebrow: "A sua pontuação digital",
-    title: "Qual é a força da sua presença digital?",
-    body: "Receba uma análise pública rápida sobre a facilidade com que os clientes encontram o negócio, compreendem a oferta e avançam para o próximo passo. Não é necessário ligar qualquer conta.",
-    cta: "Teste a sua presença digital",
-    points: ["Visibilidade", "Percurso do cliente", "Apresentação da marca"]
+    eyebrow: "Análise da Presença Digital",
+    title: "Veja onde a sua presença digital pode estar a trabalhar melhor.",
+    body: "Receba uma análise pública prática ao seu website, presença no Google, percurso de reserva ou pedido, fotografia, conteúdo e sinais nas redes sociais. Não é necessário ligar qualquer conta.",
+    cta: "Pedir a sua análise de presença digital",
+    points: ["Website e Google", "Percurso de reserva ou pedido", "Conteúdo e visibilidade"]
   }
 } as const;
 

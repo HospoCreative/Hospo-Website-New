@@ -3,11 +3,12 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import type { HomepageContent } from "@/data/homepage";
+import { localizedPath, type Locale } from "@/lib/i18n";
 import { SmartImage } from "./SmartImage";
 
 type HeroProps = { hero: HomepageContent["hero"] };
 
-export function HeroClient({ hero }: HeroProps) {
+export function HeroClient({ hero, locale }: HeroProps & { locale: Locale }) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -27,10 +28,10 @@ export function HeroClient({ hero }: HeroProps) {
             {hero.body}
           </p>
           <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row">
-            <a href="#digital-review" className="button-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
+            <a href={localizedPath("/digital-scan", locale)} className="button-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
               {hero.primaryCta}<ArrowUpRight aria-hidden="true" size={17} />
             </a>
-            <a href="#work" className="button-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
+            <a href={localizedPath("/case-studies", locale)} className="button-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
               {hero.secondaryCta}<ArrowUpRight aria-hidden="true" size={17} />
             </a>
           </div>

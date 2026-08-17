@@ -4,7 +4,7 @@ export const siteContent = {
   metadata: {
     title: "Hospo Creative | Hospitality Marketing Agency UK & Portugal",
     description:
-      "Hospitality marketing and creative support for hotels, restaurants and stays across the UK and Portugal, with selected projects worldwide."
+      "Hospo Creative is a hospitality marketing agency for hotels, stays, restaurants and F&B brands across the UK and Portugal. We improve digital presence, direct bookings and demand."
   },
   navItems: [
     { label: "Hotels & Stays", href: "/hotels-stays" },
