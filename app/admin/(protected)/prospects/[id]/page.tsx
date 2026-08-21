@@ -9,6 +9,7 @@ import { PendingSubmitButton } from "@/components/admin/PendingSubmitButton";
 import {
   PIPELINE_STATUSES,
   assessmentCategories,
+  assessmentProfile,
   formatLeadFit,
 } from "@/lib/prospecting";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -46,7 +47,7 @@ type Activity = {
       })
     | null;
 };
-type Score = { category: string; score: number; notes: string | null };
+type Score = { category: string; score: number | null; notes: string | null; is_not_applicable?: boolean };
 const input =
   "mt-2 min-h-11 w-full rounded-[8px] border border-ink/14 bg-white px-3 text-sm text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/25";
 const label = "block text-sm font-bold text-ink";
@@ -103,6 +104,7 @@ export default async function ProspectDetailPage({
   const scoreByCategory = Object.fromEntries(
     ((scores ?? []) as Score[]).map((score) => [score.category, score]),
   );
+  const profile = assessmentProfile(prospect.business_type);
   const prospectValue = prospect as ProspectFormValues & {
     digital_presence_score: number | null;
     opportunity_score: number | null;
@@ -267,15 +269,15 @@ export default async function ProspectDetailPage({
               Digital Presence Assessment
             </p>
             <h2 className="mt-3 font-serif text-3xl font-semibold">
-              Score each category from 1 to 5.
+              {profile.label} profile
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-white/70">
-              1 means a clear gap. 5 means strong. The Digital Presence Score
-              stays incomplete until every relevant category has a score.
+              Score each applicable area from 1 to 5, where 1 indicates a clear gap and 5 indicates a strong current presence. Use Not applicable only when the category genuinely does not apply. The score stays incomplete until every applicable category has a score.
             </p>
           </div>
           {assessmentCategories(prospect.business_type).map((category) => {
-            const score = scoreByCategory[category.key];
+            const score = scoreByCategory[category.key] ?? category.legacyKeys?.map((key) => scoreByCategory[key]).find(Boolean);
+            const selectedValue = score?.is_not_applicable ? "not_applicable" : score?.score?.toString() ?? "";
             return (
               <section
                 key={category.key}
@@ -290,23 +292,14 @@ export default async function ProspectDetailPage({
                       Weight: {category.weight}%
                     </p>
                   </div>
-                  <div className="flex gap-2">
-                    {[1, 2, 3, 4, 5].map((number) => (
-                      <label
-                        key={number}
-                        className={`grid size-10 cursor-pointer place-items-center rounded-full border text-sm font-black ${score?.score === number ? "border-ink bg-ink text-white" : "border-ink/20 bg-white text-ink hover:border-yellow"}`}
-                      >
-                        <input
-                          className="sr-only"
-                          type="radio"
-                          name={`score_${category.key}`}
-                          value={number}
-                          defaultChecked={score?.score === number}
-                        />
-                        {number}
-                      </label>
-                    ))}
-                  </div>
+                  <label className="text-sm font-bold text-ink/70">
+                    Score
+                    <select name={`score_${category.key}`} defaultValue={selectedValue} className={`${input} mt-1 min-w-48`}>
+                      <option value="">Not assessed</option>
+                      <option value="not_applicable">Not applicable</option>
+                      {[1, 2, 3, 4, 5].map((number) => <option key={number} value={number}>{number}</option>)}
+                    </select>
+                  </label>
                 </div>
                 <label className="mt-4 block text-sm font-bold">
                   Internal note

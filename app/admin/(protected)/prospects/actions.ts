@@ -236,31 +236,29 @@ export async function saveAssessmentAction(formData: FormData) {
   const { supabase, userId } = await context();
   const id = z.string().uuid().parse(text(formData, "id"));
   const businessType = text(formData, "business_type");
-  const scores: Record<string, number | undefined> = {};
+  const scores: Record<string, number | null | undefined> = {};
   const rows = assessmentCategories(businessType).flatMap((category) => {
-    const score = rating(formData, `score_${category.key}`);
+    const value = text(formData, `score_${category.key}`);
+    const isNotApplicable = value === "not_applicable";
+    const score = isNotApplicable ? null : rating(formData, `score_${category.key}`);
     scores[category.key] = score;
-    return score
-      ? [
-          {
-            prospect_id: id,
-            category: category.key,
-            score,
-            notes: optional(text(formData, `note_${category.key}`)),
-          },
-        ]
+    return value
+      ? [{ prospect_id: id, category: category.key, score, is_not_applicable: isNotApplicable, notes: optional(text(formData, `note_${category.key}`)) }]
       : [];
   });
-  const { error: deleteError } = await supabase
-    .from("prospect_scores")
-    .delete()
-    .eq("prospect_id", id);
-  if (deleteError)
-    redirect(
-      `/admin/prospects/${id}?error=${encodeURIComponent(deleteError.message)}`,
-    );
+  const categoryKeys = assessmentCategories(businessType).map((category) => category.key);
+  const notAssessed = categoryKeys.filter((category) => !text(formData, `score_${category}`));
+  if (notAssessed.length) {
+    const { error: clearError } = await supabase
+      .from("prospect_scores")
+      .delete()
+      .eq("prospect_id", id)
+      .in("category", notAssessed);
+    if (clearError)
+      redirect(`/admin/prospects/${id}?error=${encodeURIComponent(clearError.message)}`);
+  }
   if (rows.length) {
-    const { error } = await supabase.from("prospect_scores").insert(rows);
+    const { error } = await supabase.from("prospect_scores").upsert(rows, { onConflict: "prospect_id,category" });
     if (error)
       redirect(
         `/admin/prospects/${id}?error=${encodeURIComponent(error.message)}`,
