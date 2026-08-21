@@ -4,8 +4,11 @@ import { ServiceDetailPage } from "@/components/CommercialPage";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { servicePageBySlug, servicePages } from "@/data/commercialPages";
+import { serviceDetails } from "@/data/serviceDetails";
 import { getRequestLocale } from "@/lib/locale-server";
+import { translate } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
+import { getPublishedCaseStudies } from "@/lib/supabase/queries";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,7 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = servicePageBySlug[slug];
   const locale = await getRequestLocale();
   if (!service) return {};
-  return buildPageMetadata({ title: `${service.title} | Hospo Creative`, description: service.description, pathname: `/services/${slug}`, locale });
+  const detail = serviceDetails[slug]?.[locale];
+  return buildPageMetadata({ title: `${translate(locale, service.title)} | Hospo Creative`, description: detail?.heroDescription ?? service.description, pathname: `/services/${slug}`, locale });
 }
 
 export default async function ServicePage({ params }: Props) {
@@ -24,5 +28,6 @@ export default async function ServicePage({ params }: Props) {
   const service = servicePageBySlug[slug];
   if (!service) notFound();
   const locale = await getRequestLocale();
-  return <><Header locale={locale} /><ServiceDetailPage service={service} locale={locale} /><Footer locale={locale} /></>;
+  const caseStudies = await getPublishedCaseStudies(locale);
+  return <><Header locale={locale} /><ServiceDetailPage service={service} locale={locale} caseStudies={caseStudies} /><Footer locale={locale} /></>;
 }

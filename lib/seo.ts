@@ -7,7 +7,9 @@ const FALLBACK_SITE_URL = "https://hospocreative.com";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL).replace(/\/$/, "");
 export const DEFAULT_OG_IMAGE = "/images/social/hospo-creative-open-graph.png";
-export const FAVICON = "/images/social/hospo-favicon-v2.png";
+// The version query forces browsers to replace any favicon previously cached
+// for a local preview or an earlier version of the site.
+export const FAVICON = "/images/social/hospo-favicon-v2.png?v=20260818";
 
 function normalisePath(pathname: string) {
   const withoutLocale = pathname === "/pt" ? "/" : pathname.replace(/^\/pt(?=\/)/, "");

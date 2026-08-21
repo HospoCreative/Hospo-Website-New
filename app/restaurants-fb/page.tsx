@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { commercialHubs } from "@/data/commercialPages";
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
+import { getPublishedCaseStudies } from "@/lib/supabase/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -13,5 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RestaurantsAndFbPage() {
   const locale = await getRequestLocale();
-  return <><Header locale={locale} /><CommercialHubPage hub={commercialHubs["restaurants-fb"]} locale={locale} /><Footer locale={locale} /></>;
+  const caseStudies = await getPublishedCaseStudies(locale);
+  return <><Header locale={locale} /><CommercialHubPage hub={commercialHubs["restaurants-fb"]} locale={locale} caseStudies={caseStudies} /><Footer locale={locale} /></>;
 }

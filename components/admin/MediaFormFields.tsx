@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
+import Image from "next/image";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type StorageItem = { id: string | null; name: string };
@@ -90,10 +91,12 @@ function MediaPicker({
             {asset.isVideo ? (
               <video src={asset.publicUrl} muted playsInline preload="metadata" className="aspect-[4/3] w-full bg-ink object-cover" />
             ) : (
-              <img src={asset.publicUrl} alt="" className="aspect-[4/3] w-full bg-ink/[0.05] object-cover" />
+              <span className="relative block aspect-[4/3] w-full bg-ink/[0.05]">
+                <Image src={asset.publicUrl} alt="" fill sizes="(min-width: 640px) 14rem, 50vw" className="object-cover" />
+              </span>
             )}
-            <span className="block truncate px-2 py-1.5 text-xs font-bold text-ink">{asset.name}</span>
-            {isSelected ? <span className="absolute right-1.5 top-1.5 grid size-5 place-items-center rounded-full bg-yellow text-ink"><Check className="size-3" strokeWidth={3} /></span> : null}
+            <span className="relative z-10 block truncate px-2 py-1.5 text-xs font-bold text-ink">{asset.name}</span>
+            {isSelected ? <span className="absolute right-1.5 top-1.5 z-10 grid size-5 place-items-center rounded-full bg-yellow text-ink"><Check className="size-3" strokeWidth={3} /></span> : null}
           </button>
         );
       })}

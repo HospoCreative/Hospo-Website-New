@@ -28,12 +28,17 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
-        "@id": `${SITE_URL}/#organization`,
-        name: "Hospo Creative",
-        url: SITE_URL,
-        logo: `${SITE_URL}/images/social/hospo-favicon-v2.png`,
-        description: siteContent.metadata.description,
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "Hospo Creative",
+      alternateName: ["HospoCreative", "hospocreative"],
+      url: SITE_URL,
+      logo: `${SITE_URL}/images/social/hospo-favicon-v2.png`,
+      description: siteContent.metadata.description,
+      areaServed: [
+        { "@type": "Country", name: "United Kingdom" },
+        { "@type": "Country", name: "Portugal" }
+      ],
         sameAs: siteContent.contact.socials.map((social) => social.href)
       },
       {

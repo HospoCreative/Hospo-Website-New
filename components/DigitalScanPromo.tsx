@@ -7,15 +7,15 @@ const content = {
   en: {
     eyebrow: "Digital Presence Review",
     title: "See where your digital presence could be working harder.",
-    body: "Get a practical public review of your website, Google presence, booking or reservation journey, photography, content and social signals. No account connection is required.",
-    cta: "Get your Digital Presence Review",
+    body: "Try a practical public review of your website, Google presence, booking or reservation journey, photography, content and social signals. No account connection is required.",
+    cta: "Try the Digital Presence Review",
     points: ["Website & Google", "Booking or reservation journey", "Content & visibility"]
   },
   pt: {
     eyebrow: "Análise da Presença Digital",
     title: "Veja onde a sua presença digital pode estar a trabalhar melhor.",
-    body: "Receba uma análise pública prática ao seu website, presença no Google, percurso de reserva ou pedido, fotografia, conteúdo e sinais nas redes sociais. Não é necessário ligar qualquer conta.",
-    cta: "Pedir a sua análise de presença digital",
+    body: "Experimente uma análise pública prática ao seu website, presença no Google, percurso de reserva ou pedido, fotografia, conteúdo e sinais nas redes sociais. Não é necessário ligar qualquer conta.",
+    cta: "Experimentar a análise de presença digital",
     points: ["Website e Google", "Percurso de reserva ou pedido", "Conteúdo e visibilidade"]
   }
 } as const;
@@ -23,8 +23,8 @@ const content = {
 export function DigitalScanPromo({ locale = "en" }: { locale?: Locale }) {
   const copy = content[locale];
   return (
-    <section className="bg-white px-5 pb-[var(--hc-section-compact)] text-ink sm:px-8">
-      <Reveal className="relative mx-auto max-w-7xl overflow-hidden border border-ink/15 bg-ink px-6 py-7 text-white shadow-soft sm:px-8 sm:py-9 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
+    <section className="bg-white px-5 py-[clamp(3.5rem,7vw,6.5rem)] text-ink sm:px-8">
+      <Reveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.25rem] border border-ink/15 bg-ink px-6 py-8 text-white shadow-soft sm:px-8 sm:py-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
         <span aria-hidden="true" className="absolute left-0 top-0 h-1 w-24 bg-yellow" />
         <div className="max-w-4xl">
           <p className="section-eyebrow text-yellow">{copy.eyebrow}</p>

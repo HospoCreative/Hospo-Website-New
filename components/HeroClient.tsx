@@ -28,7 +28,7 @@ export function HeroClient({ hero, locale }: HeroProps & { locale: Locale }) {
             {hero.body}
           </p>
           <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row">
-            <a href={localizedPath("/digital-scan", locale)} className="button-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
+            <a href={localizedPath("/contact", locale)} className="button-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">
               {hero.primaryCta}<ArrowUpRight aria-hidden="true" size={17} />
             </a>
             <a href={localizedPath("/case-studies", locale)} className="button-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink">

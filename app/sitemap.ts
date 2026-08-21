@@ -22,12 +22,20 @@ const staticRoutes = [
   "/digital-scan"
 ];
 
+function entrySettings(pathname: string) {
+  if (pathname === "/") return { changeFrequency: "weekly" as const, priority: 1 };
+  if (["/services", "/hotels-stays", "/restaurants-fb", "/case-studies"].includes(pathname)) return { changeFrequency: "weekly" as const, priority: 0.9 };
+  if (pathname.startsWith("/services/") || pathname.startsWith("/case-studies/")) return { changeFrequency: "monthly" as const, priority: 0.8 };
+  return { changeFrequency: "monthly" as const, priority: 0.7 };
+}
+
 function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Sitemap {
   const { english, portuguese } = localizedUrls(pathname);
   const languages = { "en-GB": english, "pt-PT": portuguese, "x-default": english };
+  const settings = entrySettings(pathname);
   return [
-    { url: english, ...(lastModified ? { lastModified } : {}), alternates: { languages } },
-    { url: portuguese, ...(lastModified ? { lastModified } : {}), alternates: { languages } }
+    { url: english, ...settings, ...(lastModified ? { lastModified } : {}), alternates: { languages } },
+    { url: portuguese, ...settings, ...(lastModified ? { lastModified } : {}), alternates: { languages } }
   ];
 }
 
@@ -40,12 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getPublishedCaseStudies("en")
     ]);
     const postEntries = posts.flatMap((post) =>
-      entriesForPath(`/blog/${post.slug}`, post.publishedAt ? new Date(post.publishedAt) : new Date())
+      entriesForPath(`/blog/${post.slug}`, post.publishedAt ? new Date(post.publishedAt) : undefined)
     );
     const caseStudyEntries = caseStudies.flatMap((caseStudy) =>
       entriesForPath(
         `/case-studies/${caseStudy.slug}`,
-        caseStudy.publishedAt ? new Date(caseStudy.publishedAt) : new Date()
+        caseStudy.publishedAt ? new Date(caseStudy.publishedAt) : undefined
       )
     );
     return [...staticEntries, ...postEntries, ...caseStudyEntries];

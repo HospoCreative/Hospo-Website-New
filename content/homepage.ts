@@ -4,7 +4,7 @@ export const homepageContent = {
     title: "Helping hospitality businesses attract more guests, grow direct bookings and perform better online.",
     body:
       "Hospo supports independent hotels, stays, restaurants and F&B brands with strategy, websites, OTA optimisation, campaigns, content and digital performance.",
-    primaryCta: "Digital Presence Review",
+    primaryCta: "Talk to Hospo",
     secondaryCta: "Explore Our Work",
     note: "Hospitality expertise, creative execution and commercial thinking in one team.",
     images: [
@@ -47,8 +47,8 @@ export const homepageContent = {
   },
   refresh: {
     eyebrow: "Our signature solution",
-    title: "Hospo Digital Refresh",
-    body: "An integrated improvement programme for businesses that need more than one isolated marketing fix.",
+    title: "When one isolated fix isn’t enough.",
+    body: "Hospo Digital Refresh connects the visual, strategic and digital parts of the customer journey around one commercial objective.",
     supporting:
       "When the opportunity is broader, we connect the visual, strategic and digital parts of your customer journey around one commercial goal.",
     pathways: [
@@ -259,8 +259,8 @@ export const homepageContent = {
     body: "Hospo Creative combines marketing expertise, strategic direction and visual production in one specialist team.",
     supporting: "We understand how guests choose where to stay, eat and experience a destination. Every image, campaign and recommendation is created to improve the digital journey before the guest arrives.",
     markets: {
-      title: "Based in the UK and Portugal. Working worldwide.",
-      body: "Hospo Creative works primarily with hospitality businesses across the UK and Portugal, while also partnering with brands and properties on selected projects worldwide."
+      title: "Working across the UK and Portugal, with selected projects internationally.",
+      body: "Hospo Creative works with hotels, stays, restaurants and F&B brands across its core markets, alongside selected international projects."
     },
     closing: "Industry knowledge, marketing direction and visual production in one team.",
     founders: [
@@ -283,9 +283,9 @@ export const homepageContent = {
     ]
   },
   finalCta: {
-    title: "Ready to make your digital presence work harder?",
-    body: "Start with a Digital Presence Review, or explore the work and support that fit your next commercial priority.",
-    primaryCta: "Digital Presence Review",
+    title: "Let’s talk about what will move your business forward.",
+    body: "Tell us where you want to go next. We will help you identify the right mix of strategy, content and digital support to get there.",
+    primaryCta: "Talk to Hospo",
     secondaryCta: "Explore Our Work"
   }
 } as const;

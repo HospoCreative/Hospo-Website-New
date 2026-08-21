@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { Check, LoaderCircle, Upload } from "lucide-react";
+import Image from "next/image";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 type LogoAsset = {
@@ -170,9 +171,9 @@ export function LogoPoolPicker({ initialValue = "" }: { initialValue?: string })
                 aria-pressed={isSelected}
                 title={asset.name}
               >
-                <img src={asset.publicUrl} alt="" className="max-h-full max-w-full object-contain" />
+                <Image src={asset.publicUrl} alt="" fill sizes="(min-width: 640px) 10rem, 50vw" className="p-4 object-contain" />
                 {isSelected ? (
-                  <span className="absolute right-2 top-2 grid size-5 place-items-center rounded-full bg-yellow text-ink">
+                  <span className="absolute right-2 top-2 z-10 grid size-5 place-items-center rounded-full bg-yellow text-ink">
                     <Check className="size-3" strokeWidth={3} />
                   </span>
                 ) : null}

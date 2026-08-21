@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ClientLogoForm } from "@/components/admin/AdminForms";
 import { DeleteContentButton } from "@/components/admin/DeleteContentButton";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -39,11 +40,13 @@ export default async function AdminClientsPage() {
             logos.map((logo) => (
               <div key={logo.id} className="border-b border-ink/10 p-5 last:border-b-0">
                 <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_7rem_8rem_auto] md:items-center">
-                  <div className="flex h-20 items-center justify-center rounded-[6px] bg-ink p-5">
-                    <img
+                  <div className="relative flex h-20 items-center justify-center rounded-[6px] bg-ink p-5">
+                    <Image
                       src={logo.logo_url}
                       alt=""
-                      className="max-h-full max-w-full object-contain"
+                      fill
+                      sizes="112px"
+                      className="p-5 object-contain"
                     />
                   </div>
                   <p className="text-sm text-ink/55">Order {logo.sort_order}</p>

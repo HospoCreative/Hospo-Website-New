@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { ServiceEnquiry } from "@/components/ServiceEnquiry";
+import { ContactEnquiry } from "@/components/ContactEnquiry";
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -12,5 +12,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const locale = await getRequestLocale();
-  return <><Header locale={locale} /><main id="main"><ServiceEnquiry locale={locale} /></main><Footer locale={locale} /></>;
+  return <><Header locale={locale} /><main id="main"><ContactEnquiry locale={locale} /></main><Footer locale={locale} /></>;
 }

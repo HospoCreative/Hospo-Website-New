@@ -8,12 +8,12 @@ import { Campaigns } from "@/components/Campaigns";
 import { SelectedProjects } from "@/components/SelectedProjects";
 import { ServicesOverview } from "@/components/ServicesOverview";
 import { WhoWeHelp } from "@/components/WhoWeHelp";
-import { DigitalFirstImpression } from "@/components/DigitalFirstImpression";
-import { DigitalRefresh } from "@/components/DigitalRefresh";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
 import { DigitalScanPromo } from "@/components/DigitalScanPromo";
+import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
+import { PresentationGallery } from "@/components/PresentationGallery";
 import {
   getPublishedBlogPosts,
   getFeaturedCaseStudies,
@@ -37,13 +37,13 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
+        <DigitalPresenceStatistics locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
-        <DigitalFirstImpression locale={locale} />
-        <Campaigns locale={locale} />
+        <PresentationGallery locale={locale} id="presentation-gallery" />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <Testimonials locale={locale} />
+        <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
-        <DigitalRefresh locale={locale} />
         <DigitalScanPromo locale={locale} />
         <About locale={locale} />
         <BlogPreviewSection posts={blogPosts} locale={locale} />
