@@ -83,3 +83,39 @@ After that, log in at:
 - Add only genuine supplied client logos.
 - The public client-logo section is hidden until at least three published logos exist.
 - Portfolio images must stay clean: no text, labels or captions over the image itself.
+
+## Local Supabase development
+
+Local Supabase is isolated from the linked production project. It starts from the migrations in this repository and never copies production data.
+
+```bash
+# Start or stop the local stack.
+npx supabase@latest start
+npx supabase@latest stop
+
+# Rebuild the local database from every migration and local seed file.
+npx supabase@latest db reset
+
+# Inspect local URLs and public development credentials.
+npx supabase@latest status
+```
+
+For this project, local application values belong in ignored `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_local_publishable_key
+```
+
+Do not add production values to local files. Do not add a service-role key to browser code.
+
+Create development-only CMS users after starting or resetting Supabase. The password is provided at runtime and is never committed:
+
+```bash
+export LOCAL_CMS_PASSWORD='choose-a-local-password'
+DOCKER_BIN=/Applications/Docker.app/Contents/Resources/bin/docker ./scripts/create-local-cms-users.sh
+```
+
+The script creates `admin@hospo.local` and `editor@hospo.local` with the existing `admin` and `editor` profile roles. Use those accounts only against the local stack.
+
+Before a production migration: validate locally, reset from migrations, test RLS and application behaviour, review code, create a local checkpoint, then apply the migration to production only with explicit approval and deploy compatible application code afterwards.

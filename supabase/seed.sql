@@ -1,0 +1,2 @@
+-- Intentionally empty. Local CMS accounts are created with
+-- scripts/create-local-cms-users.sh so passwords never enter migrations or Git.
