@@ -49,7 +49,7 @@ type Activity = {
     | null;
 };
 type Score = { category: string; score: number | null; notes: string | null; is_not_applicable?: boolean };
-type Analysis = { id: string; status: string; scanner_version: string; pages_discovered: number; pages_scanned: number; evidence_count: number; error_message: string | null; created_at: string; completed_at: string | null };
+type Analysis = { id: string; status: string; current_stage: string | null; scanner_version: string; pages_discovered: number; pages_scanned: number; evidence_count: number; error_message: string | null; created_at: string; completed_at: string | null };
 type Evidence = { id: string; evidence_key: string; evidence_group: string; confidence: string; page_url: string | null; value: Record<string, unknown> };
 const input =
   "mt-2 min-h-11 w-full rounded-[8px] border border-ink/14 bg-white px-3 text-sm text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/25";
@@ -103,7 +103,7 @@ export default async function ProspectDetailPage({
       )
       .eq("prospect_id", id)
       .order("created_at", { ascending: false }),
-    supabase.from("prospect_analyses").select("id,status,scanner_version,pages_discovered,pages_scanned,evidence_count,error_message,created_at,completed_at").eq("prospect_id", id).order("created_at", { ascending: false }),
+    supabase.from("prospect_analyses").select("id,status,current_stage,scanner_version,pages_discovered,pages_scanned,evidence_count,error_message,created_at,completed_at").eq("prospect_id", id).order("created_at", { ascending: false }),
   ]);
   if (error || !prospect) notFound();
   const scoreByCategory = Object.fromEntries(
@@ -517,15 +517,17 @@ export default async function ProspectDetailPage({
 async function AnalysisPanel({ prospectId, analyses, selectedAnalysisId }: { prospectId: string; analyses: Analysis[]; selectedAnalysisId?: string }) {
   const latest = analyses.find((analysis) => analysis.id === selectedAnalysisId) ?? analyses[0];
   const supabase = await createSupabaseServerClient();
-  const { data } = latest ? await supabase.from("prospect_evidence").select("id,evidence_key,evidence_group,confidence,page_url,value").eq("analysis_id", latest.id).order("evidence_group").order("evidence_key") : { data: [] };
+  const { data } = latest
+    ? await supabase.from("prospect_evidence").select("id,evidence_key,evidence_group,confidence,page_url,value").eq("analysis_id", latest.id).order("evidence_group").order("evidence_key")
+    : { data: [] };
   const evidence = (data ?? []) as Evidence[];
-  const busy = latest?.status === "queued" || latest?.status === "running";
-  const groups = [["overview", "Overview"], ["conversion", "Conversion"], ["pages", "Pages"], ["contact_discovery", "Contact & Discovery"], ["technical", "Technical"]] as const;
+  const busy = ["queued", "running", "processing", "retrying"].includes(latest?.status ?? "");
+  const groups = [["overview", "Overview"], ["conversion", "Conversion"], ["pages", "Pages"], ["contact_discovery", "Contact & Discovery"], ["technical", "Technical"], ["rendering", "Rendering"], ["performance", "Performance"]] as const;
   return <div className="mt-7 space-y-6">
     <section className="rounded-[8px] bg-ink p-6 text-white shadow-soft">
       <p className="section-eyebrow text-yellow">Website intelligence</p>
       <h2 className="mt-3 font-serif text-3xl font-semibold">Latest Website Analysis</h2>
-      {latest ? <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-5"><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Status</span><strong>{latest.status}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Date</span><strong>{formatDate(latest.created_at)}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Version</span><strong>{latest.scanner_version}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Pages</span><strong>{latest.pages_scanned}/{latest.pages_discovered}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Evidence</span><strong>{latest.evidence_count}</strong></p></div> : <p className="mt-3 text-sm text-white/70">No website analysis has been run for this prospect.</p>}
+      {latest ? <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-6"><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Status</span><strong>{latest.status}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Stage</span><strong>{["queued", "processing", "retrying"].includes(latest.status) ? latest.current_stage?.replaceAll("_", " ") ?? latest.status : "Complete"}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Date</span><strong>{formatDate(latest.created_at)}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Version</span><strong>{latest.scanner_version}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Pages</span><strong>{latest.pages_scanned}/{latest.pages_discovered}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Evidence</span><strong>{latest.evidence_count}</strong></p></div> : <p className="mt-3 text-sm text-white/70">No website analysis has been run for this prospect.</p>}
       {latest?.error_message ? <p className="mt-4 rounded bg-white/10 p-3 text-sm text-white/80">{latest.error_message}</p> : null}
       <form action={startWebsiteAnalysisAction} className="mt-6"><input type="hidden" name="prospect_id" value={prospectId} /><PendingSubmitButton disabled={busy} label={latest ? "Run New Website Analysis" : "Run Website Analysis"} pendingLabel="Starting..." className="px-5 py-3 text-xs" /></form>
       {busy ? <p className="mt-3 text-xs text-white/60">This analysis is running. Refresh this page shortly for its saved evidence.</p> : null}

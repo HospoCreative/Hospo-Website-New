@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { z } from "zod";
-import { runProspectWebsiteScan, SCANNER_VERSION } from "@/lib/prospectWebsiteScanner";
+import { SCANNER_VERSION } from "@/lib/prospectWebsiteScanner";
 import { requireAdminUser } from "@/lib/supabase/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
@@ -98,31 +98,6 @@ function refresh(id?: string) {
   if (id) revalidatePath(`/admin/prospects/${id}`);
 }
 
-async function runWebsiteAnalysisJob(
-  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  analysisId: string,
-  prospect: { id: string; website_url: string; business_type: string },
-  userId: string,
-) {
-  await supabase.from("prospect_analyses").update({ status: "running", started_at: new Date().toISOString() }).eq("id", analysisId);
-  try {
-    const result = await runProspectWebsiteScan({ websiteUrl: prospect.website_url, businessType: prospect.business_type });
-    if (result.evidence.length) {
-      const { error } = await supabase.from("prospect_evidence").insert(result.evidence.map((item) => ({ ...item, prospect_id: prospect.id, analysis_id: analysisId })));
-      if (error) throw new Error("Evidence could not be stored.");
-    }
-    const status = result.failures.length ? "partial" : "completed";
-    await supabase.from("prospect_analyses").update({ status, final_url: result.finalUrl, pages_discovered: result.pagesDiscovered, pages_scanned: result.pagesScanned, evidence_count: result.evidence.length, error_message: result.failures.length ? result.failures.slice(0, 4).join(" | ") : null, completed_at: new Date().toISOString() }).eq("id", analysisId);
-    await activity(supabase, prospect.id, userId, status === "completed" ? "website_analysis_completed" : "website_analysis_partial", status === "completed" ? "Website analysis completed." : "Website analysis completed with partial page coverage.");
-  } catch (error) {
-    const message = error instanceof Error ? error.message.slice(0, 500) : "Website analysis failed.";
-    await supabase.from("prospect_analyses").update({ status: "failed", error_message: message, completed_at: new Date().toISOString() }).eq("id", analysisId);
-    await activity(supabase, prospect.id, userId, "website_analysis_failed", "Website analysis failed.");
-  } finally {
-    refresh(prospect.id);
-  }
-}
-
 function parseProspect(formData: FormData) {
   return prospectSchema.parse({
     name: text(formData, "name"),
@@ -214,12 +189,14 @@ export async function startWebsiteAnalysisAction(formData: FormData) {
   const id = z.string().uuid().parse(text(formData, "prospect_id"));
   const { data: prospect } = await supabase.from("prospects").select("id,website_url,business_type").eq("id", id).maybeSingle();
   if (!prospect) redirect(`/admin/prospects/${id}?tab=analysis&error=Prospect%20was%20not%20found`);
-  const { data: active } = await supabase.from("prospect_analyses").select("id").eq("prospect_id", id).eq("analysis_type", "website").in("status", ["queued", "running"]).maybeSingle();
+  const { data: active } = await supabase.from("prospect_analyses").select("id").eq("prospect_id", id).eq("analysis_type", "website").in("status", ["queued", "running", "processing", "retrying"]).maybeSingle();
   if (active) redirect(`/admin/prospects/${id}?tab=analysis&error=An%20analysis%20is%20already%20in%20progress`);
   const { data: analysis, error } = await supabase.from("prospect_analyses").insert({ prospect_id: id, website_url: prospect.website_url, created_by: userId, scanner_version: SCANNER_VERSION }).select("id").single();
   if (error || !analysis) redirect(`/admin/prospects/${id}?tab=analysis&error=${encodeURIComponent(error?.message ?? "Unable to start analysis")}`);
-  await activity(supabase, id, userId, "website_analysis_started", "Website analysis started.");
-  after(() => runWebsiteAnalysisJob(supabase, analysis.id, prospect, userId));
+  await activity(supabase, id, userId, "website_analysis_queued", "Website analysis queued.");
+  const workerSecret = process.env.ANALYSIS_WORKER_SECRET;
+  const workerOrigin = process.env.ANALYSIS_WORKER_ORIGIN || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
+  if (workerSecret && workerOrigin) after(async () => { await fetch(`${workerOrigin}/api/internal/prospect-analysis-worker`, { method: "POST", headers: { authorization: `Bearer ${workerSecret}` }, cache: "no-store" }); });
   refresh(id);
   redirect(`/admin/prospects/${id}?tab=analysis&message=analysis-started`);
 }
