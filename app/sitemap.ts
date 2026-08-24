@@ -31,10 +31,13 @@ function entrySettings(pathname: string) {
 
 function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Sitemap {
   const { english, portuguese } = localizedUrls(pathname);
-  const languages = { "en-GB": english, "pt-PT": portuguese, "x-default": english };
+  // Next normalises the root canonical without a trailing slash. Keep the
+  // sitemap's root URL and alternate links identical to that canonical.
+  const englishUrl = pathname === "/" ? english.replace(/\/$/, "") : english;
+  const languages = { "en-GB": englishUrl, "pt-PT": portuguese, "x-default": englishUrl };
   const settings = entrySettings(pathname);
   return [
-    { url: english, ...settings, ...(lastModified ? { lastModified } : {}), alternates: { languages } },
+    { url: englishUrl, ...settings, ...(lastModified ? { lastModified } : {}), alternates: { languages } },
     { url: portuguese, ...settings, ...(lastModified ? { lastModified } : {}), alternates: { languages } }
   ];
 }
