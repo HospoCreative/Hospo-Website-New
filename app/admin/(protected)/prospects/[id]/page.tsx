@@ -21,6 +21,7 @@ import {
   updateContactAction,
   updatePipelineStatusAction,
   updateProspectAction,
+  startWebsiteAnalysisAction,
 } from "../actions";
 
 type Contact = {
@@ -48,6 +49,8 @@ type Activity = {
     | null;
 };
 type Score = { category: string; score: number | null; notes: string | null; is_not_applicable?: boolean };
+type Analysis = { id: string; status: string; scanner_version: string; pages_discovered: number; pages_scanned: number; evidence_count: number; error_message: string | null; created_at: string; completed_at: string | null };
+type Evidence = { id: string; evidence_key: string; evidence_group: string; confidence: string; page_url: string | null; value: Record<string, unknown> };
 const input =
   "mt-2 min-h-11 w-full rounded-[8px] border border-ink/14 bg-white px-3 text-sm text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/25";
 const label = "block text-sm font-bold text-ink";
@@ -65,11 +68,11 @@ export default async function ProspectDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ tab?: string; message?: string; error?: string }>;
+  searchParams: Promise<{ tab?: string; analysis?: string; message?: string; error?: string }>;
 }) {
   const { id } = await params;
   const query = await searchParams;
-  const tab = ["overview", "assessment", "contacts", "activity"].includes(
+  const tab = ["overview", "assessment", "analysis", "contacts", "activity"].includes(
     query.tab ?? "",
   )
     ? query.tab!
@@ -80,6 +83,7 @@ export default async function ProspectDetailPage({
     { data: contacts },
     { data: scores },
     { data: activities },
+    { data: analyses },
   ] = await Promise.all([
     supabase.from("prospects").select("*").eq("id", id).maybeSingle(),
     supabase
@@ -99,6 +103,7 @@ export default async function ProspectDetailPage({
       )
       .eq("prospect_id", id)
       .order("created_at", { ascending: false }),
+    supabase.from("prospect_analyses").select("id,status,scanner_version,pages_discovered,pages_scanned,evidence_count,error_message,created_at,completed_at").eq("prospect_id", id).order("created_at", { ascending: false }),
   ]);
   if (error || !prospect) notFound();
   const scoreByCategory = Object.fromEntries(
@@ -125,6 +130,7 @@ export default async function ProspectDetailPage({
   const tabs = [
     ["overview", "Overview"],
     ["assessment", "Assessment"],
+    ["analysis", "Analysis"],
     ["contacts", `Contacts (${contacts?.length ?? 0})`],
     ["activity", "Activity"],
   ];
@@ -319,6 +325,9 @@ export default async function ProspectDetailPage({
           />
         </form>
       ) : null}
+      {tab === "analysis" ? (
+        <AnalysisPanel prospectId={id} analyses={(analyses ?? []) as Analysis[]} selectedAnalysisId={query.analysis} />
+      ) : null}
       {tab === "contacts" ? (
         <div className="mt-7 grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
           <div className="space-y-4">
@@ -503,4 +512,25 @@ export default async function ProspectDetailPage({
       ) : null}
     </div>
   );
+}
+
+async function AnalysisPanel({ prospectId, analyses, selectedAnalysisId }: { prospectId: string; analyses: Analysis[]; selectedAnalysisId?: string }) {
+  const latest = analyses.find((analysis) => analysis.id === selectedAnalysisId) ?? analyses[0];
+  const supabase = await createSupabaseServerClient();
+  const { data } = latest ? await supabase.from("prospect_evidence").select("id,evidence_key,evidence_group,confidence,page_url,value").eq("analysis_id", latest.id).order("evidence_group").order("evidence_key") : { data: [] };
+  const evidence = (data ?? []) as Evidence[];
+  const busy = latest?.status === "queued" || latest?.status === "running";
+  const groups = [["overview", "Overview"], ["conversion", "Conversion"], ["pages", "Pages"], ["contact_discovery", "Contact & Discovery"], ["technical", "Technical"]] as const;
+  return <div className="mt-7 space-y-6">
+    <section className="rounded-[8px] bg-ink p-6 text-white shadow-soft">
+      <p className="section-eyebrow text-yellow">Website intelligence</p>
+      <h2 className="mt-3 font-serif text-3xl font-semibold">Latest Website Analysis</h2>
+      {latest ? <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-5"><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Status</span><strong>{latest.status}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Date</span><strong>{formatDate(latest.created_at)}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Version</span><strong>{latest.scanner_version}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Pages</span><strong>{latest.pages_scanned}/{latest.pages_discovered}</strong></p><p><span className="block text-xs uppercase tracking-[0.12em] text-white/55">Evidence</span><strong>{latest.evidence_count}</strong></p></div> : <p className="mt-3 text-sm text-white/70">No website analysis has been run for this prospect.</p>}
+      {latest?.error_message ? <p className="mt-4 rounded bg-white/10 p-3 text-sm text-white/80">{latest.error_message}</p> : null}
+      <form action={startWebsiteAnalysisAction} className="mt-6"><input type="hidden" name="prospect_id" value={prospectId} /><PendingSubmitButton disabled={busy} label={latest ? "Run New Website Analysis" : "Run Website Analysis"} pendingLabel="Starting..." className="px-5 py-3 text-xs" /></form>
+      {busy ? <p className="mt-3 text-xs text-white/60">This analysis is running. Refresh this page shortly for its saved evidence.</p> : null}
+    </section>
+    {evidence.length ? <section className="space-y-4">{groups.map(([key, title]) => { const items = evidence.filter((item) => item.evidence_group === key); return items.length ? <div key={key} className="rounded-[8px] bg-white p-5 shadow-soft"><h3 className="font-serif text-2xl font-semibold">{title}</h3><div className="mt-4 grid gap-3">{items.map((item) => <details key={item.id} className="rounded border border-ink/10 p-3"><summary className="cursor-pointer text-sm font-bold">{item.evidence_key.replace(/^WEB_/, "").replaceAll("_", " ")} <span className="ml-2 text-xs font-normal text-ink/50">{item.confidence} confidence</span></summary><pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-xs text-ink/65">{JSON.stringify(item.value, null, 2)}</pre>{item.page_url ? <a className="mt-2 inline-block text-xs font-bold text-ink/60 hover:text-yellow" href={item.page_url} target="_blank" rel="noreferrer">Source page</a> : null}</details>)}</div></div> : null; })}</section> : null}
+    {analyses.length > 1 ? <section className="rounded-[8px] bg-white p-5 shadow-soft"><p className="section-eyebrow text-ink/55">History</p><h3 className="mt-2 font-serif text-2xl font-semibold">Previous analyses</h3><div className="mt-4 space-y-3">{analyses.filter((analysis) => analysis.id !== latest?.id).map((analysis) => <Link key={analysis.id} href={`/admin/prospects/${prospectId}?tab=analysis&analysis=${analysis.id}`} className="block border-t border-ink/10 pt-3 text-sm hover:text-yellow"><strong>{formatDate(analysis.created_at)}</strong> · Website Analysis · {analysis.status} · {analysis.pages_scanned} pages · {analysis.evidence_count} evidence items</Link>)}</div></section> : null}
+  </div>;
 }
