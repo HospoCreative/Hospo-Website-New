@@ -63,7 +63,7 @@ export function MosaicGallery({ items, locale = "en" }: { items: GalleryItem[]; 
             <div key={setIndex} className="grid min-w-[88vw] snap-start grid-cols-2 gap-3 sm:min-w-full sm:grid-cols-4 sm:grid-rows-3 sm:gap-4">
               {set.map((item, index) => {
                 const imageIndex = setIndex * 12 + index;
-                return <button key={item.src} type="button" ref={(element) => { openerRefs.current[imageIndex] = element; }} onClick={() => setSelectedIndex(imageIndex)} aria-label={`${t.open}: ${item.alt}`} className="group relative aspect-square overflow-hidden rounded-[8px] border border-ink/8 bg-[#f4f1ec] p-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4 sm:p-3"><SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 640px) 23vw, 41vw" className="object-contain transition-transform duration-500 group-hover:scale-[1.025]" fallbackLabel={item.alt} /></button>;
+                return <button key={item.src} type="button" ref={(element) => { openerRefs.current[imageIndex] = element; }} onClick={() => setSelectedIndex(imageIndex)} aria-label={`${t.open}: ${item.alt}`} className="group relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4"><SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 640px) 23vw, 41vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]" fallbackLabel={item.alt} /></button>;
               })}
             </div>
           ))}
