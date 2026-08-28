@@ -68,9 +68,11 @@ export function MosaicGallery({ items, locale = "en" }: { items: MosaicGalleryIt
   return (
     <>
       <div role="region" aria-label={t.gallery} className="mt-10">
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:h-[440px] md:grid-cols-5 md:grid-rows-2 md:overflow-visible lg:h-[520px] lg:gap-4">
-          {imageButton(items[0], 0, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:col-span-3 md:row-span-2 md:h-full md:w-auto md:max-w-none", -14, 0)}
-          {items.slice(1, 3).map((item, index) => imageButton(item, index + 1, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:col-span-2 md:h-full md:w-auto md:max-w-none", index === 0 ? 14 : -10, 0.12 + index * 0.08))}
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:h-[440px] md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-4 md:overflow-visible lg:h-[520px]">
+          {imageButton(items[0], 0, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:h-full md:w-full md:max-w-none", -14, 0)}
+          <div className="contents md:grid md:grid-rows-2 md:gap-4">
+            {items.slice(1, 3).map((item, index) => imageButton(item, index + 1, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:h-full md:w-full md:max-w-none", index === 0 ? 14 : -10, 0.12 + index * 0.08))}
+          </div>
         </div>
         <p className="mt-3 text-right text-[0.65rem] font-black uppercase tracking-[0.16em] text-ink/52 md:hidden">01 / {String(Math.min(items.length, 3)).padStart(2, "0")}</p>
       </div>
