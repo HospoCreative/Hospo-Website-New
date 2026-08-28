@@ -72,8 +72,9 @@ function HeroCtas({ locale }: { locale: Locale }) {
 }
 
 function ServiceVisualStory({ visual, locale }: { visual: ServiceVisual; locale: Locale }) {
+  const homepageGalleryImages = getPublicImageList(imageFolders.photoGallery, { text: photoGalleryImageText, altPrefix: "Hospo Creative portfolio image" });
   const images = visual.kind === "gallery"
-    ? getPublicImageList(imageFolders.photoGallery, { text: photoGalleryImageText, altPrefix: "Hospo Creative portfolio image" }).map(({ src, alt }) => ({ src, alt }))
+    ? (visual.images ?? []).map((image) => homepageGalleryImages.find((homepageImage) => homepageImage.src === image.src) ?? image)
     : visual.images ?? [];
 
   if (visual.kind === "gallery") {
