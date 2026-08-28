@@ -57,16 +57,18 @@ export function MosaicGallery({ items, locale = "en" }: { items: GalleryItem[]; 
   return (
     <>
       <div role="region" aria-label={t.gallery} className="mt-10">
-        {sets.length > 1 ? <div className="mb-4 flex justify-end gap-2"><button type="button" onClick={() => move(-1)} aria-label={t.previousSet} className="flex size-10 items-center justify-center rounded-full border border-ink/20 transition hover:border-yellow hover:bg-yellow"><ArrowLeft size={17} aria-hidden="true" /></button><button type="button" onClick={() => move(1)} aria-label={t.nextSet} className="flex size-10 items-center justify-center rounded-full border border-ink/20 transition hover:border-yellow hover:bg-yellow"><ArrowRight size={17} aria-hidden="true" /></button></div> : null}
-        <div ref={scrollerRef} className="gallery-slider flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {sets.map((set, setIndex) => (
-            <div key={setIndex} className="grid min-w-[88vw] snap-start grid-cols-2 gap-3 sm:min-w-full sm:grid-cols-4 sm:grid-rows-3 sm:gap-4">
-              {set.map((item, index) => {
-                const imageIndex = setIndex * 12 + index;
-                return <button key={item.src} type="button" ref={(element) => { openerRefs.current[imageIndex] = element; }} onClick={() => setSelectedIndex(imageIndex)} aria-label={`${t.open}: ${item.alt}`} className="group relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4"><SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 640px) 23vw, 41vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]" fallbackLabel={item.alt} /></button>;
-              })}
-            </div>
-          ))}
+        <div className="relative">
+          <div ref={scrollerRef} className="gallery-slider flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {sets.map((set, setIndex) => (
+              <div key={setIndex} className="grid min-w-[88vw] snap-start grid-cols-2 gap-3 sm:min-w-full sm:grid-cols-4 sm:grid-rows-3 sm:gap-4">
+                {set.map((item, index) => {
+                  const imageIndex = setIndex * 12 + index;
+                  return <button key={item.src} type="button" ref={(element) => { openerRefs.current[imageIndex] = element; }} onClick={() => setSelectedIndex(imageIndex)} aria-label={`${t.open}: ${item.alt}`} className="group relative aspect-[4/5] overflow-hidden rounded-[8px] bg-ink text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4"><SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 640px) 23vw, 41vw" className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]" fallbackLabel={item.alt} /></button>;
+                })}
+              </div>
+            ))}
+          </div>
+          {sets.length > 1 ? <><button type="button" onClick={() => move(-1)} aria-label={t.previousSet} className="absolute left-3 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-ink/80 text-white shadow-lg backdrop-blur transition hover:border-yellow hover:bg-yellow hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow sm:flex"><ArrowLeft size={19} aria-hidden="true" /></button><button type="button" onClick={() => move(1)} aria-label={t.nextSet} className="absolute right-3 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-ink/80 text-white shadow-lg backdrop-blur transition hover:border-yellow hover:bg-yellow hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow sm:flex"><ArrowRight size={19} aria-hidden="true" /></button></> : null}
         </div>
       </div>
 
