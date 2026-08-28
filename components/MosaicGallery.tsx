@@ -1,25 +1,29 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { SmartImage } from "./SmartImage";
 
-type MosaicGalleryItem = { src: string; alt: string };
+type GalleryItem = { src: string; alt: string };
 
 const labels = {
-  en: { gallery: "Hospo Creative visual storytelling gallery", open: "Open image full screen", close: "Close full screen image", previous: "View previous image", next: "View next image" },
-  pt: { gallery: "Galeria de narrativa visual da Hospo Creative", open: "Abrir imagem em ecrã inteiro", close: "Fechar imagem em ecrã inteiro", previous: "Ver imagem anterior", next: "Ver imagem seguinte" }
+  en: { gallery: "Hospo Creative visual storytelling gallery", open: "Open image full screen", close: "Close full screen image", previous: "View previous image", next: "View next image", previousSet: "View previous gallery images", nextSet: "View next gallery images" },
+  pt: { gallery: "Galeria de narrativa visual da Hospo Creative", open: "Abrir imagem em ecrã inteiro", close: "Fechar imagem em ecrã inteiro", previous: "Ver imagem anterior", next: "Ver imagem seguinte", previousSet: "Ver imagens anteriores da galeria", nextSet: "Ver imagens seguintes da galeria" }
 } as const;
 
-export function MosaicGallery({ items, locale = "en" }: { items: MosaicGalleryItem[]; locale?: Locale }) {
+function groupIntoSets(items: GalleryItem[], size = 12) {
+  return Array.from({ length: Math.ceil(items.length / size) }, (_, index) => items.slice(index * size, (index + 1) * size));
+}
+
+export function MosaicGallery({ items, locale = "en" }: { items: GalleryItem[]; locale?: Locale }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const reduceMotion = useReducedMotion();
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const openerRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const closeRef = useRef<HTMLButtonElement>(null);
   const previousSelection = useRef<number | null>(null);
   const t = labels[locale];
+  const sets = groupIntoSets(items);
 
   useEffect(() => {
     if (selectedIndex === null) {
@@ -44,37 +48,26 @@ export function MosaicGallery({ items, locale = "en" }: { items: MosaicGalleryIt
 
   if (!items.length) return null;
 
-  const reveal = (verticalOffset: number, delay: number) => reduceMotion ? {} : {
-    initial: { clipPath: "inset(8% 0 0 0)", opacity: 0.72, y: verticalOffset, scale: 1.04 },
-    whileInView: { clipPath: "inset(0% 0 0 0)", opacity: 1, y: 0, scale: 1 },
-    viewport: { once: true, amount: 0.38 },
-    transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as const }
+  const move = (direction: -1 | 1) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    scroller.scrollBy({ left: direction * scroller.clientWidth, behavior: "smooth" });
   };
-
-  const imageButton = (item: MosaicGalleryItem, index: number, className: string, offset: number, delay: number) => (
-    <motion.button
-      key={item.src}
-      type="button"
-      ref={(element) => { openerRefs.current[index] = element; }}
-      onClick={() => setSelectedIndex(index)}
-      aria-label={`${t.open}: ${item.alt}`}
-      className={`group relative block w-full cursor-zoom-in overflow-hidden rounded-[8px] bg-ink text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4 ${className}`}
-      {...reveal(offset, delay)}
-    >
-      <SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 1024px) 42vw, (min-width: 768px) 46vw, 86vw" className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" fallbackLabel={item.alt} />
-    </motion.button>
-  );
 
   return (
     <>
       <div role="region" aria-label={t.gallery} className="mt-10">
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:h-[440px] md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-4 md:overflow-visible lg:h-[520px]">
-          {imageButton(items[0], 0, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:h-full md:w-full md:max-w-none", -14, 0)}
-          <div className="contents md:grid md:grid-rows-2 md:gap-4">
-            {items.slice(1, 3).map((item, index) => imageButton(item, index + 1, "aspect-[4/5] w-[86vw] max-w-[31rem] shrink-0 snap-center md:h-full md:w-full md:max-w-none", index === 0 ? 14 : -10, 0.12 + index * 0.08))}
-          </div>
+        {sets.length > 1 ? <div className="mb-4 flex justify-end gap-2"><button type="button" onClick={() => move(-1)} aria-label={t.previousSet} className="flex size-10 items-center justify-center rounded-full border border-ink/20 transition hover:border-yellow hover:bg-yellow"><ArrowLeft size={17} aria-hidden="true" /></button><button type="button" onClick={() => move(1)} aria-label={t.nextSet} className="flex size-10 items-center justify-center rounded-full border border-ink/20 transition hover:border-yellow hover:bg-yellow"><ArrowRight size={17} aria-hidden="true" /></button></div> : null}
+        <div ref={scrollerRef} className="gallery-slider flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {sets.map((set, setIndex) => (
+            <div key={setIndex} className="grid min-w-[88vw] snap-start grid-cols-2 gap-3 sm:min-w-full sm:grid-cols-4 sm:grid-rows-3 sm:gap-4">
+              {set.map((item, index) => {
+                const imageIndex = setIndex * 12 + index;
+                return <button key={item.src} type="button" ref={(element) => { openerRefs.current[imageIndex] = element; }} onClick={() => setSelectedIndex(imageIndex)} aria-label={`${t.open}: ${item.alt}`} className="group relative aspect-square overflow-hidden rounded-[8px] border border-ink/8 bg-[#f4f1ec] p-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-4 sm:p-3"><SmartImage src={item.src} alt={item.alt} fill sizes="(min-width: 640px) 23vw, 41vw" className="object-contain transition-transform duration-500 group-hover:scale-[1.025]" fallbackLabel={item.alt} /></button>;
+              })}
+            </div>
+          ))}
         </div>
-        <p className="mt-3 text-right text-[0.65rem] font-black uppercase tracking-[0.16em] text-ink/52 md:hidden">01 / {String(Math.min(items.length, 3)).padStart(2, "0")}</p>
       </div>
 
       {selectedIndex !== null ? (

@@ -74,7 +74,7 @@ function HeroCtas({ locale }: { locale: Locale }) {
 function ServiceVisualStory({ visual, locale }: { visual: ServiceVisual; locale: Locale }) {
   const homepageGalleryImages = getPublicImageList(imageFolders.photoGallery, { text: photoGalleryImageText, altPrefix: "Hospo Creative portfolio image" });
   const images = visual.kind === "gallery"
-    ? homepageGalleryImages.slice(0, 3)
+    ? homepageGalleryImages
     : visual.images ?? [];
 
   if (visual.kind === "gallery") {
