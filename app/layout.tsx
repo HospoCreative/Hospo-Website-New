@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { SeoStructuredData } from "@/components/SeoStructuredData";
 import { CookieConsent } from "@/components/CookieConsent";
+import { AnalyticsEvents } from "@/components/AnalyticsEvents";
+import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 import { getSiteContent } from "@/data/site";
 import { getRequestLocale, getRequestPath } from "@/lib/locale-server";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
@@ -54,8 +57,12 @@ export default async function RootLayout({
   return (
     <html lang={locale === "pt" ? "pt-PT" : "en-GB"}>
       <body className="font-sans antialiased">
+        <Script id="hospo-google-consent-default" strategy="beforeInteractive">
+          {`window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};window["ga-disable-${GA_MEASUREMENT_ID}"]=true;window.gtag("consent","default",{analytics_storage:"denied",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",wait_for_update:500});window.gtag("js",new Date());window.gtag("config","${GA_MEASUREMENT_ID}",{send_page_view:false});`}
+        </Script>
         <SeoStructuredData data={structuredData} />
         {children}
+        <AnalyticsEvents />
         <CookieConsent locale={locale} />
       </body>
     </html>

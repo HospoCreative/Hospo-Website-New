@@ -4,6 +4,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { getHomepageContent } from "@/data/homepage";
 import { translate, type Locale } from "@/lib/i18n";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 import { SectionHeading } from "./SectionHeading";
 
 type ReviewForm = { name: string; businessName: string; email: string; website: string; challenge: string; privacy: boolean };
@@ -53,6 +54,7 @@ export function ServiceEnquiry({ locale = "en" }: { locale?: Locale }) {
       });
       const result = (await response.json()) as { error?: string };
       if (!response.ok) throw new Error(result.error || translate(locale, "Unable to send your request."));
+      trackAnalyticsEvent("generate_lead", { lead_type: "digital_presence_review", locale });
       setStatus("success"); setForm(initialForm); setCompanyWebsite("");
     } catch (error) {
       setStatus("error"); setSubmitError(error instanceof Error ? error.message : translate(locale, "Unable to send your request."));

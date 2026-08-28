@@ -4,6 +4,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 import Link from "next/link";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { localizedPath, type Locale } from "@/lib/i18n";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const copy = {
   en: {
@@ -41,6 +42,7 @@ export function ContactEnquiry({ locale }: { locale: Locale }) {
     try {
       const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: form.name, businessName: form.businessName, email: form.email, website: form.website, businessType: form.businessType, location: "", services: [form.service], timeframe: "", message: form.message, challenge: form.message, privacy: form.privacy, companyWebsite }) });
       if (!response.ok) throw new Error();
+      trackAnalyticsEvent("generate_lead", { lead_type: "contact_enquiry", locale, service: form.service });
       setForm(initial); setCompanyWebsite(""); setStatus("success");
     } catch { setStatus("error"); }
   }

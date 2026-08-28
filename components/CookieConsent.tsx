@@ -118,7 +118,6 @@ function updateGoogleConsent(analytics: AnalyticsConsent) {
 export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
   const pathname = usePathname();
   const [consent, setConsent] = useState<AnalyticsConsent | null>(null);
-  const [ready, setReady] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isManaging, setIsManaging] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
@@ -157,7 +156,6 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
     } else {
       setIsOpen(true);
     }
-    setReady(true);
   }, [isAdmin]);
 
   useEffect(() => {
@@ -199,18 +197,12 @@ export function CookieConsent({ locale = "en" }: { locale?: "en" | "pt" }) {
 
   return (
     <>
-      {ready ? (
-        <Script
-          id="hospo-google-analytics"
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-          onLoad={() => {
-            ensureGoogleConsentMode();
-            window.gtag?.("js", new Date());
-            setScriptReady(true);
-          }}
-        />
-      ) : null}
+      <Script
+        id="hospo-google-analytics"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        strategy="afterInteractive"
+        onReady={() => setScriptReady(true)}
+      />
 
       {isOpen ? (
         <div className="fixed inset-x-0 bottom-0 z-[100] p-3 sm:p-5 md:left-6 md:right-auto md:w-[28rem] md:p-0" role="presentation">
