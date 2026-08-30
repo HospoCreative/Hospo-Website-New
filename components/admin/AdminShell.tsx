@@ -1,4 +1,4 @@
-import { BookOpen, BriefcaseBusiness, ImageIcon, Inbox, LayoutDashboard, LogOut, ScanSearch, Target, UsersRound } from "lucide-react";
+import { BookOpen, BriefcaseBusiness, FileText, ImageIcon, Inbox, LayoutDashboard, LogOut, Package, ScanSearch, Target, UsersRound } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { signOutAction } from "@/app/admin/login/actions";
@@ -10,6 +10,8 @@ const adminNav = [
   { label: "Inbox", href: "/admin/inbox", icon: Inbox },
   { label: "Scans", href: "/admin/scans", icon: ScanSearch },
   { label: "Prospects", href: "/admin/prospects", icon: Target },
+  { label: "Commercial", href: "/admin/commercial", icon: Package },
+  { label: "Proposals", href: "/admin/proposals", icon: FileText },
   { label: "Case Studies", href: "/admin/case-studies", icon: BriefcaseBusiness },
   { label: "Blog", href: "/admin/blog", icon: BookOpen },
   { label: "Clients", href: "/admin/clients", icon: UsersRound },

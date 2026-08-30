@@ -250,7 +250,7 @@ const pt: Record<string, string> = {
   ,"Next statistics card": "Cartão de estatística seguinte"
   ,"of": "de"
   ,"Cookie Settings": "Definições de cookies"
-  ,"Hospo Creative | Hospitality Marketing Agency UK & Portugal": "Hospo Creative | Agência de Marketing para Hospitalidade no Reino Unido e Portugal"
+  ,"Hospo Creative | Hospitality Marketing Agency UK & Portugal": "Hospo Creative | Agência de Marketing para Hotelaria no Reino Unido e Portugal"
   ,"Hospitality marketing and creative support for hotels, restaurants and stays across the UK and Portugal, with selected projects worldwide.": "Marketing e apoio criativo para hotéis, restaurantes e alojamentos no Reino Unido e Portugal, com projetos selecionados em todo o mundo."
   ,"Ready to strengthen your marketing?": "Pronto para fortalecer o seu marketing?"
   ,"Hotels & Stays": "Hotéis e Alojamentos"

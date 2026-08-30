@@ -29,9 +29,10 @@ const copy = {
 
 const initial = { name: "", businessName: "", email: "", website: "", businessType: "", service: "", message: "", privacy: false };
 
-export function ContactEnquiry({ locale }: { locale: Locale }) {
+export function ContactEnquiry({ locale, packageName }: { locale: Locale; packageName?: string }) {
   const t = copy[locale];
-  const [form, setForm] = useState(initial);
+  const initialForm = { ...initial, service: packageName ? (locale === "pt" ? "Fotografia / vídeo" : "Photography / Video") : "", message: packageName ? (locale === "pt" ? `Tenho interesse no package ${packageName}.` : `I am interested in the ${packageName} package.`) : "" };
+  const [form, setForm] = useState(initialForm);
   const [companyWebsite, setCompanyWebsite] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const update = (field: keyof typeof initial, value: string | boolean) => setForm((current) => ({ ...current, [field]: value }));
@@ -43,7 +44,7 @@ export function ContactEnquiry({ locale }: { locale: Locale }) {
       const response = await fetch("/api/enquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: form.name, businessName: form.businessName, email: form.email, website: form.website, businessType: form.businessType, location: "", services: [form.service], timeframe: "", message: form.message, challenge: form.message, privacy: form.privacy, companyWebsite }) });
       if (!response.ok) throw new Error();
       trackAnalyticsEvent("generate_lead", { lead_type: "contact_enquiry", locale, service: form.service });
-      setForm(initial); setCompanyWebsite(""); setStatus("success");
+      setForm(initialForm); setCompanyWebsite(""); setStatus("success");
     } catch { setStatus("error"); }
   }
   const inputClass = "mt-2 min-h-12 w-full rounded-[8px] border border-ink/18 bg-white px-4 py-3 text-base text-ink outline-none transition focus:border-yellow focus:ring-2 focus:ring-yellow/40";

@@ -5,7 +5,7 @@ export const COOKIE_CONSENT_VERSION = "v1";
 export const COOKIE_CONSENT_MAX_AGE = 60 * 60 * 24 * 180;
 
 export type AnalyticsConsent = "granted" | "denied";
-export type AnalyticsEventName = "generate_lead" | "contact_click" | "cta_click";
+export type AnalyticsEventName = "generate_lead" | "contact_click" | "cta_click" | "proposal_view" | "proposal_cta_click";
 
 export function getConsentCookieValue(analytics: AnalyticsConsent) {
   return `${COOKIE_CONSENT_VERSION}:analytics:${analytics}`;

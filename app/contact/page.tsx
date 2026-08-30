@@ -10,7 +10,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({ title: locale === "pt" ? "Contacto | Hospo Creative" : "Contact Hospo Creative", description: locale === "pt" ? "Fale com a Hospo Creative sobre o seu próximo desafio de marketing, conteúdo ou otimização digital." : "Talk to Hospo Creative about your next marketing, content or digital optimisation priority.", pathname: "/contact", locale });
 }
 
-export default async function ContactPage() {
+export default async function ContactPage({ searchParams }: { searchParams: Promise<{ package?: string | string[] }> }) {
   const locale = await getRequestLocale();
-  return <><Header locale={locale} /><main id="main"><ContactEnquiry locale={locale} /></main><Footer locale={locale} /></>;
+  const candidate = (await searchParams).package;
+  const packageName = (Array.isArray(candidate) ? candidate[0] : candidate)?.trim().slice(0, 120);
+  return <><Header locale={locale} /><main id="main"><ContactEnquiry locale={locale} packageName={packageName} /></main><Footer locale={locale} /></>;
 }

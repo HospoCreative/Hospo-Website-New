@@ -23,6 +23,7 @@ import {
   updateProspectAction,
   startWebsiteAnalysisAction,
 } from "../actions";
+import { createProposalFromProspectAction } from "../../commercial/actions";
 
 type Contact = {
   id: string;
@@ -154,7 +155,7 @@ export default async function ProspectDetailPage({
             {prospect.location || prospect.city || "Location not supplied"}
           </p>
         </div>
-        <form
+        <div className="flex flex-col gap-3"><form action={createProposalFromProspectAction}><input type="hidden" name="prospect_id" value={id}/><button className="w-full rounded-full bg-ink px-4 py-3 text-xs font-black uppercase tracking-[0.12em] text-white">Create Proposal</button></form><form
           action={updatePipelineStatusAction}
           className="min-w-60 rounded-[8px] bg-white p-4 shadow-soft"
         >
@@ -176,7 +177,7 @@ export default async function ProspectDetailPage({
             pendingLabel="Updating..."
             className="mt-3 w-full px-4 py-3 text-xs"
           />
-        </form>
+        </form></div>
       </div>
       {query.error ? (
         <p className="mt-6 rounded-[8px] border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-800">
