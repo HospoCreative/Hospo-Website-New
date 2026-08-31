@@ -12,8 +12,8 @@
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Manrope", Inter, Arial, sans-serif;
   --hc-container: 85rem;
-  --hc-section: clamp(4.5rem, 7vw, 6.5rem);
-  --hc-section-compact: clamp(3.5rem, 5vw, 5rem);
+  --hc-section: clamp(4rem, 6vw, 5.5rem);
+  --hc-section-compact: clamp(3.25rem, 4.5vw, 4.5rem);
   --hc-radius: 0.5rem;
 }
 
@@ -27,6 +27,11 @@ html {
 
 section[id] {
   scroll-margin-top: 5.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--hc-yellow);
+  outline-offset: 4px;
 }
 
 body {
@@ -242,6 +247,45 @@ video {
 
 .travel-stamp {
   box-shadow: inset 0 0 0 8px rgba(0, 44, 93, 0.08);
+}
+
+.journey-rail {
+  position: relative;
+}
+
+.journey-step::before {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.journey-step:first-child::before {
+  top: 1.5rem;
+}
+
+.journey-step:last-child::before {
+  bottom: auto;
+  height: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .journey-rail::before {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: 1rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--hc-yellow), rgba(255, 255, 255, 0.22) 16%, rgba(255, 255, 255, 0.22) 84%, var(--hc-yellow));
+  }
+
+  .journey-step::before {
+    display: none;
+  }
 }
 
 @keyframes marquee {
