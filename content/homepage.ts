@@ -80,6 +80,12 @@ export const homepageContent = {
           "We have reviewed all of the deliverables, and they are truly eye-catching. We especially love the way you captured our Afternoon Tea set and the Nitrogen Ice Cream Show. The vibrant colours truly showcase the unique experiences we aim to offer our guests. The stunning shots of our beachfront, Epice Restaurant and resort façade will also be fantastic assets for our future social media content. Thank you for bringing Pullman Danang Beach Resort to life in such an authentic and inspiring way. We truly appreciate your professionalism and creativity."
       },
       {
+        name: "Nguyen Thanh Thuy",
+        title: "Marketing & Communications Manager, Pan Pacific Hanoi",
+        quote:
+          "The photos and video turned out absolutely stunning, you captured the ambiance and culinary highlights beautifully, even despite the rainy weather."
+      },
+      {
         name: "Raj Rana",
         title: "Managing Director, Itihaas",
         quote:
