@@ -38,12 +38,12 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
-        <DigitalPresenceStatistics locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
+        <Testimonials locale={locale} />
+        <DigitalPresenceStatistics locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
         <AiSearchHighlight locale={locale} />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
-        <Testimonials locale={locale} />
         <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
         <DigitalScanPromo locale={locale} />
