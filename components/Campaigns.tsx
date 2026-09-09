@@ -27,7 +27,7 @@ export function Campaigns({ locale = "en" }: { locale?: Locale }) {
   const content = copy[locale];
   return (
     <section className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-end lg:gap-16">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-16">
         <Reveal>
           <SectionHeading tone="light" eyebrow={content.eyebrow} title={content.title} body={content.body} />
         </Reveal>
