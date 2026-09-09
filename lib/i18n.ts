@@ -263,6 +263,8 @@ const pt: Record<string, string> = {
   ,"Websites & Direct Booking": "Websites e Reservas Diretas"
   ,"OTA Optimisation": "Otimização de OTAs"
   ,"SEO & Google Visibility": "SEO e Visibilidade no Google"
+  ,"SEO, AI Search & Visibility": "SEO, Pesquisa com IA e Visibilidade"
+  ,"Build visibility across Google, conversational search and AI platforms.": "Aumente a visibilidade no Google, na pesquisa conversacional e em plataformas de Inteligência Artificial."
   ,"Social Media": "Redes Sociais"
   ,"For hotels & stays": "Para hotéis e alojamentos"
   ,"Marketing and digital optimisation for hotels and stays.": "Marketing e otimização digital para hotéis e alojamentos."

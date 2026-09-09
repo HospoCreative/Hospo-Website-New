@@ -27,7 +27,7 @@ export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: N
           { label: "Hotéis e alojamentos", href: "/hotels-stays", description: "Marketing para propriedades e estadias." },
           { label: "Websites e reservas diretas", href: "/services/websites-direct-booking" },
           { label: "Otimização de OTAs", href: "/services/ota-optimisation" },
-          { label: "SEO e visibilidade no Google", href: "/services/seo-google-visibility" },
+          { label: "SEO, pesquisa com IA e visibilidade", href: "/ai-search" },
           { label: "Fotografia e vídeo", href: "/services/photography-video" }
         ],
         "/restaurants-fb": [
@@ -42,7 +42,7 @@ export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: N
           { label: "Estratégia e campanhas", href: "/services/strategy-campaigns" },
           { label: "Websites e reservas diretas", href: "/services/websites-direct-booking" },
           { label: "Otimização de OTAs", href: "/services/ota-optimisation" },
-          { label: "SEO e visibilidade no Google", href: "/services/seo-google-visibility" },
+          { label: "SEO, pesquisa com IA e visibilidade", href: "/ai-search" },
           { label: "Fotografia e vídeo", href: "/services/photography-video" },
           { label: "Redes sociais", href: "/services/social-media" }
         ],
@@ -62,7 +62,7 @@ export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: N
           { label: "Hotels & stays", href: "/hotels-stays", description: "Marketing for properties and stays." },
           { label: "Websites & direct booking", href: "/services/websites-direct-booking" },
           { label: "OTA optimisation", href: "/services/ota-optimisation" },
-          { label: "SEO & Google visibility", href: "/services/seo-google-visibility" },
+          { label: "SEO, AI Search & Visibility", href: "/ai-search" },
           { label: "Photography & video", href: "/services/photography-video" }
         ],
         "/restaurants-fb": [
@@ -77,7 +77,7 @@ export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: N
           { label: "Strategy & campaigns", href: "/services/strategy-campaigns" },
           { label: "Websites & direct booking", href: "/services/websites-direct-booking" },
           { label: "OTA optimisation", href: "/services/ota-optimisation" },
-          { label: "SEO & Google visibility", href: "/services/seo-google-visibility" },
+          { label: "SEO, AI Search & Visibility", href: "/ai-search" },
           { label: "Photography & video", href: "/services/photography-video" },
           { label: "Social media", href: "/services/social-media" }
         ],

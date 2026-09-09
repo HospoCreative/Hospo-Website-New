@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPublishedBlogPosts, getPublishedCaseStudies } from "@/lib/supabase/queries";
-import { localizedUrls, SITE_URL } from "@/lib/seo";
+import { localizedUrls } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -19,7 +19,8 @@ const staticRoutes = [
   "/contact",
   "/blog",
   "/case-studies",
-  "/digital-scan"
+  "/digital-scan",
+  "/ai-search"
 ];
 
 function entrySettings(pathname: string) {
@@ -59,8 +60,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         caseStudy.publishedAt ? new Date(caseStudy.publishedAt) : undefined
       )
     );
-    return [...staticEntries, { url: `${SITE_URL}/pt/ai-search`, changeFrequency: "monthly", priority: 0.7 }, ...postEntries, ...caseStudyEntries];
+    return [...staticEntries, ...postEntries, ...caseStudyEntries];
   } catch {
-    return [...staticEntries, { url: `${SITE_URL}/pt/ai-search`, changeFrequency: "monthly", priority: 0.7 }];
+    return staticEntries;
   }
 }
