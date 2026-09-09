@@ -10,6 +10,7 @@ import { ServicesOverview } from "@/components/ServicesOverview";
 import { WhoWeHelp } from "@/components/WhoWeHelp";
 import { FaqSection } from "@/components/FaqSection";
 import { FinalCta } from "@/components/FinalCta";
+import { AiSearchHighlight } from "@/components/AiSearchHighlight";
 import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
@@ -44,6 +45,7 @@ export default async function Home() {
         <Testimonials locale={locale} />
         <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
+        <AiSearchHighlight locale={locale} />
         <DigitalScanPromo locale={locale} />
         <About locale={locale} />
         <BlogPreviewSection posts={blogPosts} locale={locale} />

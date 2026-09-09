@@ -16,7 +16,7 @@ const copy = {
   pt: {
     eyebrow: "Serviços",
     title: "Escolha o próximo passo que mais importa.",
-    body: "Seis serviços focados, pensados para funcionar isoladamente ou em conjunto quando o desafio pede mais do que uma resposta.",
+    body: "Sete serviços focados, pensados para funcionar isoladamente ou em conjunto quando o desafio pede mais do que uma resposta.",
     cta: "Ver todos os serviços",
     supporting: "O apoio complementar pode incluir media paga, CRM, reputação e analytics."
   }
@@ -24,6 +24,7 @@ const copy = {
 
 export function ServicesOverview({ locale = "en" }: { locale?: Locale }) {
   const content = copy[locale];
+  const services = locale === "pt" ? [...servicePages, { slug: "ai-search", title: "AI Search & Visibility", eyebrow: "", description: "Visibilidade em pesquisa tradicional e plataformas de Inteligência Artificial através de SEO, AEO, GEO e novos canais de publicidade digital.", audience: "", problem: "", deliverables: [], process: [], outcomes: [], relatedHub: "both" as const }] : servicePages;
   return (
     <section id="services" className="bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
       <div className="mx-auto max-w-7xl">
@@ -34,9 +35,9 @@ export function ServicesOverview({ locale = "en" }: { locale?: Locale }) {
           </Link>
         </Reveal>
         <div className="mt-10 grid border-y border-ink/16 md:grid-cols-2 xl:grid-cols-3">
-          {servicePages.map((service, index) => (
+          {services.map((service, index) => (
             <Reveal key={service.slug} delay={index * 0.04} className="border-b border-ink/16 p-6 last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 xl:border-b-0 xl:border-r xl:px-7 xl:first:pl-0 xl:[&:nth-child(3n)]:border-r-0 xl:[&:nth-child(4)]:pl-0">
-              <Link href={localizedPath(`/services/${service.slug}`, locale)} className="group -m-3 block cursor-pointer rounded-[8px] p-3 transition duration-300 hover:bg-ink hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+              <Link href={service.slug === "ai-search" ? "/pt/ai-search" : localizedPath(`/services/${service.slug}`, locale)} className="group -m-3 block cursor-pointer rounded-[8px] p-3 transition duration-300 hover:bg-ink hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
                 <h3 className="font-serif text-[1.8rem] font-semibold leading-[1.03] transition-colors">{translate(locale, service.title)}</h3>
                 <p className="mt-3 text-sm leading-6 text-ink/68 transition-colors group-hover:text-white/72">{translate(locale, service.description)}</p>
                 <span className="mt-5 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-yellow">{translate(locale, "Explore service")} <ArrowUpRight size={15} aria-hidden="true" /></span>

@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/investimento") {
+  if (request.nextUrl.pathname === "/investimento" || request.nextUrl.pathname === "/ai-search") {
     const url = request.nextUrl.clone();
-    url.pathname = "/pt/investimento";
+    url.pathname = request.nextUrl.pathname === "/investimento" ? "/pt/investimento" : "/pt/ai-search";
     return NextResponse.redirect(url);
   }
   const isPortuguese = request.nextUrl.pathname === "/pt" || request.nextUrl.pathname.startsWith("/pt/");
