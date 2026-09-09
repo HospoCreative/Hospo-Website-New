@@ -10,15 +10,13 @@ const copy = {
     eyebrow: "Services",
     title: "Choose the next move that matters most.",
     body: "Six focused services, designed to work on their own or together when the brief needs more than one answer.",
-    cta: "View all services",
-    supporting: "Additional support can include paid media, CRM, reputation and analytics."
+    cta: "View all services"
   },
   pt: {
     eyebrow: "Serviços",
     title: "Escolha o próximo passo que mais importa.",
     body: "Seis serviços focados, pensados para funcionar isoladamente ou em conjunto quando o desafio pede mais do que uma resposta.",
-    cta: "Ver todos os serviços",
-    supporting: "O apoio complementar pode incluir media paga, CRM, reputação e analytics."
+    cta: "Ver todos os serviços"
   }
 } as const;
 
@@ -45,7 +43,6 @@ export function ServicesOverview({ locale = "en" }: { locale?: Locale }) {
             </Reveal>
           ))}
         </div>
-        <p className="mt-6 text-sm leading-6 text-ink/58">{content.supporting}</p>
       </div>
     </section>
   );
