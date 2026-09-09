@@ -37,8 +37,8 @@ export default async function Home() {
       <Header locale={locale} />
       <main id="main">
         <Hero locale={locale} />
-        <WhoWeHelp locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
+        <WhoWeHelp locale={locale} />
         <Testimonials locale={locale} />
         <DigitalPresenceStatistics locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />

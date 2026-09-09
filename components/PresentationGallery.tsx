@@ -1,19 +1,23 @@
 import { imageFolders, photoGalleryImageText } from "@/data/images";
 import { getPublicImageList } from "@/lib/imageFolders";
-import type { Locale } from "@/lib/i18n";
+import { localizedPath, type Locale } from "@/lib/i18n";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { AutoSlidingGallery } from "./AutoSlidingGallery";
 import { Reveal } from "./Reveal";
 
-const copy: Record<Locale, { eyebrow: string; title: string; body: string }> = {
+const copy: Record<Locale, { eyebrow: string; title: string; body: string; cta: string }> = {
   en: {
-    eyebrow: "Who we help",
-    title: "Built for businesses where presentation influences the decision.",
-    body: "We work with independent hotels, restaurants, stays and food and drink brands that want to improve how people discover, compare and choose them online."
+    eyebrow: "Visual work",
+    title: "Show the experience before the decision is made.",
+    body: "A selection of photography and video created to make hotels, stays, restaurants and food-led brands easier to notice, understand and choose.",
+    cta: "Explore photography & video"
   },
   pt: {
-    eyebrow: "Quem ajudamos",
-    title: "Pensado para negócios onde a apresentação influencia a decisão.",
-    body: "Trabalhamos com hotéis independentes, restaurantes, alojamentos e marcas de alimentação e bebidas que querem melhorar a forma como as pessoas os descobrem, comparam e escolhem online."
+    eyebrow: "Trabalho visual",
+    title: "Mostre a experiência antes de a decisão ser tomada.",
+    body: "Uma seleção de fotografia e vídeo criada para tornar hotéis, alojamentos, restaurantes e marcas de alimentação mais fáceis de descobrir, compreender e escolher.",
+    cta: "Explorar fotografia e vídeo"
   }
 };
 
@@ -40,6 +44,9 @@ export function PresentationGallery({ locale, id }: { locale: Locale; id?: strin
             <p className="mt-6 max-w-4xl text-lg leading-8 text-ink/65 sm:text-xl sm:leading-9">
               {sectionCopy.body}
             </p>
+            <Link href={localizedPath("/services/photography-video", locale)} className="mt-7 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.15em] text-ink transition hover:text-ink/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink">
+              {sectionCopy.cta} <ArrowUpRight size={16} aria-hidden="true" />
+            </Link>
           </div>
         </Reveal>
         <AutoSlidingGallery items={items} locale={locale} />
