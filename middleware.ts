@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/investimento") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/pt/investimento";
+    return NextResponse.redirect(url);
+  }
   const isPortuguese = request.nextUrl.pathname === "/pt" || request.nextUrl.pathname.startsWith("/pt/");
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-hospo-locale", isPortuguese ? "pt" : "en");

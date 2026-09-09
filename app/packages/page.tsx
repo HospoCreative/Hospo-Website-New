@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { GenericPackagesPage } from "@/components/GenericPackagesPage";
 import { getRequestLocale } from "@/lib/locale-server";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
@@ -8,6 +9,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function PackagesPage() {
   const locale = await getRequestLocale();
+  if (locale === "pt") redirect("/pt/investimento");
   const supabase = createSupabasePublicClient();
   const [{ data: packages }, { data: values }, { data: addons }, { data: addonValues }] = await Promise.all([
     supabase.from("packages").select("id,slug,name,name_pt,category,featured,badge,badge_pt,sort_order").eq("market", "general").eq("is_active", true).order("sort_order"),

@@ -206,6 +206,7 @@ export default async function AdminInboxPage({ searchParams }: InboxPageProps) {
               </div>
             </div>
 
+
             <div className="mt-7 grid gap-7 md:grid-cols-2">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.15em] text-ink/45">Main challenge</p>
