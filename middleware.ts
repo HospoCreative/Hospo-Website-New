@@ -1,6 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/services/seo-google-visibility" || request.nextUrl.pathname === "/pt/services/seo-google-visibility") {
+    const url = request.nextUrl.clone();
+    url.pathname = request.nextUrl.pathname.startsWith("/pt/") ? "/pt/ai-search" : "/ai-search";
+    return NextResponse.redirect(url, 308);
+  }
+
   if (request.nextUrl.pathname === "/investimento") {
     const url = request.nextUrl.clone();
     url.pathname = "/pt/investimento";

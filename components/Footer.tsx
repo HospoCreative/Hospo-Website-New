@@ -22,7 +22,7 @@ export function Footer({ locale = "en" }: { locale?: Locale }) {
         { label: "Strategy & Campaigns", href: "/services/strategy-campaigns" },
         { label: "Websites & Direct Booking", href: "/services/websites-direct-booking" },
         { label: "OTA Optimisation", href: "/services/ota-optimisation" },
-        { label: "SEO & Google Visibility", href: "/services/seo-google-visibility" },
+        { label: "SEO, AI Search & Visibility", href: "/ai-search" },
         { label: "Photography & Video", href: "/services/photography-video" },
         { label: "Social Media", href: "/services/social-media" }
       ]

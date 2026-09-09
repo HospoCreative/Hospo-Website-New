@@ -12,7 +12,6 @@ const staticRoutes = [
   "/services/strategy-campaigns",
   "/services/websites-direct-booking",
   "/services/ota-optimisation",
-  "/services/seo-google-visibility",
   "/services/photography-video",
   "/services/social-media",
   "/about",

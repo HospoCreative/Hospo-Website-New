@@ -41,11 +41,11 @@ export default async function Home() {
         <DigitalPresenceStatistics locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
+        <AiSearchHighlight locale={locale} />
         <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <Testimonials locale={locale} />
         <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
-        <AiSearchHighlight locale={locale} />
         <DigitalScanPromo locale={locale} />
         <About locale={locale} />
         <BlogPreviewSection posts={blogPosts} locale={locale} />
