@@ -13,7 +13,7 @@ function StatisticValue({ statistic }: { statistic: string }) {
   const match = statistic.match(/^(\d+)(.*)$/);
   const target = match ? Number(match[1]) : null;
   const suffix = match?.[2] ?? "";
-  const [value, setValue] = useState(target);
+  const [value, setValue] = useState(target === null || reducedMotion ? target : 0);
 
   useEffect(() => {
     if (target === null || hasAnimated.current) return;
@@ -28,17 +28,14 @@ function StatisticValue({ statistic }: { statistic: string }) {
         return;
       }
 
-      setValue(0);
-      frame = requestAnimationFrame(() => {
-        const startedAt = performance.now();
-        const duration = 560;
-        const tick = (now: number) => {
-          const progress = Math.min((now - startedAt) / duration, 1);
-          setValue(Math.round(target * (1 - Math.pow(1 - progress, 3))));
-          if (progress < 1) frame = requestAnimationFrame(tick);
-        };
-        frame = requestAnimationFrame(tick);
-      });
+      const startedAt = performance.now();
+      const duration = 560;
+      const tick = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1);
+        setValue(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
     };
 
     const element = elementRef.current;
@@ -103,16 +100,16 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
   }
 
   return (
-    <section className="overflow-hidden bg-white px-5 pb-[var(--hc-section-compact)] pt-[var(--hc-section)] text-ink sm:px-8">
+    <section className="overflow-hidden bg-ink px-5 pb-[var(--hc-section-compact)] pt-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.82fr)_minmax(20rem,0.48fr)] lg:items-end">
           <div>
-            <p className="section-eyebrow text-ink/55">{content.eyebrow}</p>
+            <p className="section-eyebrow text-yellow">{content.eyebrow}</p>
             <h2 className="mt-3 max-w-[52rem] font-serif text-[clamp(2.35rem,4.1vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.025em]">
               {content.title}
             </h2>
           </div>
-          <p className="max-w-2xl text-[1.0625rem] leading-8 text-ink/70 lg:pb-1">{content.body}</p>
+          <p className="max-w-2xl text-[1.0625rem] leading-8 text-white/72 lg:pb-1">{content.body}</p>
         </div>
 
         <div className="mt-12">
@@ -161,15 +158,15 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${index + 1} ${translate(locale, "of")} ${content.cards.length}`}
-                className="flex min-h-[31rem] basis-[88%] shrink-0 snap-start flex-col rounded-[8px] bg-ink p-7 text-white sm:min-h-[30rem] sm:basis-[58%] sm:p-8 lg:basis-[36%] xl:basis-[31.5%]"
+                className="flex min-h-[31rem] basis-[88%] shrink-0 snap-start flex-col rounded-[8px] bg-white p-7 text-ink sm:min-h-[30rem] sm:basis-[58%] sm:p-8 lg:basis-[36%] xl:basis-[31.5%]"
               >
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-white/60">{card.category}</p>
-                <p aria-label={card.statistic} className={`mt-7 font-serif font-semibold tracking-[-0.04em] text-white ${card.statistic.length > 5 ? "text-[clamp(2.65rem,4.6vw,4.2rem)] leading-[0.9]" : "text-[clamp(3.7rem,6vw,5.8rem)] leading-[0.84]"}`}>
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-ink/64">{card.category}</p>
+                <p aria-label={card.statistic} className={`mt-7 font-serif font-semibold tracking-[-0.04em] text-ink ${card.statistic.length > 5 ? "text-[clamp(2.65rem,4.6vw,4.2rem)] leading-[0.9]" : "text-[clamp(3.7rem,6vw,5.8rem)] leading-[0.84]"}`}>
                   <StatisticValue statistic={card.statistic} />
                 </p>
                 <h3 className="mt-8 font-serif text-[1.8rem] font-semibold leading-[1.05]">{card.headline}</h3>
-                <p className="mt-5 text-[0.98rem] leading-7 text-white/72">{card.body}</p>
-                <p className="mt-auto border-t border-white/18 pt-6 text-[0.68rem] leading-5 text-white/52">{card.source}</p>
+                <p className="mt-5 text-[0.98rem] leading-7 text-ink/72">{card.body}</p>
+                <p className="mt-auto border-t border-ink/12 pt-6 text-[0.68rem] leading-5 text-ink/48">{card.source}</p>
               </article>
             ))}
           </div>
@@ -181,7 +178,7 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={Math.round(progress)}
-              className="h-px max-w-sm flex-1 overflow-hidden bg-ink/22"
+              className="h-px max-w-sm flex-1 overflow-hidden bg-white/22"
             >
               <span
                 className="block h-full bg-yellow transition-[width] duration-200 motion-reduce:transition-none"
@@ -194,7 +191,7 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
                 onClick={() => move(-1)}
                 disabled={atStart}
                 aria-label={translate(locale, "Previous statistics card")}
-                className="grid size-11 place-items-center rounded-full border border-ink/28 text-ink transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow disabled:cursor-not-allowed disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-full border border-white/28 text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ArrowLeft size={18} aria-hidden="true" />
               </button>
@@ -203,7 +200,7 @@ export function DigitalPresenceStatistics({ locale = "en" }: { locale?: Locale }
                 onClick={() => move(1)}
                 disabled={atEnd}
                 aria-label={translate(locale, "Next statistics card")}
-                className="grid size-11 place-items-center rounded-full border border-ink/28 text-ink transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow disabled:cursor-not-allowed disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-full border border-white/28 text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ArrowRight size={18} aria-hidden="true" />
               </button>

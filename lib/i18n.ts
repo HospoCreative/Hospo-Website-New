@@ -521,21 +521,6 @@ const pt: Record<string, string> = {
 ,"Marketing Manager, The Evolv Collection": "Gestora de Marketing, The Evolv Collection"
 ,"We absolutely loved the final images from the Blackout Dinner x Lost Explorer shoot. The photography captured the atmosphere of the event.": "Adorámos as imagens finais da sessão Blackout Dinner x Lost Explorer. A fotografia captou a atmosfera do evento."
 ,"Hospo Creative works with hotels, stays, restaurants and F&B brands across its core markets, alongside selected international projects.": "A Hospo Creative trabalha com hotéis, alojamentos, restaurantes e marcas de F&B nos seus mercados principais, bem como em projetos internacionais selecionados."
-,"OTA & distribution": "OTAs e distribuição"
-,"of travellers use OTAs during their path to purchase.": "dos viajantes utilizam OTAs durante o percurso até à compra."
-,"Being present where guests research remains an essential part of digital visibility.": "A presença nos canais onde os clientes pesquisam continua a ser essencial para a visibilidade digital."
-,"Source: Expedia Group, Path to Purchase": "Fonte: Expedia Group, Path to Purchase"
-,"of travellers use search engines before making a travel purchase.": "dos viajantes utilizam motores de pesquisa antes de uma compra de viagem."
-,"Search remains a key part of how travellers discover and compare options.": "A pesquisa continua a desempenhar um papel central na forma como os viajantes descobrem e comparam opções."
-,"of travellers use social media in the period leading up to a travel purchase.": "dos viajantes utilizam redes sociais no período que antecede a compra de uma viagem."
-,"Social and visual content play a role throughout the inspiration and decision journey.": "O conteúdo social e visual participa no processo de inspiração e decisão."
-,"Restaurants · UK": "Restaurantes · Reino Unido"
-,"of UK consumers try restaurants because of social media.": "dos consumidores no Reino Unido experimentam restaurantes devido às redes sociais."
-,"For restaurants, digital discovery can translate into real-world visits.": "Para restaurantes, a descoberta digital pode transformar atenção em visitas reais."
-,"Source: SevenRooms, UK Restaurant Trends 2024": "Fonte: SevenRooms, UK Restaurant Trends 2024"
-,"of diners say restaurant reviews matter when choosing where to eat.": "dos clientes dizem que as avaliações são importantes ao escolher um restaurante."
-,"Online reputation forms part of the decision before a guest visits.": "A reputação online faz parte da decisão antes da visita."
-,"Source: Tripadvisor / Ipsos MORI": "Fonte: Tripadvisor / Ipsos MORI"
 };
 
 export function translate(locale: Locale, value: string) {

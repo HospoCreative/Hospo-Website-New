@@ -94,10 +94,10 @@ export function AutoSlidingGallery({ items, locale = "en" }: { items: SlidingGal
   return (
     <div className="mt-10">
       <div className="mb-5 flex justify-end gap-2">
-        <button type="button" onClick={() => move(-1)} aria-label={t.previous} className="flex size-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-yellow hover:bg-yellow hover:text-ink">
+        <button type="button" onClick={() => move(-1)} aria-label={t.previous} className="flex size-11 items-center justify-center rounded-full border border-ink/20 text-ink transition hover:border-yellow hover:bg-yellow">
           <ArrowLeft size={18} aria-hidden="true" />
         </button>
-        <button type="button" onClick={() => move(1)} aria-label={t.next} className="flex size-11 items-center justify-center rounded-full border border-white/30 text-white transition hover:border-yellow hover:bg-yellow hover:text-ink">
+        <button type="button" onClick={() => move(1)} aria-label={t.next} className="flex size-11 items-center justify-center rounded-full border border-ink/20 text-ink transition hover:border-yellow hover:bg-yellow">
           <ArrowRight size={18} aria-hidden="true" />
         </button>
       </div>

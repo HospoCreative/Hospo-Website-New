@@ -18,14 +18,14 @@ export function About({ locale = "en" }: { locale?: Locale }) {
   };
 
   return (
-    <section id="about" className="bg-white px-5 pb-[var(--hc-section-compact)] pt-[var(--hc-section)] text-ink sm:px-8">
+    <section id="about" className="bg-ink px-5 pb-[var(--hc-section-compact)] pt-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr] lg:items-start lg:gap-8">
           <Reveal className="md:col-span-2 lg:col-span-1">
-            <SectionHeading eyebrow={content.eyebrow} title={content.title} body={<><p>{content.body}</p><p className="mt-3">{content.supporting}</p></>} />
-            <div className="mt-7 border-y border-ink/18 py-5">
-              <p className="font-serif text-xl font-semibold leading-7 text-ink">{content.markets.title}</p>
-              <p className="mt-2 text-sm leading-6 text-ink/68">{content.markets.body}</p>
+            <SectionHeading tone="light" eyebrow={content.eyebrow} title={content.title} body={<><p>{content.body}</p><p className="mt-3">{content.supporting}</p></>} />
+            <div className="mt-7 border-y border-white/18 py-5">
+              <p className="font-serif text-xl font-semibold leading-7 text-white">{content.markets.title}</p>
+              <p className="mt-2 text-sm leading-6 text-white/68">{content.markets.body}</p>
             </div>
             <p className="mt-7 border-l-2 border-yellow pl-4 font-serif text-xl italic leading-7">{content.closing}</p>
           </Reveal>
@@ -33,7 +33,7 @@ export function About({ locale = "en" }: { locale?: Locale }) {
             const portrait = founderPortraits[founder.name];
             return (
               <Reveal key={founder.name} delay={0.08 + index * 0.06}>
-                <article className="border-t border-ink/18 pt-6">
+                <article className="border-t border-white/18 pt-6">
                   {portrait ? (
                     <div className="relative mb-5 size-24 overflow-hidden rounded-full border-2 border-yellow/80 sm:size-28">
                       <SmartImage
@@ -48,7 +48,7 @@ export function About({ locale = "en" }: { locale?: Locale }) {
                   ) : null}
                   <h3 className="font-serif text-2xl font-semibold">{founder.name}</h3>
                   <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.17em] text-yellow">{founder.role}</p>
-                  <p className="mt-4 text-sm leading-6 text-ink/68">{founder.bio}</p>
+                  <p className="mt-4 text-sm leading-6 text-white/68">{founder.bio}</p>
                 </article>
               </Reveal>
             );
