@@ -11,6 +11,7 @@ const adminNav = [
   { label: "Scans", href: "/admin/scans", icon: ScanSearch },
   { label: "Prospects", href: "/admin/prospects", icon: Target },
   { label: "Commercial", href: "/admin/commercial", icon: Package },
+  { label: "Content preview", href: "/admin/content-creation-packages", icon: Package },
   { label: "Proposals", href: "/admin/proposals", icon: FileText },
   { label: "Case Studies", href: "/admin/case-studies", icon: BriefcaseBusiness },
   { label: "Blog", href: "/admin/blog", icon: BookOpen },
