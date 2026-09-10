@@ -2,6 +2,7 @@ import type { BlogPost } from "@/types/blogPost";
 import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy";
 import type { ClientLogo } from "@/types/clientLogo";
 import type { Locale } from "@/lib/i18n";
+import type { PortfolioEmbed, PortfolioEmbedSection } from "@/types/portfolioEmbed";
 import { isSupabaseConfigured } from "./env";
 import { createSupabasePublicClient } from "./public";
 import { createSupabaseServerClient } from "./server";
@@ -74,6 +75,14 @@ type ClientLogoRow = {
   sort_order: number;
   published: boolean;
   related_case_study_id: string | null;
+};
+
+type PortfolioEmbedRow = {
+  id: string;
+  section: PortfolioEmbedSection;
+  instagram_url: string;
+  sort_order: number;
+  published: boolean;
 };
 
 function mapCaseStudyMedia(row: CaseStudyMediaRow): CaseStudyMedia {
@@ -272,6 +281,28 @@ export async function getPublishedClientLogos() {
   }
 
   return (data as ClientLogoRow[]).map(mapClientLogo);
+}
+
+export async function getPublishedPortfolioEmbeds(): Promise<PortfolioEmbed[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("portfolio_embeds")
+    .select("id,section,instagram_url,sort_order,published")
+    .eq("published", true)
+    .order("section", { ascending: true })
+    .order("sort_order", { ascending: true });
+
+  if (error || !data?.length) return [];
+
+  return (data as PortfolioEmbedRow[]).map((row) => ({
+    id: row.id,
+    section: row.section,
+    instagramUrl: row.instagram_url,
+    sortOrder: row.sort_order,
+    published: row.published
+  }));
 }
 
 export async function getAdminContentCounts() {
