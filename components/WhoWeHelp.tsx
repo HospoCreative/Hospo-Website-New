@@ -12,13 +12,14 @@ export function WhoWeHelp({ locale = "en" }: { locale?: Locale }) {
   const content = getHomepageContent(locale).whoWeHelp;
 
   return (
-    <section id="who-we-help" className="bg-white px-5 py-[var(--hc-section)] text-ink sm:px-8">
+    <section id="who-we-help" className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
             eyebrow={content.eyebrow}
             title={content.title}
             body={content.body}
+            tone="light"
             width="wide"
           />
         </Reveal>

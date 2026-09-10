@@ -22,7 +22,6 @@ function ProjectMediaView({ media, title }: { media: ProjectMedia; title: string
 
 export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStudies?: CaseStudy[]; locale?: Locale }) {
   const content = getHomepageContent(locale).work;
-  if (!caseStudies.length) return null;
   return (
     <section id="work" className="bg-ink px-5 py-[var(--hc-section)] text-white sm:px-8">
       <div className="mx-auto max-w-7xl">
@@ -30,7 +29,7 @@ export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStud
           <SectionHeading tone="light" eyebrow={content.eyebrow} title={content.title} body={content.body} width="wide" />
           <Link href={localizedPath("/case-studies", locale)} className="inline-flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">{translate(locale, "View all case studies")} <ArrowUpRight size={16} aria-hidden="true" /></Link>
         </Reveal>
-        <div className="mt-12 space-y-14 lg:space-y-20">
+        {caseStudies.length ? <div className="mt-12 space-y-14 lg:space-y-20">
           {caseStudies.map((project, index) => {
             const media = getMedia(project);
             if (!media) return null;
@@ -51,7 +50,7 @@ export function SelectedProjects({ caseStudies = [], locale = "en" }: { caseStud
               </Reveal>
             );
           })}
-        </div>
+        </div> : null}
       </div>
     </section>
   );

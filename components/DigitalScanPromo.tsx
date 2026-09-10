@@ -23,18 +23,18 @@ const content = {
 export function DigitalScanPromo({ locale = "en" }: { locale?: Locale }) {
   const copy = content[locale];
   return (
-    <section className="bg-white px-5 py-[clamp(3.5rem,7vw,6.5rem)] text-ink sm:px-8">
-      <Reveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.25rem] border border-ink/15 bg-ink px-6 py-8 text-white shadow-soft sm:px-8 sm:py-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
+    <section className="bg-ink px-5 py-[clamp(3.5rem,7vw,6.5rem)] text-white sm:px-8">
+      <Reveal className="relative mx-auto max-w-7xl overflow-hidden rounded-[1.25rem] border border-white/20 bg-white px-6 py-8 text-ink shadow-soft sm:px-8 sm:py-10 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
         <span aria-hidden="true" className="absolute left-0 top-0 h-1 w-24 bg-yellow" />
         <div className="max-w-4xl">
           <p className="section-eyebrow text-yellow">{copy.eyebrow}</p>
           <h2 className="mt-3 font-serif text-[clamp(2rem,3.4vw,3.25rem)] font-semibold leading-[1.02]">{copy.title}</h2>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-white/70 sm:text-lg">{copy.body}</p>
-          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.12em] text-white/65">
+          <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70 sm:text-lg">{copy.body}</p>
+          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.12em] text-ink/65">
             {copy.points.map((point) => <li key={point} className="flex items-center gap-2"><span aria-hidden="true" className="size-1.5 rounded-full bg-yellow" />{point}</li>)}
           </ul>
         </div>
-        <Link href={localizedPath("/digital-scan", locale)} className="mt-7 inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-ink transition hover:-translate-y-0.5 hover:bg-yellow lg:mt-0">
+        <Link href={localizedPath("/digital-scan", locale)} className="mt-7 inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:-translate-y-0.5 hover:bg-yellow hover:text-ink lg:mt-0">
           {copy.cta}<ArrowUpRight className="text-yellow" size={17} aria-hidden="true" />
         </Link>
       </Reveal>

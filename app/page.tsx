@@ -3,7 +3,6 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { ClientLogosSection } from "@/components/client-logos/ClientLogosSection";
-import { BlogPreviewSection } from "@/components/BlogPreviewSection";
 import { Campaigns } from "@/components/Campaigns";
 import { SelectedProjects } from "@/components/SelectedProjects";
 import { ServicesOverview } from "@/components/ServicesOverview";
@@ -15,20 +14,15 @@ import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
 import { PresentationGallery } from "@/components/PresentationGallery";
-import {
-  getPublishedBlogPosts,
-  getFeaturedCaseStudies,
-  getPublishedClientLogos
-} from "@/lib/supabase/queries";
+import { getFeaturedCaseStudies, getPublishedClientLogos } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const locale = await getRequestLocale();
-  const [caseStudies, blogPosts, clientLogos] = await Promise.all([
+  const [caseStudies, clientLogos] = await Promise.all([
     getFeaturedCaseStudies(locale),
-    getPublishedBlogPosts(locale),
     getPublishedClientLogos()
   ]);
 
@@ -37,18 +31,17 @@ export default async function Home() {
       <Header locale={locale} />
       <main id="main">
         <Hero locale={locale} />
-        <WhoWeHelp locale={locale} />
         <ClientLogosSection logos={clientLogos} locale={locale} />
+        <WhoWeHelp locale={locale} />
+        <DigitalPresenceStatistics locale={locale} />
+        <SelectedProjects caseStudies={caseStudies} locale={locale} />
+        <Testimonials locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
-        <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
+        <Campaigns locale={locale} />
         <AiSearchHighlight locale={locale} />
         <DigitalScanPromo locale={locale} />
-        <DigitalPresenceStatistics locale={locale} />
-        <Testimonials locale={locale} />
-        <SelectedProjects caseStudies={caseStudies} locale={locale} />
         <About locale={locale} />
-        <BlogPreviewSection posts={blogPosts} locale={locale} />
         <FaqSection locale={locale} />
         <FinalCta locale={locale} />
       </main>

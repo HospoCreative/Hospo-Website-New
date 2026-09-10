@@ -14,26 +14,22 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
     .filter((logo) => logo.published && logo.logoUrl)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
-  if (!publishedLogos.length) {
-    return null;
-  }
-
   return (
     <section
-      className="overflow-hidden bg-ink pb-[clamp(1.75rem,2.5vw,2.5rem)] pt-[var(--hc-section-compact)] text-white"
+      className="overflow-hidden bg-white pb-[clamp(1.75rem,2.5vw,2.5rem)] pt-[var(--hc-section-compact)] text-ink"
       aria-labelledby="client-logos-title"
     >
       <Reveal className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
-          tone="light"
           eyebrow={translate(locale, "Clients & partners")}
           title={<span id="client-logos-title">{translate(locale, "Brands we have supported.")}</span>}
         />
       </Reveal>
 
-      <div className="mt-4 sm:mt-5">
-        <div className="marquee-track flex w-max items-center gap-14 px-6 sm:gap-20 sm:px-8 lg:gap-28">
-          {publishedLogos.map((logo) => (
+      {publishedLogos.length ? (
+        <div className="mt-4 sm:mt-5">
+          <div className="marquee-track flex w-max items-center gap-14 px-6 sm:gap-20 sm:px-8 lg:gap-28">
+            {publishedLogos.map((logo) => (
             <div key={`${logo.clientName}-${logo.logoUrl}`} className="flex h-40 w-72 shrink-0 items-center justify-center sm:h-48 sm:w-96 lg:h-56 lg:w-[30rem]">
               <Image
                 src={logo.logoUrl}
@@ -44,9 +40,9 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
                 className="h-40 w-auto max-w-full object-contain sm:h-48 lg:h-56"
               />
             </div>
-          ))}
-          <div className="flex items-center gap-14 sm:gap-20 lg:gap-28" aria-hidden="true">
-            {publishedLogos.map((logo) => (
+            ))}
+            <div className="flex items-center gap-14 sm:gap-20 lg:gap-28" aria-hidden="true">
+              {publishedLogos.map((logo) => (
               <div key={`duplicate-${logo.clientName}-${logo.logoUrl}`} className="flex h-40 w-72 shrink-0 items-center justify-center sm:h-48 sm:w-96 lg:h-56 lg:w-[30rem]">
                 <Image
                   src={logo.logoUrl}
@@ -57,10 +53,11 @@ export function ClientLogosSection({ logos, locale = "en" }: ClientLogosSectionP
                   className="h-40 w-auto max-w-full object-contain sm:h-48 lg:h-56"
                 />
               </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </section>
   );
 }
