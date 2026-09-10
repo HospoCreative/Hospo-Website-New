@@ -17,6 +17,9 @@ create index if not exists portfolio_embeds_section_sort_idx
 
 alter table public.portfolio_embeds enable row level security;
 
+grant select on public.portfolio_embeds to anon;
+grant select, insert, update, delete on public.portfolio_embeds to authenticated;
+
 drop policy if exists "Public can read published portfolio embeds" on public.portfolio_embeds;
 create policy "Public can read published portfolio embeds"
   on public.portfolio_embeds for select
