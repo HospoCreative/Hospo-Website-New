@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function ContentCreationPackagesPage() {
-  return <><Header locale="en"/><main id="main"><PrivateContentCreationLanding/></main><Footer locale="en"/></>;
+  return <><Header locale="en" showLanguageSwitcher={false}/><main id="main"><PrivateContentCreationLanding/></main><Footer locale="en"/></>;
 }

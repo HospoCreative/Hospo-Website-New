@@ -3,7 +3,7 @@ import { type Locale } from "@/lib/i18n";
 import { getPublishedBlogPosts } from "@/lib/supabase/queries";
 import { HeaderClient } from "./HeaderClient";
 
-export async function Header({ locale = "en" }: { locale?: Locale }) {
+export async function Header({ locale = "en", showLanguageSwitcher = true }: { locale?: Locale; showLanguageSwitcher?: boolean }) {
   const [siteContent, publishedArticles] = await Promise.all([
     Promise.resolve(getSiteContent(locale)),
     getPublishedBlogPosts(locale)
@@ -12,5 +12,5 @@ export async function Header({ locale = "en" }: { locale?: Locale }) {
     (item) => publishedArticles.length > 0 || item.href !== "/blog"
   );
 
-  return <HeaderClient locale={locale} navItems={navItems} />;
+  return <HeaderClient locale={locale} navItems={navItems} showLanguageSwitcher={showLanguageSwitcher} />;
 }

@@ -17,7 +17,7 @@ type MenuLink = {
   description?: string;
 };
 
-export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: NavItem[] }) {
+export function HeaderClient({ locale, navItems, showLanguageSwitcher = true }: { locale: Locale; navItems: NavItem[]; showLanguageSwitcher?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
@@ -173,9 +173,9 @@ export function HeaderClient({ locale, navItems }: { locale: Locale; navItems: N
           <button type="button" className="grid size-11 place-items-center rounded-full border border-white/20 text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-ink xl:hidden" onClick={() => setIsOpen((value) => !value)} aria-label={translate(locale, isOpen ? "Close menu" : "Open menu")} aria-expanded={isOpen}>
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <button type="button" onClick={switchLanguage} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/25 px-3 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow" aria-label={locale === "en" ? "Ver site em português" : "View site in English"}>
+          {showLanguageSwitcher ? <button type="button" onClick={switchLanguage} className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/25 px-3 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white transition hover:border-yellow hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow" aria-label={locale === "en" ? "Ver site em português" : "View site in English"}>
             {locale === "en" ? "PT" : "EN"}
-          </button>
+          </button> : null}
         </div>
       </div>
 
