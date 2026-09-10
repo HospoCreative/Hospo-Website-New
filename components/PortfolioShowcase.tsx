@@ -34,8 +34,6 @@ const copy = {
     workBody: "A selection of hospitality photography, content and campaign work created for the channels where guests discover and decide.",
     reelsEyebrow: "Reels gallery",
     reelsTitle: "Made for the pace of social.",
-    reelsLabel: "Short-form video",
-    reelsBody: "Vertical content designed to hold attention, communicate the experience and give people a reason to act.",
     swipe: "Swipe",
     openWork: "Open selected work",
     reel: "Open reel"
@@ -46,8 +44,6 @@ const copy = {
     workBody: "Uma seleção de fotografia, conteúdo e campanhas para hotelaria, criada para os canais onde os clientes descobrem e decidem.",
     reelsEyebrow: "Galeria de reels",
     reelsTitle: "Feito para o ritmo das redes sociais.",
-    reelsLabel: "Vídeo de formato curto",
-    reelsBody: "Conteúdo vertical pensado para captar atenção, comunicar a experiência e dar às pessoas uma razão para agir.",
     swipe: "Deslize",
     openWork: "Abrir projeto selecionado",
     reel: "Abrir reel"
@@ -97,13 +93,12 @@ export async function PortfolioShowcase({ locale }: { locale: Locale }) {
 
       <section id="reels-gallery" className="overflow-hidden bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <Reveal className="grid gap-8 text-center lg:grid-cols-[.78fr_1fr] lg:items-end lg:text-left">
-            <div><p className="section-eyebrow text-yellow">{t.reelsEyebrow}</p><h2 className="mt-5 max-w-3xl font-serif text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[.98]">{t.reelsTitle}</h2></div>
-            <div className="rounded-[8px] bg-yellow p-6 text-ink shadow-lg sm:p-8 lg:-rotate-1"><p className="text-xs font-black uppercase tracking-[.2em]">{t.reelsLabel}</p><p className="mt-4 text-lg leading-8">{t.reelsBody}</p></div>
+          <Reveal className="text-center lg:text-left">
+            <p className="section-eyebrow text-yellow">{t.reelsEyebrow}</p><h2 className="mt-5 max-w-3xl font-serif text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[.98]">{t.reelsTitle}</h2>
           </Reveal>
           <div className="mt-7 flex justify-center sm:hidden"><span className="swipe-hint text-yellow">{t.swipe}<ArrowRight aria-hidden="true" size={14} /></span></div>
           <div className="scroll-row mt-7 grid auto-cols-[calc((100vw_-_3.5rem)_/_2)] grid-flow-col grid-rows-2 gap-4 overflow-x-auto pb-5 [scrollbar-color:rgba(255,255,255,.35)_transparent] sm:mt-12 sm:flex sm:auto-cols-auto sm:gap-5">
-            {reelLinks.map((href, index) => { const embedUrl = getPostEmbedUrl(href); return <Reveal key={href} delay={index * .04} className="w-full snap-start sm:min-w-[280px] lg:min-w-[315px]"><article className="group rounded-[8px] bg-white/10 p-2 shadow-lg transition duration-300 hover:-translate-y-1 hover:bg-yellow sm:p-3"><div className="relative aspect-[9/16] overflow-hidden rounded-[6px] bg-black">{embedUrl ? <iframe src={embedUrl} title={`${t.reelsEyebrow} ${index + 1}`} className="h-[134%] w-[134%] origin-top-left scale-[.746] sm:h-full sm:w-full sm:scale-100" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen /> : <a href={href} target="_blank" rel="noreferrer" aria-label={t.reel} className="flex h-full items-center justify-center bg-ink text-yellow"><ExternalLink aria-hidden="true" /></a>}<span className="sr-only">{t.reel}</span><Play className="pointer-events-none absolute left-1/2 top-1/2 size-12 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/40 bg-ink/40 p-3 text-white opacity-0 transition group-hover:opacity-100" aria-hidden="true" /></div></article></Reveal>; })}
+            {reelLinks.map((href, index) => { const embedUrl = getPostEmbedUrl(href); return <Reveal key={href} delay={index * .04} className="w-full snap-start sm:min-w-[280px] lg:min-w-[315px]"><article className="group rounded-[8px] bg-white/10 p-1 shadow-lg transition duration-300 hover:-translate-y-1 hover:bg-yellow sm:p-1.5"><div className="relative aspect-[9/16] overflow-hidden rounded-[6px] bg-black">{embedUrl ? <iframe src={embedUrl} title={`${t.reelsEyebrow} ${index + 1}`} className="h-[134%] w-[134%] origin-top-left scale-[.746] sm:h-full sm:w-full sm:scale-100" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen /> : <a href={href} target="_blank" rel="noreferrer" aria-label={t.reel} className="flex h-full items-center justify-center bg-ink text-yellow"><ExternalLink aria-hidden="true" /></a>}<span className="sr-only">{t.reel}</span><Play className="pointer-events-none absolute left-1/2 top-1/2 size-12 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/40 bg-ink/40 p-3 text-white opacity-0 transition group-hover:opacity-100" aria-hidden="true" /></div></article></Reveal>; })}
           </div>
         </div>
       </section>
