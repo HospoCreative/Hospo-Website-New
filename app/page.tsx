@@ -5,7 +5,7 @@ import { Hero } from "@/components/Hero";
 import { ClientLogosSection } from "@/components/client-logos/ClientLogosSection";
 import { BlogPreviewSection } from "@/components/BlogPreviewSection";
 import { Campaigns } from "@/components/Campaigns";
-import { SelectedProjects } from "@/components/SelectedProjects";
+import { PortfolioShowcase } from "@/components/PortfolioShowcase";
 import { ServicesOverview } from "@/components/ServicesOverview";
 import { WhoWeHelp } from "@/components/WhoWeHelp";
 import { FaqSection } from "@/components/FaqSection";
@@ -17,7 +17,6 @@ import { Testimonials } from "@/components/Testimonials";
 import { PresentationGallery } from "@/components/PresentationGallery";
 import {
   getPublishedBlogPosts,
-  getFeaturedCaseStudies,
   getPublishedClientLogos
 } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
@@ -26,8 +25,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const locale = await getRequestLocale();
-  const [caseStudies, blogPosts, clientLogos] = await Promise.all([
-    getFeaturedCaseStudies(locale),
+  const [blogPosts, clientLogos] = await Promise.all([
     getPublishedBlogPosts(locale),
     getPublishedClientLogos()
   ]);
@@ -46,7 +44,7 @@ export default async function Home() {
         <DigitalScanPromo locale={locale} />
         <DigitalPresenceStatistics locale={locale} />
         <Testimonials locale={locale} />
-        <SelectedProjects caseStudies={caseStudies} locale={locale} />
+        <PortfolioShowcase locale={locale} />
         <About locale={locale} />
         <BlogPreviewSection posts={blogPosts} locale={locale} />
         <FaqSection locale={locale} />
