@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPublishedBlogPosts, getPublishedCaseStudies } from "@/lib/supabase/queries";
-import { localizedUrls } from "@/lib/seo";
+import { localizedUrls, SITE_URL } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -44,6 +44,11 @@ function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Si
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries = staticRoutes.flatMap((route) => entriesForPath(route));
+  const contentCreationPackagesEntry: MetadataRoute.Sitemap = [{
+    url: `${SITE_URL}/content-creation-packages`,
+    changeFrequency: "monthly",
+    priority: 0.7
+  }];
 
   try {
     const [posts, caseStudies] = await Promise.all([
@@ -59,8 +64,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         caseStudy.publishedAt ? new Date(caseStudy.publishedAt) : undefined
       )
     );
-    return [...staticEntries, ...postEntries, ...caseStudyEntries];
+    return [...staticEntries, ...contentCreationPackagesEntry, ...postEntries, ...caseStudyEntries];
   } catch {
-    return staticEntries;
+    return [...staticEntries, ...contentCreationPackagesEntry];
   }
 }
