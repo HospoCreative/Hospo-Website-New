@@ -40,7 +40,7 @@ function InvestmentContent() {
 }
 
 function ServiceCard({ service }: { service: typeof portugalInvestmentServices[number] }) {
-  return <details id={service.id} className="group scroll-mt-24 rounded-[8px] border border-white/15 bg-[#06396d] open:border-yellow/70"><summary onClick={() => trackAnalyticsEvent("pricing_service_view", { service: service.id })} className="flex cursor-pointer list-none items-center justify-between gap-6 p-5 sm:p-7"><div><p className="section-eyebrow text-yellow">{service.category}</p><h2 className="mt-3 font-serif text-[clamp(1.9rem,3vw,3rem)] leading-none">{service.title}</h2></div><ChevronDown className="shrink-0 transition group-open:rotate-180"/></summary><div className="border-t border-white/15 px-5 pb-6 pt-6 sm:px-7 sm:pb-8"><p className="max-w-4xl text-base leading-7 text-white/72">{service.intro}</p>{service.tiers ? <div className="mt-6 grid gap-3 lg:grid-cols-3">{service.tiers.map((tier) => <article key={tier.name} className="flex flex-col rounded-[8px] border border-white/15 bg-ink/35 p-5"><p className="section-eyebrow text-yellow">{tier.name}</p><p className="mt-3 font-serif text-2xl text-white">{tier.price}</p><ul className="mt-5 space-y-2.5">{tier.items.map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-white/75"><Check size={15} className="mt-1 shrink-0 text-yellow"/>{item}</li>)}</ul></article>)}</div> : <div className="mt-6 rounded-[8px] border border-white/15 bg-ink/35 p-5"><p className="font-serif text-2xl text-yellow">{service.singlePrice}</p><ul className="mt-4 space-y-2.5">{service.singleItems?.map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-white/75"><Check size={15} className="mt-1 shrink-0 text-yellow"/>{item}</li>)}</ul></div>}{service.notes?.map((note, index) => <p key={note} className={`mt-5 text-sm leading-6 ${index === 0 && service.id === "conteudo" ? "border-l-2 border-yellow bg-yellow/10 p-4 text-white" : "text-white/60"}`}>{note}</p>)}</div></details>;
+  return <details id={service.id} className="group scroll-mt-24 rounded-[8px] border border-white/15 bg-[#06396d] open:border-yellow/70"><summary onClick={() => trackAnalyticsEvent("pricing_service_view", { service: service.id })} className="flex cursor-pointer list-none items-center justify-between gap-6 p-5 sm:p-7"><div><p className="section-eyebrow text-yellow">{service.category}</p><h2 className="mt-3 font-serif text-[clamp(1.9rem,3vw,3rem)] leading-none">{service.title}</h2></div><ChevronDown className="shrink-0 transition group-open:rotate-180"/></summary><div className="border-t border-white/15 px-5 pb-6 pt-6 sm:px-7 sm:pb-8"><p className="max-w-4xl text-base leading-7 text-white/72">{service.intro}</p>{service.contentPackages ? <ContentShootingCards packages={service.contentPackages}/> : service.tiers ? <div className="mt-6 grid gap-3 lg:grid-cols-3">{service.tiers.map((tier) => <article key={tier.name} className="flex flex-col rounded-[8px] border border-white/15 bg-ink/35 p-5"><p className="section-eyebrow text-yellow">{tier.name}</p><p className="mt-3 font-serif text-2xl text-white">{tier.price}</p>{tier.description ? <p className="mt-4 text-sm leading-6 text-white/75">{tier.description}</p> : null}<ul className="mt-5 space-y-2.5">{tier.items.map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-white/75"><Check size={15} className="mt-1 shrink-0 text-yellow"/>{item}</li>)}</ul></article>)}</div> : <div className="mt-6 rounded-[8px] border border-white/15 bg-ink/35 p-5"><p className="font-serif text-2xl text-yellow">{service.singlePrice}</p><ul className="mt-4 space-y-2.5">{service.singleItems?.map((item) => <li key={item} className="flex gap-2 text-sm leading-6 text-white/75"><Check size={15} className="mt-1 shrink-0 text-yellow"/>{item}</li>)}</ul></div>}{service.notes?.map((note, index) => <p key={note} className={`mt-5 text-sm leading-6 ${index === 0 && service.id === "conteudo" && !service.contentPackages ? "border-l-2 border-yellow bg-yellow/10 p-4 text-white" : "text-white/60"}`}>{note}</p>)}{service.contentPackages ? <a href="mailto:info@hospoagency.com?subject=Planear%20o%20meu%20shooting" onClick={() => trackAnalyticsEvent("contact_click", { source: "pricing_portugal_content" })} className="button-primary mt-7">Planear o meu shooting<ArrowUpRight size={16}/></a> : null}</div></details>;
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="text-sm font-bold text-ink">{label}{children}</label>; }
@@ -82,4 +82,24 @@ function FrameworkSection() {
       </div>
     </section>
   );
+}
+
+
+function ContentShootingCards({ packages }: { packages: NonNullable<typeof portugalInvestmentServices[number]["contentPackages"]> }) {
+  return <div className="mt-6 grid gap-3 lg:grid-cols-3">{packages.map((item) => (
+    <article key={item.name} className={`flex min-w-0 flex-col rounded-[8px] border bg-ink/35 p-5 ${item.popular ? "border-yellow/70" : "border-white/15"}`}>
+      <div className="lg:min-h-[9.5rem]">
+        <div className="mb-3 min-h-6">{item.popular ? <span className="inline-block rounded-full bg-yellow px-3 py-1 text-xs font-black text-ink">Mais Popular</span> : null}</div>
+        <h3 className="section-eyebrow text-yellow">{item.name}</h3>
+        <p className="mt-3 text-sm leading-6 text-white/75">{item.description}</p>
+      </div>
+      <p className="mt-4 text-sm font-bold text-white">{item.duration}</p>
+      <dl className="mt-4 divide-y divide-white/15 border-y border-white/15">
+        {[['Fotografia', item.photographyPrice], ['Fotografia + Vídeo', item.videoPrice]].map(([label, price]) => <div key={label} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-3"><dt className="text-sm text-white/80">{label}</dt><dd className="font-serif text-2xl text-white">{price}<span className="ml-2 font-sans text-xs text-white/65">/ shooting</span></dd></div>)}
+      </dl>
+      <p className="mt-5 text-sm font-bold text-white">Fotografia inclui</p>
+      <ul className="mt-3 space-y-2.5">{[item.photos, ...item.items].map((text) => <li key={text} className="flex gap-2 text-sm leading-6 text-white/75"><Check size={15} className="mt-1 shrink-0 text-yellow"/>{text}</li>)}</ul>
+      <div className="mt-auto pt-5"><div className="border-t border-white/15 pt-4"><p className="text-sm font-bold text-white">Fotografia + Vídeo inclui</p><p className="mt-2 text-sm leading-6 text-white/75">Tudo o que está incluído em Fotografia, mais <strong className="font-semibold text-white">{item.videos}</strong>.</p></div></div>
+    </article>
+  ))}</div>;
 }
