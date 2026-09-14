@@ -48,6 +48,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${SITE_URL}/content-creation-packages`,
     changeFrequency: "monthly",
     priority: 0.7
+  }, {
+    url: `${SITE_URL}/pt/content-creation-packages`,
+    changeFrequency: "monthly",
+    priority: 0.7
   }];
 
   try {
