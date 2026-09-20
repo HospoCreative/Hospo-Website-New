@@ -3,13 +3,15 @@ import { CommercialHubPage } from "@/components/CommercialPage";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { commercialHubs } from "@/data/commercialPages";
+import { sectorSeo } from "@/data/seoContent";
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
 import { getPublishedCaseStudies } from "@/lib/supabase/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  return buildPageMetadata({ title: locale === "pt" ? "Marketing para Hotéis e Alojamentos | Hospo Creative" : "Hotel & Stay Marketing | Hospo Creative", description: locale === "pt" ? "Marketing, presença digital e otimização de reservas diretas para hotéis, alojamentos e grupos independentes." : "Marketing, digital presence and direct-booking optimisation for independent hotels, stays and accommodation groups.", pathname: "/hotels-stays", locale });
+  const seo = sectorSeo["hotels-stays"][locale];
+  return buildPageMetadata({ title: seo.title, description: seo.description, pathname: "/hotels-stays", locale });
 }
 
 export default async function HotelsAndStaysPage() {

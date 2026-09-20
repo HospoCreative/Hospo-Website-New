@@ -2,11 +2,20 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import type { HomepageContent } from "@/data/homepage";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import { SmartImage } from "./SmartImage";
 
-type HeroProps = { hero: HomepageContent["hero"] };
+type HeroProps = {
+  hero: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    primaryCta: string;
+    secondaryCta: string;
+    note: string;
+    images: readonly { src: string; alt: string }[];
+  };
+};
 
 export function HeroClient({ hero, locale }: HeroProps & { locale: Locale }) {
   const reduceMotion = useReducedMotion();

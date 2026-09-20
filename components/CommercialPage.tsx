@@ -1,9 +1,12 @@
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import type { CommercialHub, ServicePage } from "@/data/commercialPages";
+import { sectorSeo, serviceSeo } from "@/data/seoContent";
 import { serviceDetails, type ServiceVisual } from "@/data/serviceDetails";
 import { localizedPath, translate, type Locale } from "@/lib/i18n";
+import { localizedUrls, SITE_URL } from "@/lib/seo";
 import type { CaseStudy } from "@/types/caseStudy";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { ConnectedJourney } from "./ConnectedJourney";
 import { imageFolders, photoGalleryImageText } from "@/data/images";
 import { getPublicImageList } from "@/lib/imageFolders";
@@ -11,6 +14,7 @@ import { MosaicGallery } from "./MosaicGallery";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
 import { PortfolioShowcase } from "./PortfolioShowcase";
+import { SeoStructuredData } from "./SeoStructuredData";
 
 const serviceLabels: Record<string, string> = {
   "strategy-campaigns": "Strategy & Campaigns",
@@ -110,7 +114,12 @@ function ServiceFaqs({ locale, items }: { locale: Locale; items: { question: str
 
 export function CommercialHubPage({ hub, locale, caseStudies = [] }: { hub: CommercialHub; locale: Locale; caseStudies?: CaseStudy[] }) {
   const projects = relevantWork(caseStudies, hub.slug);
-  return <main id="main" className="bg-white text-ink"><section className="bg-ink px-5 py-14 text-white sm:px-8 lg:py-16"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{translate(locale, hub.eyebrow)}</p><h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.7rem,5vw,4.6rem)] font-semibold leading-[.96]">{translate(locale, hub.title)}</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-white/75">{translate(locale, hub.description)}</p><p className="mt-6 max-w-2xl border-l-2 border-yellow pl-4 text-sm leading-7 text-white/60">{translate(locale, hub.audience)}</p><HeroCtas locale={locale} /></div></section>
+  const seo = sectorSeo[hub.slug][locale];
+  const { english, portuguese } = localizedUrls(`/${hub.slug}`);
+  const canonical = locale === "pt" ? portuguese : english;
+  const labels = locale === "pt" ? { home: "Início", services: "Serviços" } : { home: "Home", services: "Services" };
+  const structuredData = { "@context": "https://schema.org", "@graph": [{ "@type": "WebPage", "@id": `${canonical}#webpage`, url: canonical, name: seo.title, description: seo.description, inLanguage: locale === "pt" ? "pt-PT" : "en-GB", isPartOf: { "@id": `${SITE_URL}/#website` } }, { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: labels.home, item: locale === "pt" ? `${SITE_URL}/pt` : SITE_URL }, { "@type": "ListItem", position: 2, name: hub.slug === "hotels-stays" ? (locale === "pt" ? "Hotéis e alojamentos" : "Hotels & stays") : (locale === "pt" ? "Restaurantes e F&B" : "Restaurants & F&B"), item: canonical }] }] };
+  return <main id="main" className="bg-white text-ink"><SeoStructuredData data={structuredData} /><section className="bg-ink px-5 py-14 text-white sm:px-8 lg:py-16"><div className="mx-auto max-w-7xl"><Breadcrumbs locale={locale} tone="dark" items={[{ label: labels.home, href: "/" }, { label: hub.slug === "hotels-stays" ? (locale === "pt" ? "Hotéis e alojamentos" : "Hotels & stays") : (locale === "pt" ? "Restaurantes e F&B" : "Restaurants & F&B") }]} /><p className="mt-8 section-eyebrow text-yellow">{translate(locale, hub.eyebrow)}</p><h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.7rem,5vw,4.6rem)] font-semibold leading-[.96]">{seo.h1 ?? translate(locale, hub.title)}</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-white/75">{translate(locale, hub.description)}</p><p className="mt-6 max-w-2xl border-l-2 border-yellow pl-4 text-sm leading-7 text-white/60">{translate(locale, hub.audience)}</p><HeroCtas locale={locale} /></div></section>
     <section className="px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{translate(locale, "How Hospo supports you")}</p><div className="mt-7 grid border-y border-ink/10 md:grid-cols-2 xl:grid-cols-5">{hub.pillars.map((pillar) => <article key={pillar.title} className="border-b border-ink/10 px-0 py-7 md:px-6 md:[&:nth-child(odd)]:border-r xl:border-b-0 xl:border-r xl:px-7 xl:last:border-r-0"><span className="block h-1 w-8 bg-yellow" /><h2 className="mt-5 font-serif text-3xl font-semibold leading-none">{translate(locale, pillar.title)}</h2><p className="mt-4 text-sm leading-7 text-ink/70">{translate(locale, pillar.description)}</p></article>)}</div></div></section>
     {hub.journey ? <ConnectedJourney locale={locale} stages={hub.journey} /> : null}
     <ProjectCards projects={projects} locale={locale} />
@@ -120,6 +129,7 @@ export function CommercialHubPage({ hub, locale, caseStudies = [] }: { hub: Comm
 export function ServiceDetailPage({ service, locale, caseStudies = [] }: { service: ServicePage; locale: Locale; caseStudies?: CaseStudy[] }) {
   const detail = serviceDetails[service.slug]?.[locale];
   const projects = relevantWork(caseStudies, service.relatedHub, service.slug);
+  const seo = serviceSeo[service.slug]?.[locale];
   const labels = locale === "pt" ? {
     forWho: "O ponto de partida", delivery: "O que está incluído", process: "Como trabalhamos", scope: "Notas de âmbito", related: "Serviços relacionados", contact: "Fale com a Hospo sobre a sua próxima prioridade.", review: "Prefere começar por uma leitura rápida do que é visível online?"
   } : {
@@ -127,9 +137,15 @@ export function ServiceDetailPage({ service, locale, caseStudies = [] }: { servi
   };
   if (!detail) return null;
   const related = relatedServiceSlugs[service.slug] ?? Object.keys(serviceLabels).filter((slug) => slug !== service.slug).slice(0, 4);
+  const { english, portuguese } = localizedUrls(`/services/${service.slug}`);
+  const canonical = locale === "pt" ? portuguese : english;
+  const serviceLabel = seo?.h1 ?? translate(locale, service.title);
+  const labelsForSchema = locale === "pt" ? { home: "Início", services: "Serviços" } : { home: "Home", services: "Services" };
+  const structuredData = { "@context": "https://schema.org", "@graph": [{ "@type": "Service", "@id": `${canonical}#service`, name: serviceLabel, description: seo?.description ?? detail.heroDescription, url: canonical, provider: { "@id": `${SITE_URL}/#organization` }, areaServed: [{ "@type": "Country", name: "Portugal" }, { "@type": "Country", name: "United Kingdom" }], audience: { "@type": "Audience", audienceType: locale === "pt" ? "Hotéis, alojamentos, restaurantes e marcas F&B" : "Hotels, stays, restaurants and F&B brands" } }, { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: labelsForSchema.home, item: locale === "pt" ? `${SITE_URL}/pt` : SITE_URL }, { "@type": "ListItem", position: 2, name: labelsForSchema.services, item: locale === "pt" ? `${SITE_URL}/pt/services` : `${SITE_URL}/services` }, { "@type": "ListItem", position: 3, name: serviceLabel, item: canonical }] }] };
 
   return <main id="main" className="bg-white text-ink">
-    <section className="bg-ink px-5 py-14 text-white sm:px-8 lg:py-16"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{translate(locale, service.eyebrow)}</p><h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.7rem,5vw,4.6rem)] font-semibold leading-[.96]">{translate(locale, service.title)}</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-white/78">{detail.heroDescription}</p><HeroCtas locale={locale} /></div></section>
+    <SeoStructuredData data={structuredData} />
+    <section className="bg-ink px-5 py-14 text-white sm:px-8 lg:py-16"><div className="mx-auto max-w-7xl"><Breadcrumbs locale={locale} tone="dark" items={[{ label: labelsForSchema.home, href: "/" }, { label: labelsForSchema.services, href: "/services" }, { label: serviceLabel }]} /><p className="mt-8 section-eyebrow text-yellow">{translate(locale, service.eyebrow)}</p><h1 className="mt-5 max-w-5xl font-serif text-[clamp(2.7rem,5vw,4.6rem)] font-semibold leading-[.96]">{serviceLabel}</h1><p className="mt-6 max-w-3xl text-lg leading-8 text-white/78">{detail.heroDescription}</p><HeroCtas locale={locale} /></div></section>
     <section className="service-chapter service-chapter--light bg-white px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><div className="border-b border-ink/12 pb-8"><p className="section-eyebrow text-yellow">{labels.forWho}</p><h2 className="mt-5 max-w-5xl font-serif text-[clamp(2.2rem,4vw,3.8rem)] font-semibold leading-[.98]">{detail.audienceTitle}</h2><div className="mt-6 grid gap-7 lg:grid-cols-[1.2fr_.8fr] lg:items-end"><p className="max-w-4xl border-l-2 border-yellow pl-5 text-lg leading-8 text-ink/76">{detail.audienceBody}</p><div><p className="section-eyebrow text-yellow">{labels.delivery}</p><p className="mt-3 max-w-xl text-base leading-7 text-ink/72">{detail.deliverIntro}</p>{detail.scopeNote ? <div className="mt-5 border-l-2 border-yellow pl-4"><p className="text-xs font-black uppercase tracking-[.14em] text-ink/62">{labels.scope}</p><p className="mt-2 text-sm leading-6 text-ink/70">{detail.scopeNote}</p></div> : null}</div></div></div><div className="grid border-b border-ink/12 sm:grid-cols-2 lg:grid-cols-4">{detail.deliverables.map((item, index) => <Reveal key={item.title} delay={index * .05} className="border-b border-ink/12 py-5 sm:px-6 sm:[&:nth-child(odd)]:border-r lg:border-b-0 lg:border-r lg:[&:nth-child(odd)]:border-r lg:last:border-r-0"><span className="block h-1 w-8 bg-yellow" /><h3 className="mt-4 font-serif text-xl font-semibold leading-tight">{item.title}</h3><p className="mt-3 text-sm leading-6 text-ink/72">{item.body}</p></Reveal>)}</div></div></section>
     <section className="service-chapter service-chapter--ink overflow-hidden bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8"><div className="mx-auto max-w-7xl"><div className="max-w-5xl"><p className="section-eyebrow text-yellow">{labels.process}</p><h2 className="mt-5 font-serif text-[clamp(2.2rem,4vw,3.8rem)] font-semibold leading-[.98]">{detail.improveIntro}</h2><p className="mt-5 max-w-4xl text-lg leading-8 text-white/72">{locale === "pt" ? "Um percurso claro, desde a primeira decisão até à execução e melhoria contínua." : "A clear route from the first decision through to execution and ongoing improvement."}</p></div><div className="relative mt-9"><div className="absolute left-4 right-4 top-5 hidden h-px bg-yellow/70 lg:block" /><ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{detail.process.map((step, index) => <Reveal key={step.title} delay={index * .07} className="relative"><span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-yellow bg-ink text-xs font-black text-yellow">{step.number}</span><div className="mt-5 border-l border-white/22 pl-4 lg:border-l-0 lg:pl-0"><h3 className="font-serif text-3xl font-semibold leading-none">{step.title}</h3><p className="mt-4 text-sm leading-7 text-white/70">{step.body}</p></div></Reveal>)}</ol></div></div></section>
     <ServiceVisualStory visual={detail.visual} locale={locale} />

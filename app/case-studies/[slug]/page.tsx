@@ -18,6 +18,20 @@ type CaseStudyPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+const serviceRoutes = [
+  { route: "/services/photography-video", terms: ["fotografia", "photography", "vídeo", "video", "produção"] },
+  { route: "/services/social-media", terms: ["redes sociais", "social media", "instagram", "community"] },
+  { route: "/services/strategy-campaigns", terms: ["estratégia", "strategy", "campanha", "campaign"] },
+  { route: "/services/seo-google-visibility", terms: ["seo", "google", "pesquisa", "search"] },
+  { route: "/services/websites-direct-booking", terms: ["website", "web", "reserva", "booking"] },
+  { route: "/services/ota-optimisation", terms: ["ota", "listing", "anúncio"] }
+];
+
+function serviceRouteFor(label: string) {
+  const normalized = label.toLocaleLowerCase();
+  return serviceRoutes.find(({ terms }) => terms.some((term) => normalized.includes(term)))?.route;
+}
+
 function isVideoMedia(item: Pick<CaseStudyMedia, "mediaType" | "src">) {
   return item.mediaType === "video" || /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(item.src);
 }
@@ -163,14 +177,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                 </div>
 
                 <div className="mt-7 flex flex-wrap gap-2">
-                  {caseStudy.services.map((service) => (
-                    <span
-                      key={service}
-                      className="rounded-full border border-white/22 px-3 py-1.5 text-[0.66rem] font-black uppercase tracking-[0.16em] text-white/78"
-                    >
-                      {service}
-                    </span>
-                  ))}
+                  {caseStudy.services.map((service) => {
+                    const route = serviceRouteFor(service);
+                    const className = "rounded-full border border-white/22 px-3 py-1.5 text-[0.66rem] font-black uppercase tracking-[0.16em] text-white/78 transition hover:border-yellow hover:text-yellow";
+                    return route ? <Link key={service} href={localizedPath(route, locale)} className={className}>{service}</Link> : <span key={service} className={className}>{service}</span>;
+                  })}
                 </div>
               </div>
 

@@ -15,11 +15,20 @@ import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
 import { PresentationGallery } from "@/components/PresentationGallery";
+import { PortugalMarkets } from "@/components/PortugalMarkets";
 import {
   getPublishedBlogPosts,
   getPublishedClientLogos
 } from "@/lib/supabase/queries";
 import { getRequestLocale } from "@/lib/locale-server";
+import { portugueseHomeSeo } from "@/data/seoContent";
+import { buildPageMetadata } from "@/lib/seo";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  if (locale === "pt") return buildPageMetadata({ title: portugueseHomeSeo.title, description: portugueseHomeSeo.description, pathname: "/", locale });
+  return buildPageMetadata({ title: "Hospitality Marketing Agency for Hotels & Restaurants | HOSPO Creative", description: "HOSPO Creative is a specialist hospitality marketing agency for hotels, stays, restaurants and F&B brands across the UK and Portugal.", pathname: "/", locale });
+}
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +45,7 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
+        {locale === "pt" ? <PortugalMarkets /> : null}
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
         <Campaigns locale={locale} />
@@ -54,3 +64,4 @@ export default async function Home() {
     </>
   );
 }
+import type { Metadata } from "next";

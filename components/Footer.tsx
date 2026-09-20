@@ -22,9 +22,16 @@ export function Footer({ locale = "en" }: { locale?: Locale }) {
         { label: "Strategy & Campaigns", href: "/services/strategy-campaigns" },
         { label: "Websites & Direct Booking", href: "/services/websites-direct-booking" },
         { label: "OTA Optimisation", href: "/services/ota-optimisation" },
-        { label: "SEO, AI Search & Visibility", href: "/ai-search" },
+        { label: "SEO & Google Visibility", href: "/services/seo-google-visibility" },
         { label: "Photography & Video", href: "/services/photography-video" },
         { label: "Social Media", href: "/services/social-media" }
+      ]
+    },
+    {
+      title: "Portugal",
+      links: [
+        { label: "Hospitality marketing in Algarve", href: "/algarve" },
+        { label: "Hospitality marketing in Lisbon", href: "/lisboa" }
       ]
     },
     {
@@ -55,7 +62,7 @@ export function Footer({ locale = "en" }: { locale?: Locale }) {
             <p className="mt-5 max-w-sm text-sm leading-6 text-white/60">{footer.description}</p>
             <a href={`mailto:${contact.email}`} className="mt-5 inline-flex min-h-9 items-center text-sm text-white/75 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">{contact.email}</a>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
             {groups.map((group) => <div key={group.title}><p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-yellow">{translate(locale, group.title)}</p><ul className="mt-4 space-y-2.5">{group.links.map((link) => <li key={link.href}><Link href={localizedPath(link.href, locale)} className="text-sm leading-6 text-white/65 transition hover:text-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow">{translate(locale, link.label)}</Link></li>)}</ul></div>)}
           </div>
         </div>
