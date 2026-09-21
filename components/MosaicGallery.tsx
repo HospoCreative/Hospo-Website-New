@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { ArrowLeft, ArrowLeftRight, ArrowRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { SmartImage } from "./SmartImage";
@@ -8,8 +8,8 @@ import { SmartImage } from "./SmartImage";
 type GalleryItem = { src: string; alt: string };
 
 const labels = {
-  en: { gallery: "Hospo Creative visual storytelling gallery", open: "Open image full screen", close: "Close full screen image", previous: "View previous image", next: "View next image", previousSet: "View previous gallery images", nextSet: "View next gallery images" },
-  pt: { gallery: "Galeria de narrativa visual da Hospo Creative", open: "Abrir imagem em ecrã inteiro", close: "Fechar imagem em ecrã inteiro", previous: "Ver imagem anterior", next: "Ver imagem seguinte", previousSet: "Ver imagens anteriores da galeria", nextSet: "Ver imagens seguintes da galeria" }
+  en: { gallery: "Hospo Creative visual storytelling gallery", swipe: "Swipe to explore", open: "Open image full screen", close: "Close full screen image", previous: "View previous image", next: "View next image", previousSet: "View previous gallery images", nextSet: "View next gallery images" },
+  pt: { gallery: "Galeria de narrativa visual da Hospo Creative", swipe: "Deslize para explorar", open: "Abrir imagem em ecrã inteiro", close: "Fechar imagem em ecrã inteiro", previous: "Ver imagem anterior", next: "Ver imagem seguinte", previousSet: "Ver imagens anteriores da galeria", nextSet: "Ver imagens seguintes da galeria" }
 } as const;
 
 function groupIntoSets(items: GalleryItem[], size = 12) {
@@ -57,7 +57,8 @@ export function MosaicGallery({ items, locale = "en" }: { items: GalleryItem[]; 
   return (
     <>
       <div role="region" aria-label={t.gallery} className="mt-10">
-        <div className="relative">
+        <div className="relative mobile-scroll-cue">
+          {sets.length > 1 ? <p className="mb-4 flex items-center gap-2 text-[0.65rem] font-black uppercase tracking-[0.16em] text-ink/60 sm:hidden"><ArrowLeftRight size={16} aria-hidden="true" />{t.swipe}</p> : null}
           <div ref={scrollerRef} className="gallery-slider flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {sets.map((set, setIndex) => (
               <div key={setIndex} className="grid min-w-[88vw] snap-start grid-cols-2 gap-3 sm:min-w-full sm:grid-cols-4 sm:grid-rows-3 sm:gap-4">
