@@ -6,37 +6,7 @@ export const imageFolders = {
   heroBackground: "images/hero/background",
   heroCollage: "images/hero/collage",
   photoGallery: "images/gallery",
-  movingStrip: "images/strip",
   instagramFeed: "images/social/instagram"
-} as const;
-
-// Optional alt text for the moving image strip.
-// New files in public/images/strip appear automatically.
-export const movingStripImageText = {
-  "strip-01.jpg": {
-    alt: "Boutique resort pool and architecture"
-  },
-  "strip-02.jpg": {
-    alt: "Restaurant table with drinks and plated food"
-  },
-  "strip-03.jpg": {
-    alt: "Coastal landscape captured for a client brand"
-  },
-  "strip-04.jpg": {
-    alt: "A travel couple on a boutique hotel balcony"
-  },
-  "strip-05.jpg": {
-    alt: "Spa and wellness details in a tropical resort"
-  },
-  "strip-06.jpg": {
-    alt: "Luxury villa and pool atmosphere"
-  },
-  "strip-07.jpg": {
-    alt: "Cinematic coastal resort at golden hour"
-  },
-  "strip-08.jpg": {
-    alt: "Food and beverage detail"
-  }
 } as const;
 
 // Optional alt text for the photo gallery slider.

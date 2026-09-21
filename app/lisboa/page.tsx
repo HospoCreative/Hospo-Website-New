@@ -6,6 +6,8 @@ import { locationPages } from "@/data/seoContent";
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
 
+export const runtime = "edge";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const page = locationPages.lisboa[locale];

@@ -5,6 +5,8 @@ import { ContactEnquiry } from "@/components/ContactEnquiry";
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
 
+export const runtime = "edge";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return buildPageMetadata({ title: locale === "pt" ? "Contacto | Hospo Creative" : "Contact Hospo Creative", description: locale === "pt" ? "Fale com a Hospo Creative sobre o seu próximo desafio de marketing, conteúdo ou otimização digital." : "Talk to Hospo Creative about your next marketing, content or digital optimisation priority.", pathname: "/contact", locale });

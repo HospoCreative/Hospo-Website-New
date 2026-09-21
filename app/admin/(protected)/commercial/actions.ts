@@ -87,29 +87,8 @@ function refresh() {
   revalidatePath("/hotels/packages");
 }
 
-function proposalSlug(name: string) {
-  return `${slug(name) || "proposal"}-${crypto.randomUUID().slice(0, 8)}`;
-}
-
-async function logProposalEvent(supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>, proposal: { id: string; prospect_id: string | null }, userId: string, eventType: "created" | "package_selected" | "ready" | "sent" | "accepted" | "declined" | "archived", description: string) {
+async function logProposalEvent(supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>, proposal: { id: string }, userId: string, eventType: "created" | "package_selected" | "ready" | "sent" | "accepted" | "declined" | "archived") {
   await supabase.from("proposal_events").insert({ proposal_id: proposal.id, event_type: eventType, actor_user_id: userId });
-  if (proposal.prospect_id) await supabase.from("prospect_activity").insert({ prospect_id: proposal.prospect_id, activity_type: `proposal_${eventType}`, description, created_by: userId, metadata: { proposal_id: proposal.id } });
-}
-
-export async function createProposalFromProspectAction(formData: FormData) {
-  const { supabase, userId } = await context();
-  const prospectId = idSchema.parse(value(formData, "prospect_id"));
-  const [{ data: prospect }, { data: contact }] = await Promise.all([
-    supabase.from("prospects").select("id,name,business_type,website_url,market,location,city").eq("id", prospectId).single(),
-    supabase.from("prospect_contacts").select("name,email").eq("prospect_id", prospectId).eq("is_primary", true).maybeSingle(),
-  ]);
-  if (!prospect) redirect(`/admin/prospects/${prospectId}?error=Prospect%20not%20found`);
-  const template = ["Hotel", "Boutique Hotel", "Guesthouse", "Aparthotel", "Accommodation"].includes(prospect.business_type) ? "hotel" : ["Restaurant", "Cafe", "Bar", "F&B Group"].includes(prospect.business_type) ? "restaurant" : "custom";
-  const { data: proposal, error } = await supabase.from("proposals").insert({ slug: proposalSlug(prospect.name), prospect_id: prospect.id, template_type: template, client_name: prospect.name, business_name: prospect.name, business_type: prospect.business_type, website_url: prospect.website_url, market: prospect.market, location: prospect.location || prospect.city, contact_name: contact?.name || null, contact_email: contact?.email || null, prepared_for: prospect.name, created_by: userId }).select("id,prospect_id").single();
-  if (error || !proposal) redirect(`/admin/prospects/${prospectId}?error=${encodeURIComponent(error?.message ?? "Unable to create proposal")}`);
-  await logProposalEvent(supabase, proposal, userId, "created", "Proposal draft created.");
-  refresh(); revalidatePath(`/admin/prospects/${prospectId}`);
-  redirect(`/admin/proposals/${proposal.id}?message=draft-created`);
 }
 
 export async function selectProposalPackageAction(formData: FormData) {
@@ -118,18 +97,18 @@ export async function selectProposalPackageAction(formData: FormData) {
   const packageId = idSchema.parse(value(formData, "package_id"));
   const { data: item } = await supabase.from("packages").select("*").eq("id", packageId).single();
   if (!item) redirect(`/admin/proposals/${proposalId}?error=Package%20not%20found`);
-  const { data: proposal, error } = await supabase.from("proposals").update({ package_id: item.id, package_snapshot: commercialItemSnapshot(item) }).eq("id", proposalId).select("id,prospect_id").single();
+  const { data: proposal, error } = await supabase.from("proposals").update({ package_id: item.id, package_snapshot: commercialItemSnapshot(item) }).eq("id", proposalId).select("id").single();
   if (error || !proposal) redirect(`/admin/proposals/${proposalId}?error=${encodeURIComponent(error?.message ?? "Unable to select package")}`);
-  await logProposalEvent(supabase, proposal, userId, "package_selected", "Proposal package selected and commercial snapshot created.");
+  await logProposalEvent(supabase, proposal, userId, "package_selected");
   refresh(); revalidatePath(`/admin/proposals/${proposalId}`);
   redirect(`/admin/proposals/${proposalId}?section=package&message=package-selected`);
 }
 
 export async function markProposalSentAction(formData: FormData) {
   const { supabase, userId } = await context(); const id = idSchema.parse(value(formData, "proposal_id"));
-  const { data: proposal, error } = await supabase.from("proposals").update({ status: "sent", sent_at: new Date().toISOString() }).eq("id", id).neq("status", "archived").select("id,prospect_id").single();
+  const { data: proposal, error } = await supabase.from("proposals").update({ status: "sent", sent_at: new Date().toISOString() }).eq("id", id).neq("status", "archived").select("id").single();
   if (error || !proposal) redirect(`/admin/proposals/${id}?error=${encodeURIComponent(error?.message ?? "Unable to mark as sent")}`);
-  await logProposalEvent(supabase, proposal, userId, "sent", "Proposal marked as sent.");
+  await logProposalEvent(supabase, proposal, userId, "sent");
   refresh(); revalidatePath(`/admin/proposals/${id}`); revalidatePath(`/p/${value(formData, "slug")}`);
   redirect(`/admin/proposals/${id}?message=marked-sent`);
 }

@@ -9,6 +9,7 @@ import { localizedPath, translate } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export async function generateMetadata() {
   const locale = await getRequestLocale();

@@ -9,6 +9,8 @@ import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
 
+export const runtime = "edge";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return buildPageMetadata({ title: locale === "pt" ? "Serviços de Marketing para Hotelaria | HOSPO Creative" : "Marketing Services for Hotels & Restaurants | HOSPO Creative", description: locale === "pt" ? "Serviços de marketing para hotelaria: redes sociais, fotografia e vídeo, SEO, websites, OTAs, estratégia e campanhas para hotéis e restaurantes." : "Campaigns, websites, SEO, photography, video and social media for hotels, stays, restaurants, bars and F&B brands.", pathname: "/services", locale });

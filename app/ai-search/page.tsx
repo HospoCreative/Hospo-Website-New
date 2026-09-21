@@ -8,6 +8,8 @@ import { AiSearchAnalytics, AiSearchContactLink } from "@/components/AiSearchAna
 import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata, SITE_URL } from "@/lib/seo";
 
+export const runtime = "edge";
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const description = locale === "pt"

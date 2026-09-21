@@ -9,6 +9,8 @@ import { getRequestLocale } from "@/lib/locale-server";
 import { localizedPath, translate } from "@/lib/i18n";
 import { buildPageMetadata } from "@/lib/seo";
 
+export const runtime = "edge";
+
 const portraits: Record<string, string> = { "Andreia Oliveira": "/images/about/Andreia.jpg", "Tiago Bastos": "/images/about/Tiago.png" };
 
 export async function generateMetadata(): Promise<Metadata> { const locale = await getRequestLocale(); return buildPageMetadata({ title: locale === "pt" ? "Sobre a Hospo Creative" : "About Hospo Creative", description: locale === "pt" ? "Conheça a equipa da Hospo Creative e a forma como apoiamos negócios de hotelaria." : "Meet Hospo Creative and the way we support hospitality businesses.", pathname: "/about", locale }); }

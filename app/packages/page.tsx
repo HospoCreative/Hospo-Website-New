@@ -5,6 +5,7 @@ import { getRequestLocale } from "@/lib/locale-server";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function PackagesPage() {

@@ -12,6 +12,7 @@ import { buildPageMetadata, localizedUrls, SITE_URL } from "@/lib/seo";
 import { SeoStructuredData } from "@/components/SeoStructuredData";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;

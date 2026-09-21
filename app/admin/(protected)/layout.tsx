@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminUser } from "@/lib/supabase/auth";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true }
 };

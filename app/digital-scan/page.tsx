@@ -6,6 +6,7 @@ import { getRequestLocale } from "@/lib/locale-server";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();

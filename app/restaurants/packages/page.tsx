@@ -5,6 +5,7 @@ import { createSupabasePublicClient } from "@/lib/supabase/public";
 import type { CommercialItem } from "@/types/commercial";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function RestaurantPackagesPage() {

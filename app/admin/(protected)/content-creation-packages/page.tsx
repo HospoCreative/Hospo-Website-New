@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PrivateContentCreationLanding } from "@/components/PrivateContentCreationLanding";
 
+export const runtime = "nodejs";
 export const metadata: Metadata = { title: "Content Creation Packages Preview | Hospo CMS", robots: { index: false, follow: false, nocache: true } };
 
 export default function ContentCreationPackagesPreviewPage() {

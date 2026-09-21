@@ -3,6 +3,8 @@ import { Logo } from "@/components/Logo";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { resetPasswordAction, signInAction } from "./actions";
 
+export const runtime = "edge";
+
 type LoginPageProps = {
   searchParams: Promise<{
     error?: string;
