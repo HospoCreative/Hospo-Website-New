@@ -18,6 +18,7 @@ const staticRoutes = [
   "/algarve",
   "/lisboa",
   "/about",
+  "/andreia-oliveira-digital-marketing",
   "/tiago-bastos-commercial-photographer-videographer",
   "/contact",
   "/blog",
