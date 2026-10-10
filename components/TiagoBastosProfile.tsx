@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Check, MapPin } from "lucide-react";
 import { SeoStructuredData } from "@/components/SeoStructuredData";
+import { PortfolioShowcase } from "@/components/PortfolioShowcase";
+import { Reveal } from "@/components/Reveal";
+import { TiagoBastosHero } from "@/components/TiagoBastosHero";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { CaseStudy } from "@/types/caseStudy";
 
@@ -151,32 +154,13 @@ export function TiagoBastosProfile({ locale, caseStudies }: Props) {
   return (
     <>
       <SeoStructuredData data={faqSchema} />
-      <section className="overflow-hidden bg-[#062f5f] text-white">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:px-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-24 lg:px-16">
-          <div className="max-w-3xl">
-            <Link href={localizedPath("/", locale)} className="inline-flex items-center text-sm font-semibold tracking-[0.18em] text-[#f5c342] transition hover:text-white">HOSPO CREATIVE <ArrowUpRight className="ml-2 h-4 w-4" /></Link>
-            <p className="mt-14 text-xs font-bold tracking-[0.18em] text-[#f5c342]">{t.eyebrow}</p>
-            <h1 className="mt-5 font-serif text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">{t.title}</h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-white/80">{t.intro}</p>
-            <p className="mt-8 flex items-center gap-2 text-xs font-bold tracking-[0.18em] text-[#f5c342]"><MapPin className="h-4 w-4" /> {t.location}</p>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Link href={localizedPath("/contact", locale)} className="inline-flex items-center justify-center rounded-full bg-[#f5c342] px-7 py-4 text-sm font-bold text-[#062f5f] transition hover:bg-white">{t.enquire}<ArrowUpRight className="ml-2 h-4 w-4" /></Link>
-              <a href="#work" className="inline-flex items-center justify-center rounded-full border border-white/35 px-7 py-4 text-sm font-bold text-white transition hover:border-white hover:bg-white/10">{t.work}</a>
-            </div>
-          </div>
-          <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-5 rounded-[2rem] border border-[#f5c342]/30" />
-            <Image src="/images/tiago-bastos-headshot.png" alt="Tiago Bastos, commercial photographer and videographer" width={960} height={1200} priority className="relative aspect-[4/5] w-full rounded-[1.55rem] object-cover" />
-          </div>
-        </div>
-      </section>
+      <TiagoBastosHero locale={locale} eyebrow={t.eyebrow} title={t.title} intro={t.intro} location={t.location} enquire={t.enquire} work={t.work} />
 
-      <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <section id="services" className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-7xl">
-          <p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.servicesEyebrow}</p>
-          <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.servicesTitle}</h2>
+          <Reveal><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.servicesEyebrow}</p><h2 className="mt-4 max-w-2xl font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.servicesTitle}</h2></Reveal>
           <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[#062f5f]/15 bg-[#062f5f]/15 md:grid-cols-2 lg:grid-cols-3">
-            {services[locale].map(([number, title, body]) => <article key={number} className="bg-[#f7f6f2] p-7 sm:p-8"><p className="text-xs font-bold tracking-[0.2em] text-[#b27b00]">{number}</p><h3 className="mt-8 text-xl font-bold text-[#062f5f]">{title}</h3><p className="mt-4 leading-7 text-[#173f6d]">{body}</p></article>)}
+            {services[locale].map(([number, title, body], index) => <Reveal key={number} delay={index * 0.05} className="bg-[#f7f6f2] p-7 sm:p-8"><article><p className="text-xs font-bold tracking-[0.2em] text-[#b27b00]">{number}</p><h3 className="mt-8 text-xl font-bold text-[#062f5f]">{title}</h3><p className="mt-4 leading-7 text-[#173f6d]">{body}</p></article></Reveal>)}
           </div>
         </div>
       </section>
@@ -189,13 +173,15 @@ export function TiagoBastosProfile({ locale, caseStudies }: Props) {
         </div>
       </section>
 
-      <section className="bg-[#0b3b70] px-6 py-20 text-white sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr]"><div><p className="text-xs font-bold tracking-[0.18em] text-[#f5c342]">{t.experienceEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">{t.experienceTitle}</h2></div><div><p className="max-w-2xl text-lg leading-8 text-white/85">{t.experience}</p><ul className="mt-8 grid gap-3 sm:grid-cols-2">{[locale === "pt" ? "Direção criativa com contexto operacional" : "Creative direction with operational context", locale === "pt" ? "Conteúdo pensado para equipas comerciais" : "Content made for commercial teams", locale === "pt" ? "Produções eficientes no local" : "Efficient productions on location", locale === "pt" ? "Fotografia, vídeo e edição numa equipa" : "Photography, video and editing in one team"].map((item) => <li key={item} className="flex gap-3 text-sm text-white/85"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#f5c342]" />{item}</li>)}</ul></div></div></section>
+      <PortfolioShowcase locale={locale} />
+
+      <section id="about" className="bg-[#0b3b70] px-6 py-20 text-white sm:px-10 lg:px-16 lg:py-28"><Reveal className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr]"><div><p className="text-xs font-bold tracking-[0.18em] text-[#f5c342]">{t.experienceEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">{t.experienceTitle}</h2></div><div><p className="max-w-2xl text-lg leading-8 text-white/85">{t.experience}</p><ul className="mt-8 grid gap-3 sm:grid-cols-2">{[locale === "pt" ? "Direção criativa com contexto operacional" : "Creative direction with operational context", locale === "pt" ? "Conteúdo pensado para equipas comerciais" : "Content made for commercial teams", locale === "pt" ? "Produções eficientes no local" : "Efficient productions on location", locale === "pt" ? "Fotografia, vídeo e edição numa equipa" : "Photography, video and editing in one team"].map((item) => <li key={item} className="flex gap-3 text-sm text-white/85"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#f5c342]" />{item}</li>)}</ul></div></Reveal></section>
 
       <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-7xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.geographyEyebrow}</p><h2 className="mt-4 max-w-3xl font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.geographyTitle}</h2><div className="mt-12 grid gap-6 md:grid-cols-3">{(locale === "pt" ? [["Portugal", "Baseado em Portugal, disponível no Algarve, Lisboa e em todo o país para fotografia e vídeo comercial."], ["Reino Unido", "Disponível em Birmingham, West Midlands, Londres e no restante Reino Unido."], ["Internacional", "Produções internacionais selecionadas, com requisitos de viagem definidos na proposta."]] : [["Portugal", "Based in Portugal, available in the Algarve, Lisbon and nationwide for commercial photography and video."], ["United Kingdom", "Available in Birmingham, the West Midlands, London and throughout the wider UK."], ["International", "Selected international productions, with travel requirements set out in the proposal."]]).map(([title, body]) => <article key={title} className="rounded-2xl bg-white p-7"><MapPin className="h-5 w-5 text-[#b27b00]" /><h3 className="mt-6 text-xl font-bold text-[#062f5f]">{title}</h3><p className="mt-3 leading-7 text-[#173f6d]">{body}</p></article>)}</div></div></section>
 
       <section className="bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-7xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.testimonialsEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.testimonialsTitle}</h2><div className="mt-12 grid gap-6 lg:grid-cols-3">{testimonials[locale].map(([quote, source]) => <figure key={source} className="rounded-2xl border border-[#062f5f]/15 p-7"><blockquote className="font-serif text-2xl leading-snug text-[#062f5f]">“{quote}”</blockquote><figcaption className="mt-7 text-sm leading-6 text-[#173f6d]">{source}</figcaption></figure>)}</div></div></section>
 
-      <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-4xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.faqEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.faqTitle}</h2><div className="mt-10 divide-y divide-[#062f5f]/15 border-y border-[#062f5f]/15">{faqs[locale].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer list-none pr-8 text-lg font-bold text-[#062f5f] marker:hidden">{question}<span className="float-right text-[#b27b00] group-open:rotate-45">+</span></summary><p className="max-w-3xl pt-4 leading-7 text-[#173f6d]">{answer}</p></details>)}</div></div></section>
+      <section id="faq" className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><Reveal className="mx-auto max-w-4xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.faqEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.faqTitle}</h2><div className="mt-10 divide-y divide-[#062f5f]/15 border-y border-[#062f5f]/15">{faqs[locale].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer list-none pr-8 text-lg font-bold text-[#062f5f] marker:hidden">{question}<span className="float-right text-[#b27b00] group-open:rotate-45">+</span></summary><p className="max-w-3xl pt-4 leading-7 text-[#173f6d]">{answer}</p></details>)}</div></Reveal></section>
 
       <section className="bg-[#062f5f] px-6 py-20 text-white sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-4xl text-center"><h2 className="font-serif text-4xl leading-tight sm:text-6xl">{t.ctaTitle}</h2><p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/80">{t.ctaBody}</p><Link href={localizedPath("/contact", locale)} className="mt-10 inline-flex items-center rounded-full bg-[#f5c342] px-8 py-4 text-sm font-bold text-[#062f5f] transition hover:bg-white">{t.cta}<ArrowUpRight className="ml-2 h-4 w-4" /></Link></div></section>
     </>

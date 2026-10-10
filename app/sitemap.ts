@@ -18,7 +18,7 @@ const staticRoutes = [
   "/algarve",
   "/lisboa",
   "/about",
-  "/tiago-bastos",
+  "/tiago-bastos-commercial-photographer-videographer",
   "/contact",
   "/blog",
   "/case-studies",
