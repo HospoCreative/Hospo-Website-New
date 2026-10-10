@@ -1,67 +1,203 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, Download, Linkedin, Mail, MapPin } from "lucide-react";
-import { imageFolders, photoGalleryImageText } from "@/data/images";
-import { getPublicImageList } from "@/lib/imageFolders";
+import { ArrowUpRight, Check, MapPin } from "lucide-react";
+import { SeoStructuredData } from "@/components/SeoStructuredData";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { CaseStudy } from "@/types/caseStudy";
-import { PrintPortfolioButton } from "./PrintPortfolioButton";
 
-type Text = Record<string, string>;
-const copy: Record<Locale, Text> = {
+type Props = { locale: Locale; caseStudies: CaseStudy[] };
+
+const content = {
   en: {
-    eyebrow: "Content creator · Photographer · Videographer", subhead: "Content creator, photographer and videographer specialising in hospitality, food and lifestyle.", body: "I plan, shoot and edit photography, video and social-first content for hotels, restaurants and brands, combining professional production with 15 years of hospitality experience and a strong understanding of digital marketing.", location: "Portugal & UK", availability: "Available for international projects", work: "View my work", cv: "Download CV", portfolioPdf: "Save portfolio as PDF", about: "About", aboutTitle: "Hospitality experience. Creative production. Digital thinking.", aboutBody: "I’m a photographer, videographer and content creator with a background spanning approximately 15 years in hospitality and F&B across Portugal and the UK. Today I combine that operational experience with professional visual production, creating photography, video and digital content for social media, websites, campaigns and commercial use.", hospo: "At Hospo Creative, which I co-founded in 2024, I lead photography, video, creative direction and business development across hospitality projects in the UK, Portugal and selected international markets.", selected: "Selected work", selectedTitle: "Projects that show the work, not just the client list.", selectedBody: "A selection of hotel, restaurant and hospitality projects where I have contributed to visual production through Hospo Creative.", contribution: "My contribution", view: "View project", capabilities: "What I do", capabilitiesTitle: "End-to-end content production, built for real use.", process: "Production process", processTitle: "More than taking pictures.", experience: "Experience", experienceTitle: "A creative career grounded in hospitality operations.", skills: "Skills & tools", skillsTitle: "Creative, technical and commercially aware.", development: "Professional development", testimonials: "What clients say", testimonialsTitle: "Feedback on the work delivered.", connect: "Let’s connect", connectTitle: "Looking for someone who can plan, shoot and deliver content?", connectBody: "I’m open to content, photography, video and hospitality marketing opportunities across Portugal, the UK and selected international projects.", email: "Email me"
+    eyebrow: "COMMERCIAL PHOTOGRAPHER · VIDEOGRAPHER · CONTENT CREATOR",
+    title: "Commercial Photographer & Videographer for Businesses",
+    intro: "Commercial photography and video for hotels, restaurants, properties and brands across Portugal and the UK. Available in the Algarve, Lisbon, Birmingham, the West Midlands, London and for selected international productions.",
+    location: "PORTUGAL · UK · INTERNATIONAL",
+    enquire: "Enquire About a Project",
+    work: "View My Work",
+    servicesEyebrow: "WHAT I CREATE",
+    servicesTitle: "Visual content with a commercial purpose.",
+    workEyebrow: "SELECTED WORK",
+    workTitle: "Projects made for real businesses.",
+    workIntro: "Photography and video that show the experience clearly, give people a reason to choose it and provide useful assets across marketing channels.",
+    viewProject: "View project",
+    experienceEyebrow: "HOSPITALITY EXPERIENCE",
+    experienceTitle: "A practical understanding behind every shoot.",
+    experience: "With around 15 years of experience across hospitality and F&B operations in Portugal and the UK, I understand the pace, standards and details that shape a guest experience. As co-founder of Hospo Creative, I combine this operational perspective with commercial photography, video and creative direction.",
+    geographyEyebrow: "WHERE I WORK",
+    geographyTitle: "Photography & video across Portugal and the UK.",
+    testimonialsEyebrow: "CLIENT FEEDBACK",
+    testimonialsTitle: "Trusted by teams who care about the result.",
+    faqEyebrow: "FAQ",
+    faqTitle: "Questions about working together.",
+    ctaTitle: "Need photography or video for your business?",
+    ctaBody: "Tell me about your business, location and what you need to show. I will come back with the most useful next step for your project.",
+    cta: "Start a conversation",
+    backToHospo: "Hospo Creative"
   },
   pt: {
-    eyebrow: "Criador de conteúdo · Fotógrafo · Videógrafo", subhead: "Criador de conteúdo, fotógrafo e videógrafo especializado em hotelaria, gastronomia e lifestyle.", body: "Planeio, fotografo e edito fotografia, vídeo e conteúdo pensado para redes sociais para hotéis, restaurantes e marcas, combinando produção profissional com 15 anos de experiência em hotelaria e um conhecimento sólido de marketing digital.", location: "Portugal e Reino Unido", availability: "Disponível para projetos internacionais", work: "Ver projetos", cv: "Descarregar CV", portfolioPdf: "Guardar portefólio em PDF", about: "Sobre mim", aboutTitle: "Experiência em hotelaria. Produção criativa. Pensamento digital.", aboutBody: "Sou fotógrafo, videógrafo e criador de conteúdo, com um percurso de aproximadamente 15 anos em hotelaria e F&B, entre Portugal e o Reino Unido. Atualmente junto essa experiência operacional à produção visual profissional, criando fotografia, vídeo e conteúdo digital para redes sociais, websites, campanhas e utilização comercial.", hospo: "Na Hospo Creative, que cofundei em 2024, lidero fotografia, vídeo, direção criativa e desenvolvimento de negócio em projetos de hotelaria no Reino Unido, em Portugal e em mercados internacionais selecionados.", selected: "Projetos selecionados", selectedTitle: "Projetos que mostram o trabalho, não apenas a lista de clientes.", selectedBody: "Uma seleção de projetos de hotelaria e restauração nos quais contribuí para a produção visual através da Hospo Creative.", contribution: "A minha contribuição", view: "Ver projeto", capabilities: "O que faço", capabilitiesTitle: "Produção de conteúdo de ponta a ponta, pensada para utilização real.", process: "Processo de produção", processTitle: "Mais do que tirar fotografias.", experience: "Experiência", experienceTitle: "Uma carreira criativa assente em operações de hotelaria.", skills: "Competências e ferramentas", skillsTitle: "Criativo, técnico e comercialmente consciente.", development: "Formação profissional", testimonials: "O que dizem os clientes", testimonialsTitle: "Feedback sobre o trabalho entregue.", connect: "Vamos falar", connectTitle: "Procura alguém que planeie, produza e entregue conteúdo?", connectBody: "Estou disponível para oportunidades de conteúdo, fotografia, vídeo e marketing para hotelaria em Portugal, no Reino Unido e em projetos internacionais selecionados.", email: "Enviar email"
+    eyebrow: "FOTÓGRAFO COMERCIAL · VIDEÓGRAFO · CRIADOR DE CONTEÚDO",
+    title: "Fotógrafo Comercial e Videógrafo para Negócios",
+    intro: "Fotografia e vídeo comercial para hotéis, restaurantes, propriedades e marcas em Portugal e no Reino Unido. Disponível no Algarve, Lisboa, Birmingham, West Midlands, Londres e para produções internacionais selecionadas.",
+    location: "PORTUGAL · REINO UNIDO · INTERNACIONAL",
+    enquire: "Falar sobre um projeto",
+    work: "Ver projetos",
+    servicesEyebrow: "O QUE CRIO",
+    servicesTitle: "Conteúdo visual com objetivo comercial.",
+    workEyebrow: "PROJETOS SELECIONADOS",
+    workTitle: "Projetos para negócios reais.",
+    workIntro: "Fotografia e vídeo que mostram a experiência com clareza, ajudam as pessoas a escolhê-la e criam assets úteis em vários canais de marketing.",
+    viewProject: "Ver projeto",
+    experienceEyebrow: "EXPERIÊNCIA EM HOTELARIA",
+    experienceTitle: "Uma perspetiva prática em cada produção.",
+    experience: "Com cerca de 15 anos de experiência em operações de hotelaria e F&B em Portugal e no Reino Unido, compreendo o ritmo, os padrões e os detalhes que definem a experiência de um cliente. Como cofundador da Hospo Creative, combino essa perspetiva operacional com fotografia comercial, vídeo e direção criativa.",
+    geographyEyebrow: "ONDE TRABALHO",
+    geographyTitle: "Fotografia e vídeo em Portugal e no Reino Unido.",
+    testimonialsEyebrow: "OPINIÃO DE CLIENTES",
+    testimonialsTitle: "Escolhido por equipas que valorizam o resultado.",
+    faqEyebrow: "PERGUNTAS FREQUENTES",
+    faqTitle: "Questões sobre trabalhar em conjunto.",
+    ctaTitle: "Precisa de fotografia ou vídeo para o seu negócio?",
+    ctaBody: "Fale-me do seu negócio, localização e do que precisa de mostrar. Responderei com o próximo passo mais útil para o seu projeto.",
+    cta: "Iniciar uma conversa",
+    backToHospo: "Hospo Creative"
   }
-};
+} as const;
 
-const capability: Record<Locale, Array<[string, string, string]>> = {
-  en: [["01", "Photography", "Hospitality, food & beverage, interiors, lifestyle, people, events and campaign imagery."], ["02", "Video & short-form content", "Reels, TikTok, social-first video, experience films, campaign assets and vertical content."], ["03", "Content production", "Creative concepts, briefing, shot lists, production planning, styling direction, talent guidance and on-location production."], ["04", "Post-production", "Photo selection, retouching, colour grading, video editing and platform-ready delivery."], ["05", "Social & digital content", "Content planned for Instagram, TikTok, websites, paid campaigns, listings and digital channels."], ["06", "Content strategy", "Understanding the objective, audience and channel before production so the work has a clear commercial role."]],
-  pt: [["01", "Fotografia", "Hotelaria, alimentação e bebidas, interiores, lifestyle, pessoas, eventos e imagem de campanha."], ["02", "Vídeo e conteúdo de curta duração", "Reels, TikTok, vídeo pensado para redes sociais, filmes de experiência, materiais de campanha e conteúdo vertical."], ["03", "Produção de conteúdo", "Conceitos criativos, briefing, listas de captação, planeamento de produção, direção de styling, orientação de talento e produção no local."], ["04", "Pós-produção", "Seleção de fotografia, retoque, gradação de cor, edição de vídeo e entrega preparada para cada plataforma."], ["05", "Conteúdo social e digital", "Conteúdo planeado para Instagram, TikTok, websites, campanhas pagas, listings e canais digitais."], ["06", "Estratégia de conteúdo", "Compreender o objetivo, audiência e canal antes da produção, para que o trabalho tenha uma função comercial clara."]]
-};
-const production: Record<Locale, Array<[string, string, string]>> = {
-  en: [["01", "Brief", "Understand the objective, audience, channels and deliverables."], ["02", "Plan", "Build the shot list, schedule, styling direction and practical production plan."], ["03", "Produce", "Capture photography and video with the intended platform and commercial use in mind."], ["04", "Edit & deliver", "Select, retouch, edit, colour grade and prepare assets for the required channels."]],
-  pt: [["01", "Briefing", "Compreender o objetivo, a audiência, os canais e os materiais a entregar."], ["02", "Planear", "Construir a lista de captação, o calendário, a direção de styling e o plano prático de produção."], ["03", "Produzir", "Captar fotografia e vídeo tendo em conta a plataforma e a utilização comercial prevista."], ["04", "Editar e entregar", "Selecionar, retocar, editar, fazer a gradação de cor e preparar materiais para os canais necessários."]]
-};
-const details: Record<string, Record<Locale, [string, string]>> = {
-  "pan-pacific-hanoi": { en: ["Photography · Video · Hospitality content", "Photography and video content capturing the atmosphere and culinary highlights of Pan Pacific Hanoi."], pt: ["Fotografia · Vídeo · Conteúdo para hotelaria", "Conteúdo de fotografia e vídeo que capta a atmosfera e os destaques gastronómicos do Pan Pacific Hanoi."] },
-  "pullman-danang-beach-resort": { en: ["Creative direction · Photography · Video", "Photography and video production for the relaunch of the resort’s liquid-nitrogen ice-cream experience, with lifestyle and resort imagery captured across the property."], pt: ["Direção criativa · Fotografia · Vídeo", "Produção de fotografia e vídeo para o relançamento da experiência de gelado de nitrogénio do resort, complementada por imagens de lifestyle e do espaço."] },
-  "yotel-porto": { en: ["Photography · Video · Creative direction", "A complete visual production across rooms, technology, facilities, breakfast, food offering and lifestyle moments."], pt: ["Fotografia · Vídeo · Direção criativa", "Uma produção visual completa que abrange quartos, tecnologia, instalações, pequeno-almoço, oferta gastronómica e momentos de lifestyle."] },
-  "ashas-award-winning-restaurant": { en: ["Food photography · Video · Social content", "Ongoing photography and video supporting seasonal menus, new dishes, cocktail launches and campaign content."], pt: ["Fotografia de gastronomia · Vídeo · Conteúdo para redes sociais", "Fotografia e vídeo contínuos para menus sazonais, novos pratos, lançamentos de cocktails e conteúdo de campanha."] },
-  "beleza-rodizio-instagram-growth": { en: ["Photography · Video · Content production", "Social-first visual content produced as part of a multi-location content and marketing programme."], pt: ["Fotografia · Vídeo · Produção de conteúdo", "Conteúdo visual pensado para redes sociais, produzido como parte de um programa de conteúdo e marketing para várias localizações."] },
-  "grand-tourane-hotel": { en: ["Photography · Video · Lifestyle content", "Guest-experience-led photography and video focused on the spa, outdoor areas and key hotel spaces."], pt: ["Fotografia · Vídeo · Conteúdo de lifestyle", "Fotografia e vídeo centrados na experiência do hóspede, com foco no spa, zonas exteriores e espaços-chave do hotel."] }
-};
-const preferred = ["pan pacific", "pullman-danang-beach-resort", "yotel-porto", "ashas-award-winning-restaurant", "beleza-rodizio-instagram-growth", "grand-tourane-hotel"];
-const work: Record<Locale, Array<[string, string, string, string]>> = {
-  en: [["2024–Present", "HOSPO Creative", "Co-Founder · Creative & Business Development Director · Photographer / Content Creator", "Lead photography, video, creative direction and business development. I manage productions from brief and shot planning through editing, colour grading and delivery."], ["2022–2026", "Orelle / The Evolv Collection", "Bar Manager", "Luxury hospitality operations and guest experience in Birmingham."], ["2022", "The Grand Hotel Birmingham", "Assistant Bar Manager", "Premium hotel operations, team support and guest experience."], ["2020–2022", "The Edgbaston Boutique Hotel & Cocktail Lounge", "Assistant Bar Manager / Bar Manager", "Hotel and cocktail-bar operations, team leadership and service delivery."], ["2016–2020", "VILA VITA Parc Resort & Spa", "Head Bartender", "Five-star resort, luxury events and fine-dining service, including a two-Michelin-star restaurant environment."], ["2019", "Bacardi Martini Portugal", "Brand Activator", "Brand activation, consumer engagement, campaign objectives and reporting."], ["2014–2016", "Tivoli / Meliá", "Hospitality operations", "Early experience across hotel and food and beverage operations in Portugal."]],
-  pt: [["2024–Presente", "HOSPO Creative", "Cofundador · Diretor de Criação e Desenvolvimento de Negócio · Fotógrafo / Criador de Conteúdo", "Lidero fotografia, vídeo, direção criativa e desenvolvimento de negócio. Acompanho as produções desde o briefing e planeamento até à edição, gradação de cor e entrega."], ["2022–2026", "Orelle / The Evolv Collection", "Bar Manager", "Operações de hotelaria de luxo e experiência do cliente em Birmingham."], ["2022", "The Grand Hotel Birmingham", "Assistant Bar Manager", "Operações hoteleiras premium, apoio à equipa e experiência do cliente."], ["2020–2022", "The Edgbaston Boutique Hotel & Cocktail Lounge", "Assistant Bar Manager / Bar Manager", "Operações de hotel e cocktail bar, liderança de equipa e serviço."], ["2016–2020", "VILA VITA Parc Resort & Spa", "Head Bartender", "Resort de cinco estrelas, eventos de luxo e serviço de fine dining, incluindo contacto com um ambiente de restaurante com duas estrelas Michelin."], ["2019", "Bacardi Martini Portugal", "Brand Activator", "Ativação de marca, envolvimento do consumidor, objetivos de campanha e reporte."], ["2014–2016", "Tivoli / Meliá", "Operações de hotelaria", "Experiência inicial em operações hoteleiras e de alimentação e bebidas em Portugal."]]
-};
-const skills: Record<Locale, Array<[string, string[]]>> = {
-  en: [["Creative", ["Photography", "Videography", "Short-form video", "Food & beverage photography", "Hospitality & interior photography", "Lifestyle photography", "Visual storytelling", "Creative direction"]], ["Content", ["Content creation", "Social-first content", "Reels & TikTok", "Content planning", "Shot lists", "Campaign content", "Brand content"]], ["Post-production", ["Adobe Lightroom", "Adobe Photoshop", "Adobe Premiere Pro", "CapCut", "Photo retouching", "Video editing", "Colour grading"]], ["Marketing & commercial", ["Hospitality marketing", "Digital marketing", "Social media", "Content strategy", "Business development", "Client management", "Campaign planning", "Performance analysis"]], ["Production", ["Sony full-frame systems", "Professional lighting", "Drone", "Gimbal", "On-location production", "Production coordination"]]],
-  pt: [["Criativo", ["Fotografia", "Videografia", "Vídeo de curta duração", "Fotografia de alimentação e bebidas", "Fotografia de hotelaria e interiores", "Fotografia de lifestyle", "Narrativa visual", "Direção criativa"]], ["Conteúdo", ["Criação de conteúdo", "Conteúdo pensado para redes sociais", "Reels e TikTok", "Planeamento de conteúdo", "Listas de captação", "Conteúdo de campanha", "Conteúdo de marca"]], ["Pós-produção", ["Adobe Lightroom", "Adobe Photoshop", "Adobe Premiere Pro", "CapCut", "Retoque fotográfico", "Edição de vídeo", "Gradação de cor"]], ["Marketing e comercial", ["Marketing para hotelaria", "Marketing digital", "Redes sociais", "Estratégia de conteúdo", "Desenvolvimento de negócio", "Gestão de clientes", "Planeamento de campanhas", "Análise de desempenho"]], ["Produção", ["Sistemas Sony full-frame", "Iluminação profissional", "Drone", "Gimbal", "Produção no local", "Coordenação de produção"]]]
-};
-const courses = ["AI Generativa para Profissionais do Turismo | Turismo de Portugal / NEST | 2026", "Going Digital: Marketing Digital para o Setor do Turismo | Turismo de Portugal / NEST | 2026", "The Fundamentals of Digital Marketing | Google Digital Garage / The Open University | 2023", "Branding Estratégico | Turismo de Portugal | 2022", "Técnicas de Marketing Digital Avançado: E-commerce, Publicidade e Retargeting | Turismo de Portugal | 2021", "Ferramentas de controlo de gestão | Turismo de Portugal | 2021", "Digital Marketing | IEFP Portugal | 2020"];
-const feedback: Record<Locale, Array<[string, string]>> = {
-  en: [["We have reviewed all of the deliverables, and they are truly eye-catching. We especially love the way you captured our Afternoon Tea set and the Nitrogen Ice Cream Show.", "Marketing Communications Manager, Pullman Danang Beach Resort, Accor Hotels"], ["The final result from the YOTEL Porto photoshoot looks fantastic. We’re really pleased with the images and will be sharing them with our social media team to use across our digital channels.", "Influencer Marketing Consultant, M Public Relations"], ["Great results and great photos. We were really pleased with the final outcome and the quality of the content delivered for Asha’s Birmingham.", "Director, Asha’s Birmingham"]],
-  pt: [["Revimos todos os materiais entregues e estão realmente apelativos. Gostamos especialmente da forma como captou o nosso conjunto de Chá da Tarde e o espetáculo de gelado de nitrogénio.", "Gestora de Comunicação de Marketing, Pullman Danang Beach Resort, Accor Hotels"], ["O resultado final da sessão fotográfica do YOTEL Porto está fantástico. Estamos muito satisfeitos com as imagens e vamos partilhá-las com a nossa equipa de redes sociais para as utilizar nos nossos canais digitais.", "Consultor de Marketing de Influência, M Public Relations"], ["Excelentes resultados e excelentes fotografias. Ficámos muito satisfeitos com o resultado final e com a qualidade do conteúdo entregue para o Asha’s Birmingham.", "Diretor, Asha’s Birmingham"]]
-};
+const services = {
+  en: [
+    ["01", "Hospitality & Hotels", "Hotel photography, room and suite imagery, lifestyle, amenities and video content that helps guests understand the stay before they book."],
+    ["02", "Food, Drink & Restaurants", "Food and drinks photography, restaurant interiors, service, people and short-form video for venues, menus and campaigns."],
+    ["03", "Corporate Events & Conferences", "Event photography and video that capture speakers, attendees, brand moments and the energy of the day without disrupting it."],
+    ["04", "Property & Real Estate", "Photography and video for residential, hospitality and commercial spaces, made to communicate scale, detail and atmosphere."],
+    ["05", "Brands & Local Businesses", "Brand imagery, team portraits, product, workspace and campaign content for businesses that need a stronger visual presence."],
+    ["06", "Video & Social Content", "Short-form vertical video, campaign edits and a practical content library designed for websites, social channels and digital marketing."]
+  ],
+  pt: [
+    ["01", "Hotelaria e Hotéis", "Fotografia para hotéis, quartos e suites, lifestyle, comodidades e vídeo que ajuda os hóspedes a compreender a estadia antes de reservar."],
+    ["02", "Gastronomia, Bebidas e Restaurantes", "Fotografia de comida e bebidas, interiores de restaurantes, serviço, pessoas e vídeo short-form para espaços, menus e campanhas."],
+    ["03", "Eventos Corporativos e Conferências", "Fotografia e vídeo de eventos que registam oradores, participantes, momentos de marca e a energia do dia sem interromper o evento."],
+    ["04", "Propriedade e Imobiliário", "Fotografia e vídeo para espaços residenciais, de hotelaria e comerciais, pensados para comunicar escala, detalhe e ambiente."],
+    ["05", "Marcas e Negócios Locais", "Imagem de marca, retratos de equipa, produto, espaço de trabalho e conteúdo de campanha para negócios que precisam de uma presença visual mais forte."],
+    ["06", "Vídeo e Conteúdo para Redes Sociais", "Vídeo vertical short-form, edições de campanha e uma biblioteca de conteúdo prática para websites, redes sociais e marketing digital."]
+  ]
+} as const;
 
-export function TiagoBastosProfile({ locale, caseStudies }: { locale: Locale; caseStudies: CaseStudy[] }) {
-  const t = copy[locale]; const projects = preferred.map((reference) => caseStudies.find((item) => item.slug === reference || item.clientName.toLowerCase().includes(reference))).filter((item): item is CaseStudy => Boolean(item));
-  const headerGridImages = getPublicImageList(imageFolders.photoGallery, { text: photoGalleryImageText }).slice(0, 4);
-  return <article className="overflow-hidden bg-white text-ink">
-    <header className="sticky top-0 z-40 border-b border-white/15 bg-ink/95 px-5 py-4 text-white backdrop-blur sm:px-8"><div className="mx-auto flex max-w-7xl items-center justify-between gap-6"><a href="#top" className="font-serif text-lg tracking-[-0.03em] text-white">TIAGO BASTOS</a><nav aria-label="Personal navigation" className="hidden items-center gap-5 text-[0.62rem] font-black uppercase tracking-[.14em] text-white/65 md:flex">{[["work", locale === "pt" ? "Projetos" : "Work"], ["experience", locale === "pt" ? "Experiência" : "Experience"], ["skills", locale === "pt" ? "Competências" : "Skills"], ["about", t.about], ["contact", locale === "pt" ? "Contacto" : "Contact"]].map(([id, name]) => <a key={id} href={`#${id}`} className="transition hover:text-yellow">{name}</a>)}</nav><a href="/documents/Tiago-Bastos-CV.pdf" download className="inline-flex items-center gap-2 text-[.62rem] font-black uppercase tracking-[.14em] text-yellow transition hover:text-white"><Download size={14} />{t.cv}</a></div></header>
-    <section id="top" className="bg-ink px-5 py-14 text-white sm:px-8 sm:py-20"><div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.2fr_.8fr] lg:gap-16"><div><p className="section-eyebrow text-yellow">{t.eyebrow}</p><div className="mt-5 flex items-start gap-5 sm:gap-7"><h1 className="font-serif text-[clamp(3.6rem,7vw,6.6rem)] font-semibold leading-[.88] tracking-[-.05em]">Tiago<br />Bastos</h1><span className="relative mt-2 size-16 shrink-0 overflow-hidden rounded-full border-2 border-yellow/80 sm:size-20"><Image src="/images/tiago-bastos-headshot.png" alt="Tiago Bastos" fill sizes="80px" quality={90} className="object-cover object-center" /></span></div><p className="mt-7 max-w-2xl text-xl leading-8 text-white/86 sm:text-2xl sm:leading-9">{t.subhead}</p><p className="mt-5 max-w-2xl text-base leading-8 text-white/64">{t.body}</p><div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-xs font-bold uppercase tracking-[.13em] text-white/65"><span className="inline-flex items-center gap-2"><MapPin size={15} className="text-yellow" />{t.location}</span><span>{t.availability}</span></div><div className="mt-9 flex flex-wrap gap-3"><a href="#work" className="button-primary group">{t.work}<ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></a><a href="/documents/Tiago-Bastos-CV.pdf" download className="button-secondary"><Download size={16} />{t.cv}</a><PrintPortfolioButton label={t.portfolioPdf} /><a href="https://www.linkedin.com/in/tiagobastos93" className="inline-flex min-h-12 items-center gap-2 px-2 text-xs font-black uppercase tracking-[.14em] text-white/68 transition hover:text-yellow"><Linkedin size={16} />LinkedIn</a></div></div><div className="mx-auto grid w-full max-w-[32rem] grid-cols-2 gap-3 sm:gap-4">{headerGridImages.map((image, index) => <figure key={image.src} className="relative aspect-square overflow-hidden rounded-[8px] border border-white/15 bg-white/5"><Image src={image.src} alt={image.alt} fill priority={index < 2} sizes="(min-width: 1024px) 19vw, (min-width: 640px) 38vw, 43vw" className="object-cover object-center" /></figure>)}</div></div></section>
-    <section id="about" className="px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.95fr_1.05fr] lg:gap-16"><div><p className="section-eyebrow text-ink/52">{t.about}</p><h2 className="mt-4 font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.aboutTitle}</h2></div><div className="self-end"><p className="text-base leading-8 text-ink/72 sm:text-lg">{t.aboutBody}</p><p className="mt-6 border-l-2 border-yellow pl-5 text-sm leading-7 text-ink/66">{t.hospo}</p></div></div></section>
-    <section id="work" className="bg-[#f5f7fa] px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-ink/52">{t.selected}</p><h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.selectedTitle}</h2><p className="mt-5 max-w-2xl text-base leading-7 text-ink/65">{t.selectedBody}</p><div className="mt-11 grid gap-5 md:grid-cols-2 xl:grid-cols-3">{projects.map((project) => { const item = (details[project.slug] || (project.clientName.toLowerCase().includes("pan pacific") ? details["pan-pacific-hanoi"] : undefined))?.[locale]; const image = project.heroImage || project.media?.find((media) => media.mediaType === "image")?.src; const href = localizedPath(`/case-studies/${project.slug}`, locale); return <article key={project.slug} className="group overflow-hidden rounded-[8px] border border-ink/15 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"><Link href={href} className="relative block aspect-[4/3] bg-ink">{image ? <Image src={image} alt={project.heroImageAlt || project.title} fill sizes="(min-width: 1280px) 29vw, (min-width: 768px) 45vw, 100vw" className="object-cover transition duration-700 group-hover:scale-[1.035]" /> : <span className="absolute inset-0 grid place-items-center p-6 text-center font-serif text-3xl text-white">{project.clientName}</span>}</Link><div className="p-6"><p className="text-[.62rem] font-black uppercase tracking-[.15em] text-ink/50">{project.clientName}{project.location ? ` · ${project.location}` : ""}</p><h3 className="mt-3 font-serif text-3xl leading-none">{project.title}</h3><p className="mt-4 text-sm font-bold leading-6 text-ink/75">{t.contribution}: {item?.[0] || project.services.slice(0, 3).join(" · ")}</p><p className="mt-3 text-sm leading-7 text-ink/64">{item?.[1] || project.summary}</p><Link href={href} className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[.14em] text-ink transition hover:text-yellow">{t.view}<ArrowUpRight size={16} /></Link></div></article>; })}</div></div></section>
-    <section className="px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-ink/52">{t.capabilities}</p><h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.capabilitiesTitle}</h2><div className="mt-11 grid border-l border-t border-ink/15 md:grid-cols-2 lg:grid-cols-3">{capability[locale].map(([number, title, body]) => <article key={number} className="min-h-60 border-b border-r border-ink/15 p-6 sm:p-7"><p className="section-eyebrow text-ink/43">{number}</p><h3 className="mt-8 font-serif text-3xl leading-none">{title}</h3><p className="mt-4 text-sm leading-7 text-ink/65">{body}</p></article>)}</div></div></section>
-    <section className="bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{t.process}</p><h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.processTitle}</h2><div className="mt-11 grid border-l border-t border-white/15 md:grid-cols-2 lg:grid-cols-4">{production[locale].map(([number, title, body]) => <article key={number} className="min-h-56 border-b border-r border-white/15 p-6"><p className="section-eyebrow text-yellow">{number}</p><h3 className="mt-8 font-serif text-3xl">{title}</h3><p className="mt-4 text-sm leading-7 text-white/68">{body}</p></article>)}</div></div></section>
-    <section id="experience" className="px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.82fr_1.18fr] lg:gap-20"><div><p className="section-eyebrow text-ink/52">{t.experience}</p><h2 className="mt-4 font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.experienceTitle}</h2></div><div className="divide-y divide-ink/15 border-y border-ink/15">{work[locale].map(([period, company, role, body]) => <article key={`${period}-${company}`} className="grid gap-2 py-6 sm:grid-cols-[8rem_1fr] sm:gap-7"><p className="text-xs font-black uppercase tracking-[.13em] text-ink/48">{period}</p><div><h3 className="font-serif text-2xl leading-tight">{company}</h3><p className="mt-1 text-sm font-extrabold leading-6 text-ink/78">{role}</p><p className="mt-3 text-sm leading-7 text-ink/65">{body}</p></div></article>)}</div></div></section>
-    <section id="skills" className="bg-[#f5f7fa] px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-ink/52">{t.skills}</p><h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.skillsTitle}</h2><div className="mt-11 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{skills[locale].map(([category, items]) => <section key={category} className="rounded-[8px] border border-ink/15 bg-white p-6"><h3 className="font-serif text-3xl">{category}</h3><ul className="mt-5 space-y-2.5">{items.map((item) => <li key={item} className="flex gap-2.5 text-sm leading-6 text-ink/72"><Check size={16} className="mt-0.5 shrink-0 text-yellow" />{item}</li>)}</ul></section>)}</div><div className="mt-12 grid gap-8 border-t border-ink/15 pt-9 lg:grid-cols-[.8fr_1.2fr]"><p className="section-eyebrow text-ink/52">{t.development}</p><div className="divide-y divide-ink/15 border-y border-ink/15">{courses.map((item) => <p key={item} className="py-3.5 text-sm leading-6 text-ink/68">{item}</p>)}</div></div></div></section>
-    <section className="bg-white px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-ink/52">{t.testimonials}</p><h2 className="mt-4 max-w-3xl font-serif text-[clamp(2.65rem,4.8vw,4.6rem)] leading-[.92] tracking-[-.04em]">{t.testimonialsTitle}</h2><div className="mt-11 grid gap-5 lg:grid-cols-3">{feedback[locale].map(([quote, source]) => <figure key={quote} className="flex flex-col rounded-[8px] bg-ink p-6 text-white sm:p-7"><blockquote className="font-serif text-2xl leading-tight text-white">“{quote}”</blockquote><figcaption className="mt-8 border-t border-white/15 pt-4 text-[.65rem] font-black uppercase leading-5 tracking-[.13em] text-yellow">{source}</figcaption></figure>)}</div></div></section>
-    <section id="contact" className="bg-ink px-5 py-16 text-white sm:px-8 sm:py-20"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-9 md:flex-row md:items-end"><div><p className="section-eyebrow text-yellow">{t.connect}</p><h2 className="mt-4 max-w-4xl font-serif text-[clamp(2.8rem,5.4vw,5.2rem)] leading-[.89] tracking-[-.045em]">{t.connectTitle}</h2><p className="mt-6 max-w-2xl text-base leading-8 text-white/72">{t.connectBody}</p></div><div className="flex flex-col gap-3 sm:flex-row md:flex-col"><a href="mailto:tiagobastosavr@gmail.com" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-xs font-black uppercase tracking-[.14em] text-ink transition hover:-translate-y-0.5 hover:bg-yellow"><Mail size={16} />{t.email}</a><a href="https://www.linkedin.com/in/tiagobastos93" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/35 px-6 text-xs font-black uppercase tracking-[.14em] text-white transition hover:-translate-y-0.5 hover:border-yellow hover:text-yellow"><Linkedin size={16} />LinkedIn</a><a href="/documents/Tiago-Bastos-CV.pdf" download className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/35 px-6 text-xs font-black uppercase tracking-[.14em] text-white transition hover:-translate-y-0.5 hover:border-yellow hover:text-yellow"><Download size={16} />{t.cv}</a><PrintPortfolioButton label={t.portfolioPdf} /></div></div></section>
-    <footer className="bg-ink px-5 py-7 text-white/55 sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 text-[.65rem] font-black uppercase tracking-[.14em] sm:flex-row"><p>Tiago Bastos · Content · Photo · Video</p><p>Portugal · UK · International</p></div></footer>
-  </article>;
+const projectDetails = [
+  { matches: ["yotel-porto"], type: ["Hotel Photography & Video", "Fotografia e Vídeo para Hotel"], location: ["Porto, Portugal", "Porto, Portugal"], alt: ["YOTEL Porto hotel interior", "Interior do hotel YOTEL Porto"] },
+  { matches: ["pullman-danang-beach-resort"], type: ["Hotel & Resort Photography", "Fotografia de Hotel e Resort"], location: ["Danang, Vietnam", "Danang, Vietname"], alt: ["Pullman Danang Beach Resort", "Pullman Danang Beach Resort"] },
+  { matches: ["pan-pacific-hanoi", "pan-pacific-hanoi-content-production"], type: ["Food & Hospitality Content", "Conteúdo de Gastronomia e Hotelaria"], location: ["Hanoi, Vietnam", "Hanoi, Vietname"], alt: ["Pan Pacific Hanoi food and hospitality content", "Conteúdo de gastronomia e hotelaria no Pan Pacific Hanoi"] },
+  { matches: ["ashas-award-winning-restaurant"], type: ["Restaurant Food & Drink", "Gastronomia e Bebidas para Restaurante"], location: ["Birmingham, UK", "Birmingham, Reino Unido"], alt: ["Asha's Birmingham restaurant content", "Conteúdo do restaurante Asha's Birmingham"] }
+] as const;
+
+const testimonials = {
+  en: [
+    ["We have reviewed all of the deliverables, and they are truly eye-catching. We especially love the way you captured our Afternoon Tea set and the Nitrogen Ice Cream Show.", "Marketing Communications Manager, Pullman Danang Beach Resort, Accor Hotels"],
+    ["The final result from the YOTEL Porto photoshoot looks fantastic. We’re really pleased with the images and will be sharing them with our social media team to use across our digital channels.", "Influencer Marketing Consultant, M Public Relations"],
+    ["Great results and great photos. We were really pleased with the final outcome and the quality of the content delivered for Asha’s Birmingham.", "Director, Asha’s"]
+  ],
+  pt: [
+    ["Revimos todos os conteúdos entregues e são realmente marcantes. Gostamos especialmente da forma como captou o nosso Afternoon Tea e o espetáculo de gelado com nitrogénio.", "Marketing Communications Manager, Pullman Danang Beach Resort, Accor Hotels"],
+    ["O resultado final da sessão para o YOTEL Porto está fantástico. Estamos muito satisfeitos com as imagens e vamos partilhá-las com a equipa de redes sociais para utilização nos nossos canais digitais.", "Influencer Marketing Consultant, M Public Relations"],
+    ["Ótimos resultados e ótimas fotografias. Ficámos muito satisfeitos com o resultado final e com a qualidade do conteúdo entregue para o Asha’s Birmingham.", "Diretor, Asha’s"]
+  ]
+} as const;
+
+const faqs = {
+  en: [
+    ["Who is Tiago Bastos?", "Tiago Bastos is a commercial photographer and videographer working with hotels, restaurants, properties and brands. He is also co-founder of Hospo Creative."],
+    ["What does Tiago specialise in?", "His work focuses on commercial photography, videography and content production, with particular experience in hospitality, food and drink, property, events and brand content."],
+    ["Do you work in the Algarve and Lisbon?", "Yes. Tiago is based in Portugal and works across the Algarve, Lisbon and throughout the country."],
+    ["Are you available in Birmingham and the West Midlands?", "Yes. Tiago is available for commercial shoots in Birmingham, the West Midlands and across the wider UK."],
+    ["Can you work in London?", "Yes. London shoots can be planned alongside work throughout the UK."],
+    ["Can I hire you as a freelance photographer or videographer?", "Yes. Projects can be booked directly for photography, video or a combined content production."],
+    ["Do you offer both photography and video?", "Yes. Productions can include still photography, video, short-form vertical edits and content planning where needed."],
+    ["Do you cover corporate events?", "Yes. Tiago covers conferences, launches, awards, brand events and other business occasions."],
+    ["Do you photograph property and real estate?", "Yes. This includes hospitality, residential and commercial spaces, with photography and video shaped around the property’s audience."],
+    ["Do you work internationally?", "Yes, for selected productions. Travel and production requirements are discussed as part of the proposal."]
+  ],
+  pt: [
+    ["Quem é o Tiago Bastos?", "Tiago Bastos é fotógrafo comercial e videógrafo para hotéis, restaurantes, propriedades e marcas. É também cofundador da Hospo Creative."],
+    ["Em que é que o Tiago é especializado?", "O seu trabalho foca-se em fotografia comercial, videografia e produção de conteúdo, com experiência particular em hotelaria, gastronomia e bebidas, imobiliário, eventos e conteúdos de marca."],
+    ["Trabalha no Algarve e em Lisboa?", "Sim. O Tiago está baseado em Portugal e trabalha no Algarve, em Lisboa e em todo o país."],
+    ["Está disponível em Birmingham e West Midlands?", "Sim. O Tiago está disponível para produções comerciais em Birmingham, West Midlands e no restante Reino Unido."],
+    ["Pode trabalhar em Londres?", "Sim. As produções em Londres podem ser planeadas em conjunto com projetos por todo o Reino Unido."],
+    ["Posso contratar como fotógrafo ou videógrafo freelancer?", "Sim. Pode contratar diretamente fotografia, vídeo ou uma produção de conteúdo combinada."],
+    ["Disponibiliza fotografia e vídeo?", "Sim. As produções podem incluir fotografia, vídeo, edições verticais short-form e planeamento de conteúdo quando necessário."],
+    ["Cobre eventos corporativos?", "Sim. O Tiago cobre conferências, lançamentos, prémios, eventos de marca e outras ocasiões empresariais."],
+    ["Fotografa propriedade e imobiliário?", "Sim. Inclui espaços de hotelaria, residenciais e comerciais, com fotografia e vídeo adequados ao público da propriedade."],
+    ["Trabalha internacionalmente?", "Sim, para produções selecionadas. As necessidades de viagem e produção são discutidas na proposta."]
+  ]
+} as const;
+
+function findImage(study: CaseStudy) {
+  return study.heroImage || study.media?.find((item) => item.mediaType === "image")?.src || null;
+}
+
+export function TiagoBastosProfile({ locale, caseStudies }: Props) {
+  const t = content[locale];
+  const languageIndex = locale === "pt" ? 1 : 0;
+  const selectedProjects = projectDetails.flatMap((detail) => {
+    const slugs = Array.from(detail.matches) as string[];
+    const study = caseStudies.find((item) => slugs.includes(item.slug) || item.clientName.toLowerCase().includes(detail.matches[0].replaceAll("-", " ").split(" ").slice(0, 2).join(" ")));
+    return study ? [{ detail, study, image: findImage(study) }] : [];
+  });
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs[locale].map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } }))
+  };
+
+  return (
+    <>
+      <SeoStructuredData data={faqSchema} />
+      <section className="overflow-hidden bg-[#062f5f] text-white">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:px-10 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-24 lg:px-16">
+          <div className="max-w-3xl">
+            <Link href={localizedPath("/", locale)} className="inline-flex items-center text-sm font-semibold tracking-[0.18em] text-[#f5c342] transition hover:text-white">HOSPO CREATIVE <ArrowUpRight className="ml-2 h-4 w-4" /></Link>
+            <p className="mt-14 text-xs font-bold tracking-[0.18em] text-[#f5c342]">{t.eyebrow}</p>
+            <h1 className="mt-5 font-serif text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">{t.title}</h1>
+            <p className="mt-7 max-w-2xl text-lg leading-8 text-white/80">{t.intro}</p>
+            <p className="mt-8 flex items-center gap-2 text-xs font-bold tracking-[0.18em] text-[#f5c342]"><MapPin className="h-4 w-4" /> {t.location}</p>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <Link href={localizedPath("/contact", locale)} className="inline-flex items-center justify-center rounded-full bg-[#f5c342] px-7 py-4 text-sm font-bold text-[#062f5f] transition hover:bg-white">{t.enquire}<ArrowUpRight className="ml-2 h-4 w-4" /></Link>
+              <a href="#work" className="inline-flex items-center justify-center rounded-full border border-white/35 px-7 py-4 text-sm font-bold text-white transition hover:border-white hover:bg-white/10">{t.work}</a>
+            </div>
+          </div>
+          <div className="relative mx-auto w-full max-w-md">
+            <div className="absolute -inset-5 rounded-[2rem] border border-[#f5c342]/30" />
+            <Image src="/images/tiago-bastos-headshot.png" alt="Tiago Bastos, commercial photographer and videographer" width={960} height={1200} priority className="relative aspect-[4/5] w-full rounded-[1.55rem] object-cover" />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.servicesEyebrow}</p>
+          <h2 className="mt-4 max-w-2xl font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.servicesTitle}</h2>
+          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[#062f5f]/15 bg-[#062f5f]/15 md:grid-cols-2 lg:grid-cols-3">
+            {services[locale].map(([number, title, body]) => <article key={number} className="bg-[#f7f6f2] p-7 sm:p-8"><p className="text-xs font-bold tracking-[0.2em] text-[#b27b00]">{number}</p><h3 className="mt-8 text-xl font-bold text-[#062f5f]">{title}</h3><p className="mt-4 leading-7 text-[#173f6d]">{body}</p></article>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="work" className="bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.workEyebrow}</p>
+          <div className="mt-4 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end"><h2 className="font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.workTitle}</h2><p className="max-w-xl leading-7 text-[#173f6d]">{t.workIntro}</p></div>
+          {selectedProjects.length > 0 && <div className="mt-12 grid gap-7 md:grid-cols-2">{selectedProjects.map(({ detail, study, image }) => <article key={study.slug} className="group overflow-hidden rounded-2xl bg-[#f7f6f2]"><div className="aspect-[16/10] overflow-hidden bg-[#dfe5e9]">{image ? <Image src={image} alt={detail.alt[languageIndex]} width={1600} height={1000} unoptimized className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="h-full w-full bg-[#062f5f]" />}</div><div className="p-7"><p className="text-xs font-bold tracking-[0.15em] text-[#b27b00]">{detail.type[languageIndex]} · {detail.location[languageIndex]}</p><h3 className="mt-3 text-2xl font-bold text-[#062f5f]">{locale === "pt" && study.titlePt ? study.titlePt : study.title}</h3><Link href={localizedPath(`/case-studies/${study.slug}`, locale)} className="mt-6 inline-flex items-center font-bold text-[#062f5f] underline underline-offset-4">{t.viewProject}<ArrowUpRight className="ml-2 h-4 w-4" /></Link></div></article>)}</div>}
+        </div>
+      </section>
+
+      <section className="bg-[#0b3b70] px-6 py-20 text-white sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.75fr_1.25fr]"><div><p className="text-xs font-bold tracking-[0.18em] text-[#f5c342]">{t.experienceEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight sm:text-5xl">{t.experienceTitle}</h2></div><div><p className="max-w-2xl text-lg leading-8 text-white/85">{t.experience}</p><ul className="mt-8 grid gap-3 sm:grid-cols-2">{[locale === "pt" ? "Direção criativa com contexto operacional" : "Creative direction with operational context", locale === "pt" ? "Conteúdo pensado para equipas comerciais" : "Content made for commercial teams", locale === "pt" ? "Produções eficientes no local" : "Efficient productions on location", locale === "pt" ? "Fotografia, vídeo e edição numa equipa" : "Photography, video and editing in one team"].map((item) => <li key={item} className="flex gap-3 text-sm text-white/85"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#f5c342]" />{item}</li>)}</ul></div></div></section>
+
+      <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-7xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.geographyEyebrow}</p><h2 className="mt-4 max-w-3xl font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.geographyTitle}</h2><div className="mt-12 grid gap-6 md:grid-cols-3">{(locale === "pt" ? [["Portugal", "Baseado em Portugal, disponível no Algarve, Lisboa e em todo o país para fotografia e vídeo comercial."], ["Reino Unido", "Disponível em Birmingham, West Midlands, Londres e no restante Reino Unido."], ["Internacional", "Produções internacionais selecionadas, com requisitos de viagem definidos na proposta."]] : [["Portugal", "Based in Portugal, available in the Algarve, Lisbon and nationwide for commercial photography and video."], ["United Kingdom", "Available in Birmingham, the West Midlands, London and throughout the wider UK."], ["International", "Selected international productions, with travel requirements set out in the proposal."]]).map(([title, body]) => <article key={title} className="rounded-2xl bg-white p-7"><MapPin className="h-5 w-5 text-[#b27b00]" /><h3 className="mt-6 text-xl font-bold text-[#062f5f]">{title}</h3><p className="mt-3 leading-7 text-[#173f6d]">{body}</p></article>)}</div></div></section>
+
+      <section className="bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-7xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.testimonialsEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.testimonialsTitle}</h2><div className="mt-12 grid gap-6 lg:grid-cols-3">{testimonials[locale].map(([quote, source]) => <figure key={source} className="rounded-2xl border border-[#062f5f]/15 p-7"><blockquote className="font-serif text-2xl leading-snug text-[#062f5f]">“{quote}”</blockquote><figcaption className="mt-7 text-sm leading-6 text-[#173f6d]">{source}</figcaption></figure>)}</div></div></section>
+
+      <section className="bg-[#f7f6f2] px-6 py-20 sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-4xl"><p className="text-xs font-bold tracking-[0.18em] text-[#b27b00]">{t.faqEyebrow}</p><h2 className="mt-4 font-serif text-4xl leading-tight text-[#062f5f] sm:text-5xl">{t.faqTitle}</h2><div className="mt-10 divide-y divide-[#062f5f]/15 border-y border-[#062f5f]/15">{faqs[locale].map(([question, answer]) => <details key={question} className="group py-5"><summary className="cursor-pointer list-none pr-8 text-lg font-bold text-[#062f5f] marker:hidden">{question}<span className="float-right text-[#b27b00] group-open:rotate-45">+</span></summary><p className="max-w-3xl pt-4 leading-7 text-[#173f6d]">{answer}</p></details>)}</div></div></section>
+
+      <section className="bg-[#062f5f] px-6 py-20 text-white sm:px-10 lg:px-16 lg:py-28"><div className="mx-auto max-w-4xl text-center"><h2 className="font-serif text-4xl leading-tight sm:text-6xl">{t.ctaTitle}</h2><p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/80">{t.ctaBody}</p><Link href={localizedPath("/contact", locale)} className="mt-10 inline-flex items-center rounded-full bg-[#f5c342] px-8 py-4 text-sm font-bold text-[#062f5f] transition hover:bg-white">{t.cta}<ArrowUpRight className="ml-2 h-4 w-4" /></Link></div></section>
+    </>
+  );
 }

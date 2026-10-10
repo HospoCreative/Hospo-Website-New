@@ -18,6 +18,7 @@ const staticRoutes = [
   "/algarve",
   "/lisboa",
   "/about",
+  "/tiago-bastos",
   "/contact",
   "/blog",
   "/case-studies",
