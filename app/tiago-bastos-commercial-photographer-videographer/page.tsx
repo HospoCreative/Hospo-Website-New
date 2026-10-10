@@ -40,7 +40,21 @@ export default async function TiagoBastosCommercialPage() {
         inLanguage: locale === "pt" ? "pt-PT" : "en-GB",
         isPartOf: { "@id": `${SITE_URL}/#website` },
         about: { "@id": personId },
-        primaryImageOfPage: `${SITE_URL}/images/about/Tiago.png`
+        primaryImageOfPage: { "@id": `${canonicalUrl}#portrait` }
+      },
+      {
+        "@type": "ImageObject",
+        "@id": `${canonicalUrl}#portrait`,
+        contentUrl: `${SITE_URL}/images/about/Tiago.png`,
+        url: `${SITE_URL}/images/about/Tiago.png`,
+        caption: "Tiago Bastos, Commercial Photographer & Videographer"
+      },
+      {
+        "@type": "ImageObject",
+        "@id": `${canonicalUrl}#hospitality-image`,
+        contentUrl: `${SITE_URL}/images/hero/collage/1.jpg`,
+        url: `${SITE_URL}/images/hero/collage/1.jpg`,
+        caption: "Commercial food and hospitality photography by Tiago Bastos"
       },
       {
         "@type": "Person",
