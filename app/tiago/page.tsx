@@ -6,7 +6,7 @@ import { FAVICON, SITE_URL } from "@/lib/seo";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Tiago Bastos | Hospo Creative",
-  description: "Digital business card for Tiago Bastos, Co-Founder, Photographer and Videographer at Hospo Creative.",
+  description: "Digital business card for Tiago Bastos, Co-Founder and Creative and Business Development Director at Hospo Creative.",
   robots: { index: false, follow: false },
   icons: { icon: [{ url: FAVICON, type: "image/png" }], apple: FAVICON }
 };

@@ -3,11 +3,32 @@
 import { Download, QrCode, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { DigitalCardLocale } from "@/data/digitalBusinessCards";
 
 type DigitalCardQrDialogProps = {
   cardUrl: string;
   name: string;
+  locale: DigitalCardLocale;
 };
+
+const copy = {
+  en: {
+    showQr: "Show QR code",
+    modalTitle: (name: string) => `Share ${name}'s card`,
+    close: "Close QR code",
+    generating: "Generating QR code…",
+    scan: "Scan to open this digital business card.",
+    qrAlt: (name: string) => `QR code for ${name}'s digital business card`
+  },
+  pt: {
+    showQr: "Mostrar código QR",
+    modalTitle: (name: string) => `Partilhar cartão de ${name}`,
+    close: "Fechar código QR",
+    generating: "A gerar código QR…",
+    scan: "Digitalize para abrir este cartão digital.",
+    qrAlt: (name: string) => `Código QR do cartão digital de ${name}`
+  }
+} as const;
 
 const qrOptions = {
   errorCorrectionLevel: "M" as const,
@@ -28,10 +49,11 @@ function downloadSvg(svg: string, name: string) {
   URL.revokeObjectURL(href);
 }
 
-export function DigitalCardQrDialog({ cardUrl, name }: DigitalCardQrDialogProps) {
+export function DigitalCardQrDialog({ cardUrl, name, locale }: DigitalCardQrDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [png, setPng] = useState<string>();
   const [svg, setSvg] = useState<string>();
+  const content = copy[locale];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -72,11 +94,11 @@ export function DigitalCardQrDialog({ cardUrl, name }: DigitalCardQrDialogProps)
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white/30 px-5 text-xs font-extrabold uppercase tracking-[0.16em] text-white transition hover:border-[#ffcc53] hover:text-[#ffcc53]"
+        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#002c5d] px-4 text-[0.65rem] font-extrabold uppercase tracking-[0.13em] text-white transition hover:bg-[#003a78]"
         aria-haspopup="dialog"
       >
         <QrCode size={17} aria-hidden="true" />
-        Share card
+        {content.showQr}
       </button>
 
       {isOpen ? (
@@ -88,32 +110,32 @@ export function DigitalCardQrDialog({ cardUrl, name }: DigitalCardQrDialogProps)
           onMouseDown={() => setIsOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-[1.5rem] bg-white p-6 text-[#002c5d] shadow-2xl"
+            className="w-full max-w-md rounded-[1.5rem] bg-white p-6 text-[#002c5d] shadow-2xl sm:p-7"
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[0.65rem] font-extrabold uppercase tracking-[0.22em] text-[#002c5d]/55">Hospo Creative</p>
-                <h2 id="digital-card-qr-title" className="mt-2 font-[var(--font-display)] text-3xl leading-none">Share {name}&apos;s card</h2>
+                <h2 id="digital-card-qr-title" className="mt-2 font-[var(--font-display)] text-3xl leading-none">{content.modalTitle(name)}</h2>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="rounded-full p-2 transition hover:bg-[#002c5d]/8"
-                aria-label="Close QR code"
+                aria-label={content.close}
               >
                 <X size={21} aria-hidden="true" />
               </button>
             </div>
 
-            <div className="mt-6 rounded-2xl bg-[#f7f8fa] p-5">
+            <div className="mt-6 rounded-2xl bg-[#f7f8fa] p-4 sm:p-5">
               {png ? (
-                <Image src={png} alt={`QR code for ${name}'s digital business card`} width={256} height={256} unoptimized className="mx-auto aspect-square w-full max-w-56" />
+                <Image src={png} alt={content.qrAlt(name)} width={320} height={320} unoptimized className="mx-auto aspect-square w-full max-w-72" />
               ) : (
-                <div className="mx-auto flex aspect-square w-full max-w-56 items-center justify-center rounded-xl bg-white text-center text-xs font-bold text-[#002c5d]/50">Generating QR code…</div>
+                <div className="mx-auto flex aspect-square w-full max-w-72 items-center justify-center rounded-xl bg-white text-center text-xs font-bold text-[#002c5d]/50">{content.generating}</div>
               )}
             </div>
-            <p className="mt-4 text-center text-sm leading-6 text-[#002c5d]/70">Scan to open this digital business card.</p>
+            <p className="mt-4 text-center text-sm leading-6 text-[#002c5d]/70">{content.scan}</p>
 
             <div className="mt-5 grid grid-cols-2 gap-3">
               <button

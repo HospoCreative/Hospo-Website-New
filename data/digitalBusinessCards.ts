@@ -1,6 +1,7 @@
 import { SITE_URL } from "@/lib/seo";
 
 export type DigitalCardSlug = "tiago" | "andreia";
+export type DigitalCardLocale = "en" | "pt";
 export type SocialNetwork = "instagram" | "linkedin" | "website";
 
 export type DigitalCardSocial = {
@@ -12,6 +13,7 @@ export type DigitalCardSocial = {
 export type DigitalCardPortfolioItem = {
   src: string;
   alt: string;
+  altPt: string;
   href: string;
 };
 
@@ -21,8 +23,10 @@ export type DigitalBusinessCard = {
   lastName: string;
   name: string;
   title: string;
+  titlePt: string;
   portrait: string;
   portraitAlt: string;
+  portraitAltPt: string;
   email?: string;
   phone?: string;
   whatsapp?: string;
@@ -35,16 +39,19 @@ const portfolio: readonly DigitalCardPortfolioItem[] = [
   {
     src: "/images/gallery/0.1_Bar Hotel cocktail hospo creative.jpg",
     alt: "Cocktail creation photographed for a hotel bar",
+    altPt: "Cocktail criado para o bar de um hotel",
     href: "/services/photography-video"
   },
   {
     src: "/images/gallery/0.3_Food Restaurante Hospo Creative.jpg",
     alt: "Restaurant dish photographed for hospitality marketing",
+    altPt: "Prato de restaurante fotografado para marketing de hotelaria",
     href: "/services/photography-video"
   },
   {
     src: "/images/gallery/0.4_Wine Hospo Creative.jpg",
     alt: "Wine service photographed for a hospitality brand",
+    altPt: "Serviço de vinho fotografado para uma marca de hotelaria",
     href: "/case-studies"
   }
 ];
@@ -68,21 +75,16 @@ export const digitalBusinessCards = {
     firstName: "Tiago",
     lastName: "Bastos",
     name: "Tiago Bastos",
-    title: "Co-Founder | Photographer & Videographer",
+    title: "Co-Founder, Creative and Business Development Director",
+    titlePt: "Co-Fundador, Diretor Criativo e de Desenvolvimento de Negócio",
     portrait: "/images/about/Tiago.png",
-    portraitAlt: "Tiago Bastos, Co-Founder and Photographer at Hospo Creative",
+    portraitAlt: "Tiago Bastos, Co-Founder and Creative and Business Development Director at Hospo Creative",
+    portraitAltPt: "Tiago Bastos, Co-Fundador e Diretor Criativo e de Desenvolvimento de Negócio na Hospo Creative",
     email: "info@hospoagency.com",
     emailActionLabel: "Email Hospo",
     phone: "+447887783999",
     whatsapp: "+447887783999",
-    socialLinks: [
-      {
-        label: "Tiago on LinkedIn",
-        href: "https://www.linkedin.com/in/tiagobastos93",
-        network: "linkedin"
-      },
-      ...companySocials
-    ],
+    socialLinks: companySocials,
     portfolio
   },
   andreia: {
@@ -90,9 +92,11 @@ export const digitalBusinessCards = {
     firstName: "Andreia",
     lastName: "Oliveira",
     name: "Andreia Oliveira",
-    title: "Founder & Head of Marketing",
+    title: "Co-Founder, Marketing and Growth Director",
+    titlePt: "Co-Fundadora, Diretora de Marketing e Crescimento",
     portrait: "/images/about/Andreia.jpg",
-    portraitAlt: "Andreia Oliveira, Founder and Head of Marketing at Hospo Creative",
+    portraitAlt: "Andreia Oliveira, Co-Founder and Marketing and Growth Director at Hospo Creative",
+    portraitAltPt: "Andreia Oliveira, Co-Fundadora e Diretora de Marketing e Crescimento na Hospo Creative",
     email: "info@hospoagency.com",
     emailActionLabel: "Email Hospo",
     phone: "+447928946702",
