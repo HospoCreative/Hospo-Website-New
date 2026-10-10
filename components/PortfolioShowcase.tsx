@@ -51,8 +51,8 @@ const copy = {
 } as const;
 
 const tiagoReelsCopy = {
-  en: { reelsEyebrow: "Video & short-form", reelsTitle: "Made for movement.", swipe: "Swipe", reel: "Open video" },
-  pt: { reelsEyebrow: "Vídeo e short-form", reelsTitle: "Feito para movimento.", swipe: "Deslize", reel: "Abrir vídeo" }
+  en: { reelsEyebrow: "Video & social content", reelsTitle: "Photography gets attention. Video brings the experience to life.", reelsBody: "Short-form video is now a key part of how hotels, restaurants, bars and food and drink brands communicate online. I create promotional video, Reels and vertical content designed around the real experience of the business.", swipe: "Swipe", reel: "Open video" },
+  pt: { reelsEyebrow: "Vídeo e conteúdo para redes sociais", reelsTitle: "A fotografia capta a atenção. O vídeo ajuda a mostrar a experiência.", reelsBody: "Crio vídeos promocionais, Reels e conteúdo vertical para hotéis, restaurantes, bares e marcas de alimentação e bebidas.", swipe: "Deslize", reel: "Abrir vídeo" }
 } as const;
 
 function SwipeHint({ children }: { children: string }) {
@@ -72,6 +72,7 @@ function getPostEmbedUrl(postUrl: string) {
 export async function PortfolioShowcase({ locale, showSelectedWork = true, showReels = true, variant = "hospo" }: { locale: Locale; showSelectedWork?: boolean; showReels?: boolean; variant?: "hospo" | "tiago" }) {
   const t = copy[locale];
   const reelText = variant === "tiago" ? tiagoReelsCopy[locale] : t;
+  const reelsBody = variant === "tiago" ? tiagoReelsCopy[locale].reelsBody : undefined;
   const embeds = await getPublishedPortfolioEmbeds();
   const savedSelectedWork = embeds.filter((embed) => embed.section === "selected_work").map((embed) => embed.instagramUrl);
   const savedReels = embeds.filter((embed) => embed.section === "reels").map((embed) => embed.instagramUrl);
@@ -100,7 +101,7 @@ export async function PortfolioShowcase({ locale, showSelectedWork = true, showR
       {showReels ? <section id="reels-gallery" className="overflow-hidden bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8">
         <div className="mx-auto max-w-7xl">
           <Reveal className="text-center lg:text-left">
-            <p className="section-eyebrow text-yellow">{reelText.reelsEyebrow}</p><h2 className="mt-5 max-w-3xl font-serif text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[.98]">{reelText.reelsTitle}</h2>
+            <p className="section-eyebrow text-yellow">{reelText.reelsEyebrow}</p><h2 className="mt-5 max-w-4xl font-serif text-[clamp(2.4rem,5vw,4.5rem)] font-semibold leading-[.98]">{reelText.reelsTitle}</h2>{reelsBody ? <p className="mt-6 max-w-3xl text-base leading-7 text-white/75">{reelsBody}</p> : null}
           </Reveal>
           <div className="mt-7 flex justify-center sm:hidden"><span className="swipe-hint text-yellow">{reelText.swipe}<ArrowRight aria-hidden="true" size={14} /></span></div>
           <div className="scroll-row mt-7 grid auto-cols-[calc((100vw_-_3.5rem)_/_2)] grid-flow-col grid-rows-2 gap-4 overflow-x-auto pb-5 [scrollbar-color:rgba(255,255,255,.35)_transparent] sm:mt-12 sm:flex sm:auto-cols-auto sm:gap-5">

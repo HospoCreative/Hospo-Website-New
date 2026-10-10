@@ -13,6 +13,7 @@ type Props = {
   eyebrow: string;
   title: string;
   intro: string;
+  supporting?: string;
   location: string;
   enquire: string;
   work: string;
@@ -25,11 +26,11 @@ const homepageHeroImages = [
 ] as const;
 
 const labels = {
-  en: { services: "Services", work: "Work", about: "About", faq: "FAQ", contact: "Contact", open: "Open menu", close: "Close menu", language: "Português", portrait: "Commercial photography, video and creative direction through Hospo Creative." },
-  pt: { services: "Serviços", work: "Projetos", about: "Sobre", faq: "FAQ", contact: "Contacto", open: "Abrir menu", close: "Fechar menu", language: "English", portrait: "Fotografia comercial, vídeo e direção criativa através da Hospo Creative." }
+  en: { services: "Services", work: "Work", video: "Video", about: "About", faq: "FAQ", contact: "Contact", open: "Open menu", close: "Close menu", language: "Português", portrait: "Photography, video and creative direction for hospitality and food & drink brands through Hospo Creative." },
+  pt: { services: "Serviços", work: "Portfólio", video: "Vídeo", about: "Sobre", faq: "FAQ", contact: "Contacto", open: "Abrir menu", close: "Fechar menu", language: "English", portrait: "Fotografia, vídeo e direção criativa para hotelaria e restauração através da Hospo Creative." }
 } as const;
 
-export function TiagoBastosHero({ locale, eyebrow, title, intro, location, enquire, work }: Props) {
+export function TiagoBastosHero({ locale, eyebrow, title, intro, supporting, location, enquire, work }: Props) {
   const reduceMotion = useReducedMotion();
   const [menuOpen, setMenuOpen] = useState(false);
   const nav = labels[locale];
@@ -38,6 +39,7 @@ export function TiagoBastosHero({ locale, eyebrow, title, intro, location, enqui
   const links = [
     [nav.services, "#services"],
     [nav.work, "#work"],
+    [nav.video, "#reels-gallery"],
     [nav.about, "#about"],
     [nav.faq, "#faq"]
   ] as const;
@@ -57,11 +59,12 @@ export function TiagoBastosHero({ locale, eyebrow, title, intro, location, enqui
         {menuOpen && <nav className="border-t border-white/15 bg-[#062f5f] px-6 py-5 sm:px-10 lg:hidden" aria-label="Tiago Bastos mobile">{links.map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block py-3 text-sm font-bold text-white/85">{label}</a>)}<Link href={alternateLanguagePath} hrefLang={locale === "pt" ? "en-GB" : "pt-PT"} className="block py-3 text-sm font-bold text-[#f5c342]">{nav.language}</Link><Link href={localizedPath("/contact", locale)} className="mt-3 inline-flex rounded-full bg-[#f5c342] px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-[#062f5f]">{nav.contact}</Link></nav>}
       </header>
 
-      <div id="top" className="mx-auto grid min-h-[calc(100svh-5rem)] max-w-7xl gap-11 px-6 py-14 sm:px-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:gap-14 lg:px-16 lg:py-12">
+      <div id="top" className="mx-auto grid min-h-[calc(100svh-5rem)] max-w-7xl gap-11 px-6 py-14 sm:px-10 lg:grid-cols-[0.98fr_1.02fr] lg:items-center lg:gap-14 lg:px-16 lg:py-12">
         <motion.div initial={reduceMotion ? false : { opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, ease: "easeOut" }} className="relative z-10 max-w-2xl">
           <p className="text-xs font-bold tracking-[0.18em] text-[#f5c342]">{eyebrow}</p>
-          <h1 className="mt-5 max-w-[10.5ch] font-serif text-[clamp(2.5rem,5.8vw,2.9rem)] leading-[0.98] tracking-tight sm:max-w-[13ch] sm:text-[clamp(3rem,5vw,3.7rem)] lg:max-w-[12.5ch] lg:text-[clamp(3.5rem,4.3vw,4.5rem)]">{title}</h1>
+          <h1 className="mt-5 max-w-none font-serif text-[clamp(2.15rem,9vw,2.65rem)] leading-[0.98] tracking-tight sm:max-w-[17ch] sm:text-[clamp(2.8rem,5vw,3.5rem)] lg:max-w-[21ch] lg:text-[clamp(3.25rem,4vw,3.9rem)]">{title}</h1>
           <p className="mt-7 max-w-xl text-lg leading-8 text-white/78">{intro}</p>
+          {supporting ? <p className="mt-4 max-w-xl text-base leading-7 text-white/65">{supporting}</p> : null}
           <p className="mt-7 border-l-2 border-[#f5c342] pl-4 text-xs font-bold tracking-[0.16em] text-white/72">{location}</p>
           <div className="mt-9 flex flex-col items-start gap-3 sm:flex-row"><Link href={localizedPath("/contact", locale)} className="inline-flex items-center rounded-full bg-[#f5c342] px-6 py-3.5 text-sm font-bold text-[#062f5f] transition hover:bg-white">{enquire}<ArrowUpRight className="ml-2 h-4 w-4" /></Link><a href="#work" className="inline-flex items-center rounded-full border border-white/35 px-6 py-3.5 text-sm font-bold transition hover:border-white hover:bg-white/10">{work}<ArrowUpRight className="ml-2 h-4 w-4" /></a></div>
           <motion.div initial={reduceMotion ? false : { opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, delay: 0.32 }} className="mt-10 flex items-center gap-4"><div className="relative size-14 overflow-hidden rounded-full border-2 border-[#f5c342]"><SmartImage src="/images/about/Tiago.png" alt="Tiago Bastos" fill sizes="56px" className="object-cover" fallbackLabel="Tiago Bastos" /></div><p className="max-w-xs text-sm leading-5 text-white/72">{nav.portrait}</p></motion.div>

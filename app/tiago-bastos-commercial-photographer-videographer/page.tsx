@@ -12,8 +12,8 @@ const pathname = "/tiago-bastos-commercial-photographer-videographer";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return buildPageMetadata({
-    title: locale === "pt" ? "Fotógrafo Comercial e Videógrafo em Portugal e Reino Unido | Tiago Bastos" : "Commercial Photographer & Videographer Portugal & UK | Tiago Bastos",
-    description: locale === "pt" ? "Fotógrafo comercial e videógrafo para hotéis, restaurantes, eventos, propriedades e marcas em Portugal, no Reino Unido e em projetos internacionais selecionados." : "Commercial photographer and videographer for hotels, restaurants, events, property and brands across Portugal, the UK and selected international projects.",
+    title: locale === "pt" ? "Fotografia e Vídeo para Hotéis e Restaurantes | Tiago Bastos" : "Hotel, Restaurant & Food Photographer | Tiago Bastos",
+    description: locale === "pt" ? "Fotografia e vídeo profissional para hotéis, resorts, restaurantes, bares e marcas de alimentação e bebidas no Algarve, Lisboa, Portugal e Reino Unido." : "Photography and video for hotels, resorts, restaurants, bars and food & drink brands across Portugal and the UK, including the Algarve, Lisbon, Birmingham and London.",
     pathname,
     locale,
     image: "/images/about/Tiago.png"
@@ -26,8 +26,17 @@ export default async function TiagoBastosCommercialPage() {
   const canonicalUrl = `${SITE_URL}${locale === "pt" ? "/pt" : ""}${pathname}`;
   const personId = `${SITE_URL}${pathname}#person`;
   const services = locale === "pt"
-    ? ["Fotografia para Hotelaria", "Fotografia de Gastronomia e Bebidas", "Fotografia e Vídeo de Eventos Corporativos", "Fotografia de Propriedade e Imobiliário", "Conteúdo de Marca", "Produção de Vídeo"]
-    : ["Hospitality Photography", "Food and Drink Photography", "Corporate Event Photography and Video", "Property and Real Estate Photography", "Brand Content", "Video Production"];
+    ? ["Fotografia e Vídeo para Hotéis", "Fotografia e Vídeo para Restaurantes", "Fotografia de Alimentação e Bebidas", "Vídeo para Hotelaria e Restauração", "Produção de Conteúdo para Redes Sociais", "Fotografia de Eventos Corporativos", "Fotografia de Propriedade e Interiores"]
+    : ["Hotel Photography & Video", "Restaurant Photography & Video", "Food & Drink Photography", "Hospitality Videography", "Social Media Content Production", "Corporate Event Photography", "Property Photography"];
+  const areaServed = [
+    { "@type": "Country", name: "Portugal" },
+    { "@type": "Country", name: "United Kingdom" },
+    { "@type": "AdministrativeArea", name: "Algarve" },
+    { "@type": "City", name: "Lisbon" },
+    { "@type": "City", name: "Birmingham" },
+    { "@type": "AdministrativeArea", name: "West Midlands" },
+    { "@type": "City", name: "London" }
+  ];
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -35,8 +44,8 @@ export default async function TiagoBastosCommercialPage() {
         "@type": "WebPage",
         "@id": canonicalUrl,
         url: canonicalUrl,
-        name: locale === "pt" ? "Fotógrafo Comercial e Videógrafo em Portugal e Reino Unido | Tiago Bastos" : "Commercial Photographer & Videographer Portugal & UK | Tiago Bastos",
-        description: locale === "pt" ? "Fotógrafo comercial e videógrafo para hotéis, restaurantes, eventos, propriedades e marcas em Portugal, no Reino Unido e em projetos internacionais selecionados." : "Commercial photographer and videographer for hotels, restaurants, events, property and brands across Portugal, the UK and selected international projects.",
+        name: locale === "pt" ? "Fotografia e Vídeo para Hotéis e Restaurantes | Tiago Bastos" : "Hotel, Restaurant & Food Photographer | Tiago Bastos",
+        description: locale === "pt" ? "Fotografia e vídeo profissional para hotéis, resorts, restaurantes, bares e marcas de alimentação e bebidas no Algarve, Lisboa, Portugal e Reino Unido." : "Photography and video for hotels, resorts, restaurants, bars and food & drink brands across Portugal and the UK, including the Algarve, Lisbon, Birmingham and London.",
         inLanguage: locale === "pt" ? "pt-PT" : "en-GB",
         isPartOf: { "@id": `${SITE_URL}/#website` },
         about: { "@id": personId },
@@ -47,14 +56,14 @@ export default async function TiagoBastosCommercialPage() {
         "@id": `${canonicalUrl}#portrait`,
         contentUrl: `${SITE_URL}/images/about/Tiago.png`,
         url: `${SITE_URL}/images/about/Tiago.png`,
-        caption: "Tiago Bastos, Commercial Photographer & Videographer"
+        caption: locale === "pt" ? "Tiago Bastos, fotógrafo e videógrafo para hotéis, restaurantes e marcas de alimentação e bebidas" : "Tiago Bastos, photographer and videographer for hotels, restaurants and food brands"
       },
       {
         "@type": "ImageObject",
         "@id": `${canonicalUrl}#hospitality-image`,
         contentUrl: `${SITE_URL}/images/hero/collage/1.jpg`,
         url: `${SITE_URL}/images/hero/collage/1.jpg`,
-        caption: "Commercial food and hospitality photography by Tiago Bastos"
+        caption: locale === "pt" ? "Fotografia de hotelaria, gastronomia e bebidas por Tiago Bastos" : "Hotel, food and drink photography by Tiago Bastos"
       },
       {
         "@type": "Person",
@@ -62,11 +71,13 @@ export default async function TiagoBastosCommercialPage() {
         name: "Tiago Bastos",
         url: canonicalUrl,
         image: `${SITE_URL}/images/about/Tiago.png`,
-        jobTitle: locale === "pt" ? "Fotógrafo Comercial e Videógrafo" : "Commercial Photographer & Videographer",
-        description: locale === "pt" ? "Fotógrafo comercial e videógrafo para hotéis, restaurantes, eventos, propriedades e marcas." : "Commercial photographer and videographer for hotels, restaurants, events, property and brands.",
+        jobTitle: locale === "pt" ? "Fotógrafo e Videógrafo para Hotéis, Restaurantes e Marcas de Alimentação e Bebidas" : "Photographer & Videographer for Hotels, Restaurants & Food Brands",
+        description: locale === "pt" ? "Tiago Bastos é fotógrafo e videógrafo especializado em hotéis, restaurantes, bares e marcas de alimentação e bebidas em Portugal e no Reino Unido." : "Tiago Bastos is a photographer and videographer specialising in hotels, restaurants, bars and food and drink brands across Portugal and the UK.",
         worksFor: { "@id": `${SITE_URL}/#organization` },
         sameAs: ["https://www.linkedin.com/in/tiagobastos93/"],
-        knowsAbout: ["Commercial Photography", "Commercial Videography", "Hospitality Photography", "Food and Drink Photography", "Corporate Event Photography", "Property Photography", "Content Production"]
+        knowsAbout: locale === "pt"
+          ? ["Fotografia de Hotéis", "Fotografia para Hotelaria", "Fotografia de Restaurantes", "Fotografia Gastronómica", "Fotografia de Alimentação e Bebidas", "Fotografia de Bebidas", "Vídeo para Hotéis", "Vídeo para Restaurantes", "Vídeo para Hotelaria", "Produção de Conteúdo", "Fotografia de Eventos Corporativos", "Fotografia de Propriedade"]
+          : ["Hotel Photography", "Hospitality Photography", "Restaurant Photography", "Food Photography", "Food and Drink Photography", "Beverage Photography", "Hotel Videography", "Restaurant Videography", "Hospitality Videography", "Content Production", "Corporate Event Photography", "Property Photography"]
       },
       {
         "@type": "BreadcrumbList",
@@ -80,7 +91,7 @@ export default async function TiagoBastosCommercialPage() {
         "@type": "Service",
         name,
         provider: { "@id": personId },
-        areaServed: [{ "@type": "Country", name: "Portugal" }, { "@type": "Country", name: "United Kingdom" }],
+        areaServed,
         mainEntityOfPage: canonicalUrl
       }))
     ]
