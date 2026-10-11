@@ -15,7 +15,6 @@ import { DigitalScanPromo } from "@/components/DigitalScanPromo";
 import { DigitalPresenceStatistics } from "@/components/DigitalPresenceStatistics";
 import { Testimonials } from "@/components/Testimonials";
 import { PresentationGallery } from "@/components/PresentationGallery";
-import { PortugalMarkets } from "@/components/PortugalMarkets";
 import {
   getPublishedBlogPosts,
   getPublishedClientLogos
@@ -45,7 +44,6 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
-        {locale === "pt" ? <PortugalMarkets /> : null}
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
         <Campaigns locale={locale} />
