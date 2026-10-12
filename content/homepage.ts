@@ -74,6 +74,12 @@ export const homepageContent = {
     title: "Work that clients are proud to share.",
     items: [
       {
+        name: "Nouman Farooqui",
+        title: "Director, Asha’s Birmingham",
+        quote:
+          "Tiago and Andreia are without a doubt the best media team we have ever collaborated with. Their expertise in professional photography and videography for top-tier hospitality brands is exceptional. They truly know their craft and delivered stunning, high-quality visual content for our brand. Highly recommended!"
+      },
+      {
         name: "Tin Le",
         title: "Marketing Communications Manager, Pullman Danang Beach Resort, Accor Hotels",
         quote:
@@ -90,12 +96,6 @@ export const homepageContent = {
         title: "Managing Director, Itihaas",
         quote:
           "Thank you so much for delivering such amazing work. You have done a fantastic job and I am very happy with the final result. We will be using the images to promote festive dining at Itihaas."
-      },
-      {
-        name: "Nouman Farooqui",
-        title: "Director, Asha’s Birmingham",
-        quote:
-          "Great results and great photos. We were really pleased with the final outcome and the quality of the content delivered for Asha’s Birmingham."
       },
       {
         name: "Alexandre Gomes Ferreira",
