@@ -21,8 +21,8 @@ export function LocationMarketingPage({ slug, locale }: { slug: LocationSlug; lo
   const { english, portuguese } = localizedUrls(`/${slug}`);
   const canonical = locale === "pt" ? portuguese : english;
   const labels = locale === "pt"
-    ? { home: "Início", services: "Serviços", faq: "Perguntas frequentes", contact: "Fale com a Hospo", sectors: "Veja também" }
-    : { home: "Home", services: "Services", faq: "FAQs", contact: "Talk to Hospo", sectors: "Explore also" };
+    ? { home: "Início", services: "Serviços", faq: "Perguntas frequentes", contact: "Fale com a Hospo", sectors: "Veja também", proof: "Projetos selecionados", proofTitle: "Experiência aplicada a negócios reais de hotelaria e restauração.", proofBody: "Veja casos de estudo de hotéis, restaurantes e marcas F&B, apresentados com a localização e âmbito reais de cada projeto.", proofCta: "Ver casos de estudo" }
+    : { home: "Home", services: "Services", faq: "FAQs", contact: "Talk to Hospo", sectors: "Explore also", proof: "Selected hospitality work", proofTitle: "Experience applied to real hospitality businesses.", proofBody: "Explore case studies for hotels, restaurants and F&B brands, each presented with the project’s accurate location and scope.", proofCta: "Explore case studies" };
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -36,6 +36,19 @@ export function LocationMarketingPage({ slug, locale }: { slug: LocationSlug; lo
         inLanguage: locale === "pt" ? "pt-PT" : "en-GB",
         about: { "@type": "Place", name: `${place}, ${country}` },
         isPartOf: { "@id": `${SITE_URL}/#website` }
+      },
+      {
+        "@type": "Service",
+        "@id": `${canonical}#service`,
+        name: page.title,
+        description: page.description,
+        url: canonical,
+        provider: { "@id": `${SITE_URL}/#organization` },
+        areaServed: [
+          { "@type": "Place", name: place },
+          { "@type": "Country", name: "Portugal" }
+        ],
+        audience: { "@type": "Audience", audienceType: locale === "pt" ? "Hotéis, resorts, restaurantes, bares e marcas de alimentação e bebidas" : "Hotels, resorts, restaurants, bars and F&B brands" }
       },
       {
         "@type": "BreadcrumbList",
@@ -74,6 +87,8 @@ export function LocationMarketingPage({ slug, locale }: { slug: LocationSlug; lo
       <section className="px-5 py-[var(--hc-section-compact)] sm:px-8">
         <div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{labels.services}</p><h2 className="mt-5 max-w-4xl font-serif text-[clamp(2.25rem,4vw,3.8rem)] font-semibold leading-[.98]">{page.servicesTitle}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-ink/72">{page.servicesIntro}</p><div className="mt-9 grid border-y border-ink/15 sm:grid-cols-2 lg:grid-cols-5">{serviceLinks.map((service) => <Link key={service.slug} href={localizedPath(`/services/${service.slug}`, locale)} className="group border-b border-ink/15 p-5 transition hover:bg-ink hover:text-white sm:border-r sm:[&:nth-child(even)]:border-r-0 lg:border-b-0 lg:[&:nth-child(even)]:border-r lg:last:border-r-0"><h3 className="font-serif text-2xl leading-tight">{service[locale]}</h3><span className="mt-6 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[.14em] group-hover:text-yellow">{locale === "pt" ? "Explorar serviço" : "Explore service"}<ArrowUpRight size={15} /></span></Link>)}</div></div>
       </section>
+
+      <section className="bg-[#f6f8fb] px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-7 md:flex-row md:items-end"><div><p className="section-eyebrow text-yellow">{labels.proof}</p><h2 className="mt-5 max-w-3xl font-serif text-[clamp(2.25rem,4vw,3.8rem)] font-semibold leading-[.98]">{labels.proofTitle}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-ink/72">{labels.proofBody}</p></div><Link href={localizedPath("/case-studies", locale)} className="inline-flex shrink-0 items-center gap-2 text-xs font-black uppercase tracking-[.14em] transition hover:text-ink/60">{labels.proofCta}<ArrowUpRight size={16} /></Link></div></section>
 
       <section className="bg-ink px-5 py-[var(--hc-section-compact)] text-white sm:px-8"><div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.65fr_1.35fr]"><div><p className="section-eyebrow text-yellow">{labels.faq}</p><h2 className="mt-5 font-serif text-[clamp(2.25rem,4vw,3.8rem)] font-semibold leading-[.98]">{locale === "pt" ? "Questões práticas antes de avançar." : "Practical questions before getting started."}</h2></div><div className="border-y border-white/20">{page.faqs.map((item) => <details key={item.question} className="border-b border-white/20 py-5 last:border-b-0"><summary className="cursor-pointer list-none font-bold leading-7">{item.question}</summary><p className="pt-3 text-sm leading-7 text-white/70">{item.answer}</p></details>)}</div></div></section>
 

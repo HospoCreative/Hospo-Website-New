@@ -76,6 +76,24 @@ function HeroCtas({ locale }: { locale: Locale }) {
   return <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4"><Link href={localizedPath("/contact", locale)} className="button-primary inline-flex items-center gap-2">{translate(locale, "Talk to Hospo")}<ArrowUpRight size={17} /></Link><Link href={localizedPath("/digital-scan", locale)} className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[.14em] text-white/70 transition hover:text-yellow">{translate(locale, "Digital Presence Review")}<ArrowUpRight size={16} /></Link></div>;
 }
 
+function PortugalLocationLinks({ locale, audience }: { locale: Locale; audience: "hotels" | "restaurants" | "service" }) {
+  const copy = {
+    en: {
+      hotels: { eyebrow: "Portugal", title: "Hotel marketing support in Portugal.", body: "Explore how Hospo supports hotel and stay businesses in the Algarve and Lisbon.", algarve: "Hotel marketing in the Algarve", lisbon: "Support for Lisbon hotels" },
+      restaurants: { eyebrow: "Portugal", title: "Restaurant marketing support in Portugal.", body: "Explore how Hospo supports restaurants, bars and F&B businesses in the Algarve and Lisbon.", algarve: "Restaurant marketing in the Algarve", lisbon: "Support for Lisbon restaurants" },
+      service: { eyebrow: "Portugal", title: "Hospitality marketing support in Portugal.", body: "Explore local support for hotels, restaurants and F&B businesses in the Algarve and Lisbon.", algarve: "Hospitality marketing in the Algarve", lisbon: "Marketing support in Lisbon" }
+    },
+    pt: {
+      hotels: { eyebrow: "Portugal", title: "Marketing para hotéis em Portugal.", body: "Veja como a Hospo apoia hotéis e alojamentos no Algarve e em Lisboa.", algarve: "Marketing para hotéis no Algarve", lisbon: "Apoio para hotéis em Lisboa" },
+      restaurants: { eyebrow: "Portugal", title: "Marketing para restaurantes em Portugal.", body: "Veja como a Hospo apoia restaurantes, bares e negócios de alimentação e bebidas no Algarve e em Lisboa.", algarve: "Marketing para restaurantes no Algarve", lisbon: "Apoio para restaurantes em Lisboa" },
+      service: { eyebrow: "Portugal", title: "Marketing para hotelaria e restauração em Portugal.", body: "Veja o apoio local para hotéis, restaurantes e negócios de alimentação e bebidas no Algarve e em Lisboa.", algarve: "Marketing para hotelaria no Algarve", lisbon: "Apoio de marketing em Lisboa" }
+    }
+  } as const;
+  const t = copy[locale][audience];
+
+  return <section className="service-chapter service-chapter--light bg-[#f6f8fb] px-5 py-10 text-ink sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="section-eyebrow text-yellow">{t.eyebrow}</p><h2 className="mt-3 max-w-2xl font-serif text-3xl font-semibold leading-tight">{t.title}</h2><p className="mt-3 max-w-2xl text-sm leading-7 text-ink/70">{t.body}</p></div><div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold"><Link href={localizedPath("/algarve", locale)} className="inline-flex items-center gap-2 transition hover:text-ink/60">{t.algarve}<ArrowUpRight size={15} /></Link><Link href={localizedPath("/lisboa", locale)} className="inline-flex items-center gap-2 transition hover:text-ink/60">{t.lisbon}<ArrowUpRight size={15} /></Link></div></div></section>;
+}
+
 function ServiceVisualStory({ visual, locale }: { visual: ServiceVisual; locale: Locale }) {
   const homepageGalleryImages = getPublicImageList(imageFolders.photoGallery, { text: photoGalleryImageText, altPrefix: "Hospo Creative portfolio image" });
   const images = visual.kind === "gallery"
@@ -123,7 +141,9 @@ export function CommercialHubPage({ hub, locale, caseStudies = [] }: { hub: Comm
     <section className="px-5 py-[var(--hc-section-compact)] sm:px-8"><div className="mx-auto max-w-7xl"><p className="section-eyebrow text-yellow">{translate(locale, "How Hospo supports you")}</p><div className="mt-7 grid border-y border-ink/10 md:grid-cols-2 xl:grid-cols-5">{hub.pillars.map((pillar) => <article key={pillar.title} className="border-b border-ink/10 px-0 py-7 md:px-6 md:[&:nth-child(odd)]:border-r xl:border-b-0 xl:border-r xl:px-7 xl:last:border-r-0"><span className="block h-1 w-8 bg-yellow" /><h2 className="mt-5 font-serif text-3xl font-semibold leading-none">{translate(locale, pillar.title)}</h2><p className="mt-4 text-sm leading-7 text-ink/70">{translate(locale, pillar.description)}</p></article>)}</div></div></section>
     {hub.journey ? <ConnectedJourney locale={locale} stages={hub.journey} /> : null}
     <ProjectCards projects={projects} locale={locale} />
-    <section className="bg-ink px-5 py-12 text-white sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-center"><div><p className="section-eyebrow text-yellow">{translate(locale, "Related services")}</p><p className="mt-3 text-white/70">{translate(locale, "Bring focused support together around the commercial priority in front of you.")}</p></div><div className="flex flex-wrap gap-4">{hub.relatedServiceSlugs.map((slug) => <Link key={slug} href={localizedPath(`/services/${slug}`, locale)} className="text-xs font-black uppercase tracking-[.13em] hover:text-yellow">{translate(locale, serviceLabels[slug])}</Link>)}</div></div></section></main>;
+    <section className="bg-ink px-5 py-12 text-white sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-center"><div><p className="section-eyebrow text-yellow">{translate(locale, "Related services")}</p><p className="mt-3 text-white/70">{translate(locale, "Bring focused support together around the commercial priority in front of you.")}</p></div><div className="flex flex-wrap gap-4">{hub.relatedServiceSlugs.map((slug) => <Link key={slug} href={localizedPath(`/services/${slug}`, locale)} className="text-xs font-black uppercase tracking-[.13em] hover:text-yellow">{translate(locale, serviceLabels[slug])}</Link>)}</div></div></section>
+    <PortugalLocationLinks locale={locale} audience={hub.slug === "hotels-stays" ? "hotels" : "restaurants"} />
+  </main>;
 }
 
 export function ServiceDetailPage({ service, locale, caseStudies = [] }: { service: ServicePage; locale: Locale; caseStudies?: CaseStudy[] }) {
@@ -151,6 +171,7 @@ export function ServiceDetailPage({ service, locale, caseStudies = [] }: { servi
     <ServiceVisualStory visual={detail.visual} locale={locale} />
     {["photography-video", "social-media"].includes(service.slug) ? <PortfolioShowcase locale={locale} /> : <ProjectCards projects={projects} locale={locale} tone="ink" />}
     <section className="service-chapter service-chapter--light bg-white px-5 py-10 sm:px-8"><div className="mx-auto max-w-7xl border-y border-ink/12 py-7"><p className="section-eyebrow text-yellow">{labels.related}</p><div className="mt-5 flex flex-wrap gap-x-7 gap-y-4">{related.map((slug) => <Link key={slug} href={localizedPath(`/services/${slug}`, locale)} className="inline-flex items-center gap-2 text-sm font-bold transition hover:text-ink/60">{translate(locale, serviceLabels[slug])}<ArrowUpRight size={15} /></Link>)}</div></div></section>
+    {["social-media", "photography-video", "seo-google-visibility", "websites-direct-booking", "strategy-campaigns"].includes(service.slug) ? <PortugalLocationLinks locale={locale} audience={service.relatedHub === "hotels-stays" ? "hotels" : service.relatedHub === "restaurants-fb" ? "restaurants" : "service"} /> : null}
     <ServiceFaqs locale={locale} items={detail.faqs} />
     <section className="service-chapter service-chapter--light bg-white px-5 py-10 text-ink sm:px-8"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-center"><div><p className="max-w-2xl font-serif text-3xl font-semibold leading-tight">{labels.contact}</p><Link href={localizedPath("/digital-scan", locale)} className="mt-3 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[.14em] text-ink/65 hover:text-ink">{labels.review}<ArrowUpRight size={15} /></Link></div><Link href={localizedPath("/contact", locale)} className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-ink px-5 text-xs font-extrabold uppercase tracking-[.14em] text-white transition hover:-translate-y-0.5 hover:bg-ink/88">{translate(locale, "Talk to Hospo")}<ArrowUpRight size={17} /></Link></div></section>
   </main>;

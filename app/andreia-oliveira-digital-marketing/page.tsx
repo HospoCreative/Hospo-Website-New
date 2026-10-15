@@ -51,7 +51,7 @@ export default async function AndreiaOliveiraPage() {
         description: locale === "pt" ? "Especialista em redes sociais e marketing digital para hotéis, restaurantes e negócios de hotelaria e restauração em Portugal e no Reino Unido." : "Social media and digital marketing specialist for hotels, restaurants and hospitality businesses across Portugal and the UK.",
         worksFor: { "@id": `${SITE_URL}/#organization` },
         sameAs: ["https://www.linkedin.com/in/andreia-rodrigues-de-oliveira/"],
-        knowsAbout: locale === "pt" ? ["Marketing Digital", "Gestão de Redes Sociais", "Estratégia de Redes Sociais", "Meta Ads", "Publicidade no Facebook", "Publicidade no Instagram", "Google Ads", "Estratégia de Conteúdo", "Marketing para Hotelaria e Restauração"] : ["Digital Marketing", "Social Media Marketing", "Social Media Management", "Meta Ads", "Facebook Advertising", "Instagram Advertising", "Google Ads", "Content Strategy", "Hospitality Marketing"]
+        knowsAbout: locale === "pt" ? ["Marketing para Hotelaria", "Marketing Hoteleiro", "Estratégia Digital", "Gestão de Redes Sociais", "Estratégia de Redes Sociais", "Meta Ads", "Google Ads", "SEO", "Marketing Digital"] : ["Hospitality Marketing", "Hotel Marketing", "Digital Strategy", "Social Media Marketing", "Social Media Management", "Meta Ads", "Google Ads", "SEO"]
       },
       {
         "@type": "BreadcrumbList",

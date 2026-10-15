@@ -76,8 +76,8 @@ export default async function TiagoBastosCommercialPage() {
         worksFor: { "@id": `${SITE_URL}/#organization` },
         sameAs: ["https://www.linkedin.com/in/tiagobastos93/"],
         knowsAbout: locale === "pt"
-          ? ["Fotografia de Hotéis", "Fotografia para Hotelaria", "Fotografia de Restaurantes", "Fotografia Gastronómica", "Fotografia de Alimentação e Bebidas", "Fotografia de Bebidas", "Vídeo para Hotéis", "Vídeo para Restaurantes", "Vídeo para Hotelaria", "Produção de Conteúdo", "Fotografia de Eventos Corporativos", "Fotografia de Propriedade"]
-          : ["Hotel Photography", "Hospitality Photography", "Restaurant Photography", "Food Photography", "Food and Drink Photography", "Beverage Photography", "Hotel Videography", "Restaurant Videography", "Hospitality Videography", "Content Production", "Corporate Event Photography", "Property Photography"]
+          ? ["Fotografia para Hotelaria", "Fotografia de Hotéis", "Fotografia de Restaurantes", "Vídeo para Hotelaria", "Vídeo para Hotéis", "Vídeo para Restaurantes", "Conteúdo de Alimentação e Bebidas", "Direção Criativa", "Operações de Hotelaria", "Produção de Conteúdo"]
+          : ["Hospitality Photography", "Hotel Photography", "Restaurant Photography", "Hospitality Videography", "Hotel Videography", "Restaurant Videography", "Food & Beverage Content", "Creative Direction", "Hospitality Operations", "Content Production"]
       },
       {
         "@type": "BreadcrumbList",

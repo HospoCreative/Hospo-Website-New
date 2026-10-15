@@ -45,11 +45,11 @@ export default async function Home() {
       <main id="main">
         <Hero locale={locale} />
         <WhoWeHelp locale={locale} />
-        {locale === "pt" ? <PortugalMarkets /> : null}
         <ClientLogosSection logos={clientLogos} locale={locale} />
         <PresentationGallery locale={locale} id="presentation-gallery" />
         <Campaigns locale={locale} />
         <ServicesOverview locale={locale} />
+        <PortugalMarkets locale={locale} />
         <AiSearchHighlight locale={locale} />
         <DigitalScanPromo locale={locale} />
         <DigitalPresenceStatistics locale={locale} />
