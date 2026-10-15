@@ -18,6 +18,13 @@ export function middleware(request: NextRequest) {
     url.pathname = "/pt/investimento";
     return NextResponse.redirect(url, 308);
   }
+
+  if (request.nextUrl.pathname === "/pt/birmingham") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/birmingham";
+    return NextResponse.redirect(url, 308);
+  }
+
   const isPortuguese = request.nextUrl.pathname === "/pt" || request.nextUrl.pathname.startsWith("/pt/");
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-hospo-locale", isPortuguese ? "pt" : "en");

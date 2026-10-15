@@ -17,6 +17,7 @@ const staticRoutes = [
   "/services/social-media",
   "/algarve",
   "/lisboa",
+  "/birmingham",
   "/about",
   "/andreia-oliveira-digital-marketing",
   "/tiago-bastos-commercial-photographer-videographer",
@@ -39,6 +40,14 @@ function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Si
   // Next normalises the root canonical without a trailing slash. Keep the
   // sitemap's root URL and alternate links identical to that canonical.
   const englishUrl = pathname === "/" ? english.replace(/\/$/, "") : english;
+  if (pathname === "/birmingham") {
+    return [{
+      url: englishUrl,
+      ...entrySettings(pathname),
+      ...(lastModified ? { lastModified } : {}),
+      alternates: { languages: { "en-GB": englishUrl, "x-default": englishUrl } }
+    }];
+  }
   const languages = { "en-GB": englishUrl, "pt-PT": portuguese, "x-default": englishUrl };
   const settings = entrySettings(pathname);
   return [
