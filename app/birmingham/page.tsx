@@ -3,7 +3,6 @@ import { BirminghamMarketingPage } from "@/components/BirminghamMarketingPage";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SeoStructuredData } from "@/components/SeoStructuredData";
-import { getPublishedCaseStudies } from "@/lib/supabase/queries";
 import { DEFAULT_OG_IMAGE, FAVICON, SITE_URL } from "@/lib/seo";
 
 const pathname = "/birmingham";
@@ -47,7 +46,6 @@ export function generateMetadata(): Metadata {
 
 export default async function BirminghamPage() {
   const canonical = `${SITE_URL}${pathname}`;
-  const caseStudies = await getPublishedCaseStudies("en");
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -56,5 +54,5 @@ export default async function BirminghamPage() {
       { "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: SITE_URL }, { "@type": "ListItem", position: 2, name: "Birmingham & West Midlands", item: canonical }] }
     ]
   };
-  return <><Header locale="en" /><SeoStructuredData data={structuredData} /><BirminghamMarketingPage caseStudies={caseStudies} /><Footer locale="en" /></>;
+  return <><Header locale="en" /><SeoStructuredData data={structuredData} /><BirminghamMarketingPage /><Footer locale="en" /></>;
 }
