@@ -25,6 +25,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
+  if (request.nextUrl.pathname === "/algarve/redes-sociais-fotografia-restaurantes") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/pt/algarve/redes-sociais-fotografia-restaurantes";
+    return NextResponse.redirect(url, 308);
+  }
+
   const isPortuguese = request.nextUrl.pathname === "/pt" || request.nextUrl.pathname.startsWith("/pt/");
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-hospo-locale", isPortuguese ? "pt" : "en");

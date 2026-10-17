@@ -103,11 +103,11 @@ export const locationPages: Record<LocationSlug, Record<Locale, LocationPage>> =
       ]
     },
     pt: {
-      eyebrow: "Marketing para hotelaria no Algarve",
+      eyebrow: "MARKETING PARA HOTELARIA E RESTAURAÇÃO · ALGARVE",
       title: "Marketing para Hotéis e Restaurantes no Algarve",
-      description: "A Hospo Creative apoia hotéis, resorts, restaurantes e negócios de hotelaria e restauração no Algarve. Os serviços incluem redes sociais, fotografia e vídeo, SEO, websites e campanhas de marketing.",
-      titleTag: "Agência de Marketing para Hotelaria no Algarve | HOSPO Creative",
-      metaDescription: "Marketing para hotéis, resorts, restaurantes e marcas F&B no Algarve: redes sociais, fotografia, vídeo, SEO, websites e campanhas.",
+      description: "A Hospo Creative é uma agência especializada em marketing para hotelaria e restauração, apoiando hotéis, resorts, restaurantes, bares e marcas de alimentação e bebidas em todo o Algarve.",
+      titleTag: "Marketing para Hotéis e Restaurantes no Algarve | Hospo Creative",
+      metaDescription: "Marketing para hotéis e restaurantes no Algarve: redes sociais, fotografia gastronómica, vídeo, SEO, websites, Meta Ads e campanhas.",
       audienceTitle: "Para negócios de hotelaria com uma jornada de cliente sazonal e orientada para o destino.",
       audience: ["Hotéis, resorts e alojamentos boutique", "Restaurantes, beach clubs e bares", "Grupos de hotelaria e marcas F&B"],
       localContextTitle: "Apoio que liga a força do destino a um percurso comercial claro.",

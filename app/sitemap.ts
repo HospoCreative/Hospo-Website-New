@@ -16,6 +16,7 @@ const staticRoutes = [
   "/services/photography-video",
   "/services/social-media",
   "/algarve",
+  "/algarve/restaurant-social-media-photography",
   "/lisboa",
   "/birmingham",
   "/about",
@@ -47,6 +48,15 @@ function entriesForPath(pathname: string, lastModified?: Date): MetadataRoute.Si
       ...(lastModified ? { lastModified } : {}),
       alternates: { languages: { "en-GB": englishUrl, "x-default": englishUrl } }
     }];
+  }
+  if (pathname === "/algarve/restaurant-social-media-photography") {
+    const specialistEnglish = `${SITE_URL}/algarve/restaurant-social-media-photography`;
+    const specialistPortuguese = `${SITE_URL}/pt/algarve/redes-sociais-fotografia-restaurantes`;
+    const languages = { "en-GB": specialistEnglish, "pt-PT": specialistPortuguese, "x-default": specialistEnglish };
+    return [
+      { url: specialistEnglish, ...entrySettings(pathname), ...(lastModified ? { lastModified } : {}), alternates: { languages } },
+      { url: specialistPortuguese, ...entrySettings(pathname), ...(lastModified ? { lastModified } : {}), alternates: { languages } }
+    ];
   }
   const languages = { "en-GB": englishUrl, "pt-PT": portuguese, "x-default": englishUrl };
   const settings = entrySettings(pathname);
