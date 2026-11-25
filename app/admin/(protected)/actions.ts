@@ -1,10 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdminUser } from "@/lib/supabase/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { PUBLIC_CONTENT_CACHE_TAGS } from "@/lib/supabase/queries";
 
 const statusSchema = z.enum(["draft", "published", "archived"]);
 
@@ -66,6 +67,10 @@ const enquiryStatusSchema = z.enum(["new", "read", "replied", "archived"]);
 const digitalScanStatusSchema = z.enum(["new", "reviewed", "contacted", "archived"]);
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+function invalidatePublicContent(...tags: string[]) {
+  tags.forEach((tag) => revalidateTag(tag));
+}
 
 type ParsedCaseStudyMedia = {
   media_type: "image" | "video";
@@ -269,6 +274,7 @@ export async function createCaseStudyAction(formData: FormData) {
   revalidatePath("/case-studies/[slug]", "page");
   revalidatePath("/pt/case-studies");
   revalidatePath("/pt/case-studies/[slug]", "page");
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.caseStudies);
   redirect(`/admin/case-studies/${data.id}`);
 }
 
@@ -347,6 +353,7 @@ export async function updateCaseStudyAction(formData: FormData) {
   revalidatePath("/pt/case-studies");
   revalidatePath("/pt/case-studies/[slug]", "page");
   revalidatePath(`/pt/case-studies/${parsed.slug}`);
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.caseStudies);
   redirect(`/admin/case-studies/${id}?message=saved`);
 }
 
@@ -394,6 +401,7 @@ export async function createBlogPostAction(formData: FormData) {
   revalidatePath("/pt/blog");
   revalidatePath("/");
   revalidatePath("/pt");
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.blogPosts);
   redirect(`/admin/blog/${data.id}`);
 }
 
@@ -444,6 +452,7 @@ export async function updateBlogPostAction(formData: FormData) {
   revalidatePath("/blog/[slug]", "page");
   revalidatePath("/pt/blog/[slug]", "page");
   revalidatePath(`/pt/blog/${parsed.slug}`);
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.blogPosts);
   redirect(`/admin/blog/${id}?message=saved`);
 }
 
@@ -479,6 +488,7 @@ export async function deleteCaseStudyAction(formData: FormData) {
   revalidatePath("/case-studies");
   revalidatePath("/case-studies/[slug]", "page");
   revalidatePath(`/case-studies/${caseStudy.slug}`);
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.caseStudies);
   redirect("/admin/case-studies?message=deleted");
 }
 
@@ -507,6 +517,7 @@ export async function deleteBlogPostAction(formData: FormData) {
   revalidatePath("/pt/blog");
   revalidatePath("/blog/[slug]", "page");
   revalidatePath(`/blog/${post.slug}`);
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.blogPosts);
   redirect("/admin/blog?message=deleted");
 }
 
@@ -533,6 +544,7 @@ export async function createClientLogoAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.clientLogos);
   redirect("/admin/clients?message=saved");
 }
 
@@ -563,6 +575,7 @@ export async function updateClientLogoAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.clientLogos);
   redirect("/admin/clients?message=updated");
 }
 
@@ -577,6 +590,7 @@ export async function deleteClientLogoAction(formData: FormData) {
   }
 
   revalidatePath("/");
+  invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.clientLogos);
   redirect("/admin/clients?message=deleted");
 }
 
@@ -649,6 +663,7 @@ export async function deleteMediaAction(formData: FormData) {
       revalidatePath("/");
       revalidatePath("/case-studies");
       revalidatePath("/case-studies/[slug]", "page");
+      invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.caseStudies);
     }
 
     if (bucket === "blog-media") {
@@ -659,6 +674,7 @@ export async function deleteMediaAction(formData: FormData) {
       revalidatePath("/");
       revalidatePath("/blog");
       revalidatePath("/blog/[slug]", "page");
+      invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.blogPosts);
     }
   }
 
@@ -725,6 +741,7 @@ export async function deleteMediaBatchAction(formData: FormData) {
     revalidatePath("/");
     revalidatePath("/case-studies");
     revalidatePath("/case-studies/[slug]", "page");
+    invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.caseStudies);
   }
 
   if (bucket === "blog-media") {
@@ -738,6 +755,7 @@ export async function deleteMediaBatchAction(formData: FormData) {
     revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/blog/[slug]", "page");
+    invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.blogPosts);
   }
 
   if (bucket === "client-logos") {
@@ -754,6 +772,7 @@ export async function deleteMediaBatchAction(formData: FormData) {
     if (primaryLogoError) cleanupErrors.push(primaryLogoError.message);
 
     revalidatePath("/");
+    invalidatePublicContent(PUBLIC_CONTENT_CACHE_TAGS.clientLogos);
   }
 
   revalidatePath("/admin/media");

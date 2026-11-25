@@ -1,11 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { PORTFOLIO_EMBED_SECTIONS, type PortfolioEmbedSection } from "@/types/portfolioEmbed";
 import { requireAdminUser } from "@/lib/supabase/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { PUBLIC_CONTENT_CACHE_TAGS } from "@/lib/supabase/queries";
 
 const idSchema = z.string().uuid();
 const sectionSchema = z.enum(PORTFOLIO_EMBED_SECTIONS);
@@ -43,6 +44,7 @@ function refresh() {
   revalidatePath("/pt/services/photography-video");
   revalidatePath("/services/social-media");
   revalidatePath("/pt/services/social-media");
+  revalidateTag(PUBLIC_CONTENT_CACHE_TAGS.portfolioEmbeds);
 }
 
 async function context() {

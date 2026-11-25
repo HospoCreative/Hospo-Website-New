@@ -3,9 +3,21 @@ import type { CaseStudy, CaseStudyMedia, ContentStatus } from "@/types/caseStudy
 import type { ClientLogo } from "@/types/clientLogo";
 import type { Locale } from "@/lib/i18n";
 import type { PortfolioEmbed, PortfolioEmbedSection } from "@/types/portfolioEmbed";
+import { unstable_cache } from "next/cache";
 import { isSupabaseConfigured } from "./env";
 import { createSupabasePublicClient } from "./public";
 import { createSupabaseServerClient } from "./server";
+
+/**
+ * Shared data-cache tags for public CMS content. Admin mutations invalidate
+ * these tags so pages can keep fast, cached reads without delaying a publish.
+ */
+export const PUBLIC_CONTENT_CACHE_TAGS = {
+  blogPosts: "public-blog-posts",
+  caseStudies: "public-case-studies",
+  clientLogos: "public-client-logos",
+  portfolioEmbeds: "public-portfolio-embeds"
+} as const;
 
 type CaseStudyMediaRow = {
   id: string;
@@ -84,6 +96,11 @@ type PortfolioEmbedRow = {
   sort_order: number;
   published: boolean;
 };
+
+const caseStudySelect =
+  "id,title,title_pt,slug,client_name,location,sector,sector_pt,summary,summary_pt,challenge,challenge_pt,solution,solution_pt,result,result_pt,services,services_pt,hero_image,hero_image_alt,hero_image_alt_pt,featured,display_order,status,published_at";
+const blogPostSelect =
+  "id,title,title_pt,slug,excerpt,excerpt_pt,content,content_pt,cover_image,cover_image_alt,cover_image_alt_pt,author_name,tags,tags_pt,status,published_at";
 
 function mapCaseStudyMedia(row: CaseStudyMediaRow): CaseStudyMedia {
   return {
@@ -179,7 +196,7 @@ function mapClientLogo(row: ClientLogoRow): ClientLogo {
   };
 }
 
-export async function getPublishedCaseStudies(locale: Locale = "en") {
+async function fetchPublishedCaseStudies(locale: Locale = "en") {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -187,9 +204,7 @@ export async function getPublishedCaseStudies(locale: Locale = "en") {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("case_studies")
-    .select(
-      "id,title,title_pt,slug,client_name,location,sector,sector_pt,summary,summary_pt,challenge,challenge_pt,solution,solution_pt,result,result_pt,services,services_pt,hero_image,hero_image_alt,hero_image_alt_pt,featured,display_order,status,published_at"
-    )
+    .select(caseStudySelect)
     .eq("status", "published")
     .order("display_order", { ascending: true })
     .order("published_at", { ascending: false });
@@ -220,6 +235,16 @@ export async function getPublishedCaseStudies(locale: Locale = "en") {
   );
 }
 
+const getCachedPublishedCaseStudies = unstable_cache(
+  fetchPublishedCaseStudies,
+  ["published-case-studies"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.caseStudies] }
+);
+
+export async function getPublishedCaseStudies(locale: Locale = "en") {
+  return getCachedPublishedCaseStudies(locale);
+}
+
 export async function getFeaturedCaseStudies(locale: Locale = "en") {
   const caseStudies = await getPublishedCaseStudies(locale);
   return caseStudies
@@ -236,11 +261,40 @@ export async function getFeaturedCaseStudies(locale: Locale = "en") {
 }
 
 export async function getCaseStudyBySlug(slug: string, locale: Locale = "en") {
-  const caseStudies = await getPublishedCaseStudies(locale);
-  return caseStudies.find((caseStudy) => caseStudy.slug === slug) ?? null;
+  return getCachedCaseStudyBySlug(slug, locale);
 }
 
-export async function getPublishedBlogPosts(locale: Locale = "en") {
+async function fetchCaseStudyBySlug(slug: string, locale: Locale = "en") {
+  if (!isSupabaseConfigured()) return null;
+
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("case_studies")
+    .select(caseStudySelect)
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const caseStudy = data as CaseStudyRow;
+  const { data: mediaData } = await supabase
+    .from("case_study_media")
+    .select("id,case_study_id,media_type,src,alt,caption,sort_order,published")
+    .eq("case_study_id", caseStudy.id)
+    .eq("published", true)
+    .order("sort_order", { ascending: true });
+
+  return mapCaseStudy(caseStudy, (mediaData ?? []) as CaseStudyMediaRow[], locale);
+}
+
+const getCachedCaseStudyBySlug = unstable_cache(
+  fetchCaseStudyBySlug,
+  ["case-study-by-slug"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.caseStudies] }
+);
+
+async function fetchPublishedBlogPosts(locale: Locale = "en") {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -248,7 +302,7 @@ export async function getPublishedBlogPosts(locale: Locale = "en") {
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id,title,title_pt,slug,excerpt,excerpt_pt,content,content_pt,cover_image,cover_image_alt,cover_image_alt_pt,author_name,tags,tags_pt,status,published_at")
+    .select(blogPostSelect)
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -259,12 +313,41 @@ export async function getPublishedBlogPosts(locale: Locale = "en") {
   return (data as BlogPostRow[]).map((post) => mapBlogPost(post, locale));
 }
 
-export async function getBlogPostBySlug(slug: string, locale: Locale = "en") {
-  const posts = await getPublishedBlogPosts(locale);
-  return posts.find((post) => post.slug === slug) ?? null;
+const getCachedPublishedBlogPosts = unstable_cache(
+  fetchPublishedBlogPosts,
+  ["published-blog-posts"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.blogPosts] }
+);
+
+export async function getPublishedBlogPosts(locale: Locale = "en") {
+  return getCachedPublishedBlogPosts(locale);
 }
 
-export async function getPublishedClientLogos() {
+export async function getBlogPostBySlug(slug: string, locale: Locale = "en") {
+  return getCachedBlogPostBySlug(slug, locale);
+}
+
+async function fetchBlogPostBySlug(slug: string, locale: Locale = "en") {
+  if (!isSupabaseConfigured()) return null;
+
+  const supabase = createSupabasePublicClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select(blogPostSelect)
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+
+  return error || !data ? null : mapBlogPost(data as BlogPostRow, locale);
+}
+
+const getCachedBlogPostBySlug = unstable_cache(
+  fetchBlogPostBySlug,
+  ["blog-post-by-slug"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.blogPosts] }
+);
+
+async function fetchPublishedClientLogos() {
   if (!isSupabaseConfigured()) {
     return [];
   }
@@ -283,7 +366,17 @@ export async function getPublishedClientLogos() {
   return (data as ClientLogoRow[]).map(mapClientLogo);
 }
 
-export async function getPublishedPortfolioEmbeds(): Promise<PortfolioEmbed[]> {
+const getCachedPublishedClientLogos = unstable_cache(
+  fetchPublishedClientLogos,
+  ["published-client-logos"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.clientLogos] }
+);
+
+export async function getPublishedClientLogos() {
+  return getCachedPublishedClientLogos();
+}
+
+async function fetchPublishedPortfolioEmbeds(): Promise<PortfolioEmbed[]> {
   if (!isSupabaseConfigured()) return [];
 
   const supabase = createSupabasePublicClient();
@@ -303,6 +396,16 @@ export async function getPublishedPortfolioEmbeds(): Promise<PortfolioEmbed[]> {
     sortOrder: row.sort_order,
     published: row.published
   }));
+}
+
+const getCachedPublishedPortfolioEmbeds = unstable_cache(
+  fetchPublishedPortfolioEmbeds,
+  ["published-portfolio-embeds"],
+  { revalidate: 3600, tags: [PUBLIC_CONTENT_CACHE_TAGS.portfolioEmbeds] }
+);
+
+export async function getPublishedPortfolioEmbeds(): Promise<PortfolioEmbed[]> {
+  return getCachedPublishedPortfolioEmbeds();
 }
 
 export async function getAdminContentCounts() {
